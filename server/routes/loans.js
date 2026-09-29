@@ -12,15 +12,26 @@ function serializeLoan(loan) {
   if (json.user && typeof json.user === "object") {
     json.userId = json.user.id || json.user._id?.toString();
     json.farmerName = json.user.name;
-    json.farmName = json.user.farmName || "";
+    json.farmName = json.farmName || json.user.farmName || "";
     json.farmerEmail = json.user.email || "";
   }
   return json;
 }
 
+function getFarmContext(req) {
+  const farmId = req.body?.farmId || req.query.farmId || req.user.activeFarmId || "";
+  const farm = farmId ? req.user.farms?.id?.(farmId) : null;
+  if (farmId && !farm) throw new HttpError(404, "Farm not found");
+  return {
+    farmId: farm?._id?.toString() || "",
+    farmName: farm?.name || req.user.farmName || ""
+  };
+}
+
 loansRouter.get("/", requireAuth, async (req, res, next) => {
   try {
     const query = req.user.role === "admin" ? {} : { user: req.user._id };
+    if (req.user.role !== "admin" && req.query.farmId) query.farmId = req.query.farmId;
     const loans = await LoanApplication.find(query)
       .populate("user", "name farmName email")
       .populate("reviewedBy", "name email")
@@ -39,6 +50,7 @@ loansRouter.post("/", requireAuth, validateBody(loanApplicationSchema), async (r
 
     const loan = await LoanApplication.create({
       user: req.user._id,
+      ...getFarmContext(req),
       amount: req.body.amount,
       purpose: req.body.purpose,
       crop: req.body.crop,

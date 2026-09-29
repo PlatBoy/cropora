@@ -36,10 +36,45 @@ async function getMarketSnapshot(userId) {
   };
 }
 
+function getFarmContext(req) {
+  const farmId = req.body?.farmId || req.query.farmId || req.user.activeFarmId || "";
+  const farm = farmId ? req.user.farms?.id?.(farmId) : null;
+  if (farmId && !farm) throw new HttpError(404, "Farm not found");
+  return {
+    farmId: farm?._id?.toString() || "",
+    farmName: farm?.name || req.user.farmName || ""
+  };
+}
+
+async function getFarmMarketSnapshot(req) {
+  const farm = getFarmContext(req);
+  const orderQuery = { user: req.user._id };
+  const loanQuery = { user: req.user._id, status: "approved" };
+  if (farm.farmId) {
+    orderQuery.farmId = farm.farmId;
+    loanQuery.farmId = farm.farmId;
+  }
+
+  const [user, orders, loans] = await Promise.all([
+    User.findById(req.user._id),
+    MarketOrder.find(orderQuery).sort({ createdAt: -1 }).limit(50),
+    LoanApplication.find(loanQuery).sort({ createdAt: -1 }).limit(50)
+  ]);
+
+  return {
+    account: {
+      walletBalance: user?.walletBalance || 0
+    },
+    catalog: MARKET_ITEMS,
+    orders: orders.map((order) => order.toJSON()),
+    loans: loans.map((loan) => loan.toJSON())
+  };
+}
+
 marketRouter.get("/", requireAuth, async (req, res, next) => {
   try {
     ensureFarmer(req);
-    res.json(await getMarketSnapshot(req.user._id));
+    res.json(await getFarmMarketSnapshot(req));
   } catch (error) {
     next(error);
   }
@@ -73,6 +108,7 @@ marketRouter.post("/orders", requireAuth, validateBody(marketOrderSchema), async
         [
           {
             user: req.user._id,
+            ...getFarmContext(req),
             itemId: item.id,
             itemName: item.name,
             category: item.category,

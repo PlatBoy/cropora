@@ -14,7 +14,7 @@ export async function ensureSeedAdmin() {
         email: env.ADMIN_EMAIL.toLowerCase(),
         passwordHash,
         role: "admin",
-        farmName: "Cropura Operations",
+        farmName: "Krishsense Operations",
         isActive: true
       }
     },

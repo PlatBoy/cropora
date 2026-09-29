@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const analysisSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    farmId: { type: String, trim: true, default: "", index: true },
+    farmName: { type: String, trim: true, maxlength: 160, default: "" },
     type: { type: String, enum: ["field_report", "soil_identifier"], required: true, index: true },
     status: { type: String, enum: ["pending", "reviewed", "follow_up"], default: "pending", index: true },
     input: {

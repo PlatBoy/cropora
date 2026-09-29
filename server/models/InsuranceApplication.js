@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const insuranceApplicationSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    farmId: { type: String, trim: true, default: "", index: true },
+    farmName: { type: String, trim: true, maxlength: 160, default: "" },
     crop: { type: String, required: true, trim: true, maxlength: 120 },
     landArea: { type: String, trim: true, maxlength: 40, default: "" },
     landUnit: { type: String, enum: ["acre", "hectare", "bigha"], default: "acre" },

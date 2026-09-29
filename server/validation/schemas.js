@@ -18,6 +18,18 @@ export const passwordChangeSchema = z.object({
   newPassword: z.string().min(8).max(128)
 });
 
+export const farmSchema = z.object({
+  name: z.string().trim().min(2).max(160),
+  location: z.string().trim().max(160).optional().default(""),
+  landArea: z.string().trim().max(40).optional().default(""),
+  landUnit: z.enum(["acre", "hectare", "bigha"]).optional().default("acre"),
+  primaryCrop: z.string().trim().max(120).optional().default("")
+});
+
+export const activeFarmSchema = z.object({
+  farmId: z.string().trim().min(1).max(80)
+});
+
 export const adminPasswordResetSchema = z.object({
   password: z.string().min(8).max(128)
 });
@@ -27,8 +39,10 @@ export const userStatusSchema = z.object({
 });
 
 const optionalText = z.string().trim().max(500).optional().default("");
+const optionalFarmId = z.string().trim().max(80).optional().default("");
 
 export const analysisInputSchema = z.object({
+  farmId: optionalFarmId,
   landArea: z.string().trim().max(40).optional().default(""),
   landUnit: z.enum(["acre", "hectare", "bigha"]).optional().default("acre"),
   landType: z
@@ -45,6 +59,7 @@ export const analysisInputSchema = z.object({
 });
 
 export const identifierInputSchema = z.object({
+  farmId: optionalFarmId,
   landType: z
     .enum(["irrigated", "dryland", "lowland", "hilly", "river_belt", "plain", "unknown"])
     .optional()
@@ -60,6 +75,7 @@ export const statusSchema = z.object({
 });
 
 export const loanApplicationSchema = z.object({
+  farmId: optionalFarmId,
   amount: z.coerce.number().min(1000).max(10000000),
   purpose: z.string().trim().min(3).max(200),
   crop: z.string().trim().max(120).optional().default(""),
@@ -75,6 +91,7 @@ export const loanStatusSchema = z.object({
 });
 
 export const diseaseInputSchema = z.object({
+  farmId: optionalFarmId,
   crop: z.string().trim().min(1).max(120),
   location: z.string().trim().max(160).optional().default(""),
   symptoms: z.string().trim().max(700).optional().default(""),
@@ -82,6 +99,7 @@ export const diseaseInputSchema = z.object({
 });
 
 export const insuranceApplicationSchema = z.object({
+  farmId: optionalFarmId,
   crop: z.string().trim().min(1).max(120),
   landArea: z.string().trim().max(40).optional().default(""),
   landUnit: z.enum(["acre", "hectare", "bigha"]).optional().default("acre"),
@@ -98,6 +116,7 @@ export const insuranceStatusSchema = z.object({
 });
 
 export const marketOrderSchema = z.object({
+  farmId: optionalFarmId,
   itemId: z.string().trim().min(2).max(80),
   quantity: z.coerce.number().int().min(1).max(100)
 });

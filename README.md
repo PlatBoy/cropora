@@ -1,4 +1,4 @@
-# Cropura
+# Krishsense
 
 Production-ready farmer soil analysis app with secure auth, Gemini multimodal soil photo classification, MongoDB persistence, Cloudinary image storage, and admin review dashboards.
 
@@ -9,7 +9,8 @@ Production-ready farmer soil analysis app with secure auth, Gemini multimodal so
 - Gemini analyzes uploaded photos and returns soil type, confidence, risk, nutrients, irrigation guidance, and recommendations.
 - Cloudinary stores uploaded soil images permanently.
 - MongoDB stores users, reports, statuses, AI results, and image metadata.
-- Admins review reports, users, soil mix, and report status.
+- Each farmer can add multiple farms and switch between farm-specific soil reports, loans, market orders, disease checks, and insurance.
+- Admins review reports, users, loans, insurance, and report status.
 
 ## Required Services
 
@@ -18,11 +19,8 @@ Create these before deploying:
 - MongoDB Atlas database and connection string.
 - Cloudinary account with cloud name, API key, API secret.
 - Google AI Studio Gemini API key.
-- Render or Vercel project connected to `xodi6/project1`.
+- Render or Vercel project connected to `PlatBoy/krishsense`.
 
-admin@cropura.app
-admin123456
+Configure secrets such as `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `MONGODB_URI` in the host's environment settings. Do not commit credentials to the repository.
 
-
-rakes2123@gmail.com
-12345678
+Existing farmer accounts get a default farm created the first time they sign in after this update. Their existing records are assigned to that farm.

@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const diseaseReportSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    farmId: { type: String, trim: true, default: "", index: true },
+    farmName: { type: String, trim: true, maxlength: 160, default: "" },
     status: { type: String, enum: ["pending", "reviewed", "follow_up"], default: "pending", index: true },
     input: {
       crop: { type: String, trim: true, maxlength: 120, default: "" },

@@ -14,16 +14,27 @@ function serializeDisease(report) {
   if (json.user && typeof json.user === "object") {
     json.userId = json.user.id || json.user._id?.toString();
     json.farmerName = json.user.name || "";
-    json.farmName = json.user.farmName || "";
+    json.farmName = json.farmName || json.user.farmName || "";
     json.farmerEmail = json.user.email || "";
   }
   json.photoUrl = json.image?.secureUrl || json.image?.url || "";
   return json;
 }
 
+function getFarmContext(req) {
+  const farmId = req.body?.farmId || req.query.farmId || req.user.activeFarmId || "";
+  const farm = farmId ? req.user.farms?.id?.(farmId) : null;
+  if (farmId && !farm) throw new HttpError(404, "Farm not found");
+  return {
+    farmId: farm?._id?.toString() || "",
+    farmName: farm?.name || req.user.farmName || ""
+  };
+}
+
 diseasesRouter.get("/", requireAuth, async (req, res, next) => {
   try {
     const query = req.user.role === "admin" ? {} : { user: req.user._id };
+    if (req.user.role !== "admin" && req.query.farmId) query.farmId = req.query.farmId;
     const reports = await DiseaseReport.find(query)
       .populate("user", "name farmName email")
       .sort({ createdAt: -1 })
@@ -53,6 +64,7 @@ diseasesRouter.post("/", requireAuth, uploadSoilPhoto.single("photo"), async (re
 
     const report = await DiseaseReport.create({
       user: req.user._id,
+      ...getFarmContext(req),
       input: parsed.data,
       image: {
         url: cloudinaryResult.url,

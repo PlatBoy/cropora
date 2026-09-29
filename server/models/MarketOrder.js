@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const marketOrderSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    farmId: { type: String, trim: true, default: "", index: true },
+    farmName: { type: String, trim: true, maxlength: 160, default: "" },
     itemId: { type: String, required: true, index: true },
     itemName: { type: String, required: true, trim: true },
     category: { type: String, required: true, trim: true },

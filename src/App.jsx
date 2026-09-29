@@ -237,6 +237,14 @@ const insuranceClientSchema = z.object({
   damageType: z.string().min(1, "Select damage type.")
 });
 
+const farmClientSchema = z.object({
+  name: z.string().trim().min(2, "Farm name is required."),
+  location: z.string().trim().optional(),
+  landArea: z.string().trim().optional(),
+  landUnit: z.enum(["acre", "hectare", "bigha"]),
+  primaryCrop: z.string().trim().optional()
+});
+
 function firstValidationMessage(result) {
   return result.success ? "" : result.error.issues[0]?.message || "Please check the form.";
 }
@@ -297,6 +305,12 @@ function getLanguageName(language) {
   return LANGUAGES.find((lang) => lang.code === language)?.name || "English";
 }
 
+function withFarm(path, farmId) {
+  if (!farmId) return path;
+  const joiner = path.includes("?") ? "&" : "?";
+  return `${path}${joiner}farmId=${encodeURIComponent(farmId)}`;
+}
+
 function getInitialTheme() {
   try {
     const savedTheme = localStorage.getItem(THEME_KEY);
@@ -346,7 +360,7 @@ function exportAnalysesCsv(analyses) {
     analysis.result?.summary
   ]);
   const csv = [header, ...rows].map((row) => row.map(csvValue).join(",")).join("\n");
-  downloadTextFile(`cropura-reports-${Date.now()}.csv`, csv, "text/csv;charset=utf-8");
+  downloadTextFile(`krishsense-reports-${Date.now()}.csv`, csv, "text/csv;charset=utf-8");
 }
 
 function exportUsersCsv(users) {
@@ -365,7 +379,7 @@ function exportUsersCsv(users) {
     user.walletBalance || 0
   ]);
   const csv = [header, ...rows].map((row) => row.map(csvValue).join(",")).join("\n");
-  downloadTextFile(`cropura-users-${Date.now()}.csv`, csv, "text/csv;charset=utf-8");
+  downloadTextFile(`krishsense-users-${Date.now()}.csv`, csv, "text/csv;charset=utf-8");
 }
 
 function exportOrdersCsv(orders) {
@@ -383,7 +397,7 @@ function exportOrdersCsv(orders) {
     titleCase(order.status)
   ]);
   const csv = [header, ...rows].map((row) => row.map(csvValue).join(",")).join("\n");
-  downloadTextFile(`cropura-orders-${Date.now()}.csv`, csv, "text/csv;charset=utf-8");
+  downloadTextFile(`krishsense-orders-${Date.now()}.csv`, csv, "text/csv;charset=utf-8");
 }
 
 function assistantAnswerLines(answer) {
@@ -411,7 +425,7 @@ function printAnalysisReport(analysis) {
   const html = `<!doctype html>
 <html>
   <head>
-    <title>Cropura Soil Report</title>
+    <title>Krishsense Soil Report</title>
     <style>
       body { font-family: Arial, sans-serif; color: #17231b; padding: 28px; line-height: 1.45; }
       h1 { margin: 0 0 4px; color: #21663a; }
@@ -424,7 +438,7 @@ function printAnalysisReport(analysis) {
     </style>
   </head>
   <body>
-    <h1>Cropura Soil Report</h1>
+    <h1>Krishsense Soil Report</h1>
     <p class="muted">${escapeHtml(formatDate(analysis.createdAt))}</p>
     ${analysis.photoUrl ? `<img src="${escapeHtml(analysis.photoUrl)}" alt="Soil" style="width:180px;height:130px;object-fit:cover;border-radius:8px" />` : ""}
     <table>${rows.map(([label, value]) => `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value ?? "Not available")}</td></tr>`).join("")}</table>
@@ -437,7 +451,7 @@ function printAnalysisReport(analysis) {
 </html>`;
   const reportWindow = window.open("", "_blank");
   if (!reportWindow) {
-    downloadTextFile(`cropura-report-${analysis.id}.html`, html, "text/html;charset=utf-8");
+    downloadTextFile(`krishsense-report-${analysis.id}.html`, html, "text/html;charset=utf-8");
     return;
   }
   reportWindow.document.write(html);
@@ -540,7 +554,7 @@ function buildNotifications(analyses, loans, market) {
   });
   if (!notifications.length) {
     notifications.push({
-      title: "Welcome to Cropura",
+      title: "Welcome to Krishsense",
       detail: "Upload soil photos, apply for loans, and track farm tools here."
     });
   }
@@ -605,7 +619,7 @@ function App() {
     return (
       <main className="loading-screen">
         <Sprout size={34} />
-        <span>Opening Cropura</span>
+        <span>Opening Krishsense</span>
       </main>
     );
   }
@@ -781,7 +795,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <Sprout size={24} />
           </span>
           <div>
-            <p>Cropura</p>
+            <p>Krishsense</p>
             <h1>Soil decisions for every field</h1>
           </div>
         </div>
@@ -911,6 +925,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
 }
 
 function Dashboard({ session, onLogout, theme, onThemeToggle, language, onLanguageChange }) {
+  const [farmName, setFarmName] = useState(session.user.farmName);
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -919,8 +934,8 @@ function Dashboard({ session, onLogout, theme, onThemeToggle, language, onLangua
             <Sprout size={23} />
           </span>
           <div>
-            <strong>Cropura</strong>
-            <span>{session.user.role === "admin" ? "Admin console" : session.user.farmName || "Farmer desk"}</span>
+            <strong>Krishsense</strong>
+            <span>{session.user.role === "admin" ? "Admin console" : farmName || "Farmer desk"}</span>
           </div>
         </div>
         <div className="topbar-actions">
@@ -941,7 +956,7 @@ function Dashboard({ session, onLogout, theme, onThemeToggle, language, onLangua
       {session.user.role === "admin" ? (
         <AdminDashboard token={session.token} />
       ) : (
-        <FarmerDashboard token={session.token} user={session.user} language={language} />
+        <FarmerDashboard token={session.token} user={session.user} language={language} onFarmChange={setFarmName} />
       )}
     </main>
   );
@@ -968,45 +983,49 @@ function FloatingNewsBanner() {
   );
 }
 
-function FarmerDashboard({ token, user, language }) {
+function FarmerDashboard({ token, user, language, onFarmChange }) {
   const [activeView, setActiveView] = useState("analysis");
+  const [accountUser, setAccountUser] = useState(user);
   const [analyses, setAnalyses] = useState([]);
   const [diseases, setDiseases] = useState([]);
   const [insurance, setInsurance] = useState([]);
   const [loans, setLoans] = useState([]);
   const [market, setMarket] = useState(emptyMarketState);
   const [loading, setLoading] = useState(true);
+  const farms = accountUser.farms?.length ? accountUser.farms : [{ id: "", name: accountUser.farmName || "Main farm" }];
+  const activeFarmId = accountUser.activeFarmId || farms[0]?.id || "";
+  const activeFarm = farms.find((farm) => farm.id === activeFarmId) || farms[0];
 
   async function loadAnalyses() {
     setLoading(true);
-    const data = await apiRequest("/api/analyses", { token });
+    const data = await apiRequest(withFarm("/api/analyses", activeFarmId), { token });
     setAnalyses(data.analyses);
     setLoading(false);
   }
 
   async function loadLoans() {
-    const data = await apiRequest("/api/loans", { token });
+    const data = await apiRequest(withFarm("/api/loans", activeFarmId), { token });
     setLoans(data.loans);
   }
 
   async function loadMarket() {
-    const data = await apiRequest("/api/market", { token });
+    const data = await apiRequest(withFarm("/api/market", activeFarmId), { token });
     setMarket(data);
   }
 
   async function loadDiseases() {
-    const data = await apiRequest("/api/diseases", { token });
+    const data = await apiRequest(withFarm("/api/diseases", activeFarmId), { token });
     setDiseases(data.diseases);
   }
 
   async function loadInsurance() {
-    const data = await apiRequest("/api/insurance", { token });
+    const data = await apiRequest(withFarm("/api/insurance", activeFarmId), { token });
     setInsurance(data.insurance);
   }
 
   useEffect(() => {
     Promise.all([loadAnalyses(), loadLoans(), loadMarket(), loadDiseases(), loadInsurance()]).catch(() => setLoading(false));
-  }, []);
+  }, [activeFarmId]);
 
   const latest = analyses[0];
   const pending = analyses.filter((analysis) => analysis.status === "pending").length;
@@ -1020,10 +1039,19 @@ function FarmerDashboard({ token, user, language }) {
         <div className="profile-block">
           <img src={fieldImage} alt="Farm rows" />
           <div>
-            <span>{user.farmName || "Farm profile"}</span>
-            <strong>{user.name}</strong>
+            <span>{activeFarm?.name || "Farm profile"}</span>
+            <strong>{accountUser.name}</strong>
           </div>
         </div>
+        <FarmSwitcher
+          token={token}
+          farms={farms}
+          activeFarmId={activeFarmId}
+          onUserChange={(nextUser) => {
+            setAccountUser(nextUser);
+            onFarmChange(nextUser.farmName);
+          }}
+        />
         <nav className="side-nav" aria-label="Farmer dashboard">
           <button className={activeView === "analysis" ? "active" : ""} onClick={() => setActiveView("analysis")}>
             <Camera size={18} />
@@ -1070,6 +1098,7 @@ function FarmerDashboard({ token, user, language }) {
 
       <section className="content-area">
         <div className="metric-row">
+          <Metric icon={<Sprout size={19} />} label="Active farm" value={activeFarm?.name || "Main farm"} />
           <Metric icon={<FlaskConical size={19} />} label="Analyses" value={analyses.length} />
           <Metric icon={<Clock3 size={19} />} label="Pending review" value={pending} />
           <Metric icon={<Leaf size={19} />} label="Latest soil" value={latest?.result.soilType || "None"} />
@@ -1079,17 +1108,17 @@ function FarmerDashboard({ token, user, language }) {
           <Metric icon={<Wallet size={19} />} label="Balance" value={formatMoney(market.account?.walletBalance || 0)} />
         </div>
 
-        {activeView === "analysis" && <SoilAnalysisForm token={token} onCreated={loadAnalyses} />}
-        {activeView === "identify" && <SoilIdentifierUpload token={token} onCreated={loadAnalyses} />}
+        {activeView === "analysis" && <SoilAnalysisForm token={token} farmId={activeFarmId} activeFarm={activeFarm} onCreated={loadAnalyses} />}
+        {activeView === "identify" && <SoilIdentifierUpload token={token} farmId={activeFarmId} onCreated={loadAnalyses} />}
         {activeView === "history" && <AnalysisHistory analyses={analyses} loading={loading} />}
-        {activeView === "disease" && <DiseaseDetectionPanel token={token} diseases={diseases} onChanged={loadDiseases} />}
+        {activeView === "disease" && <DiseaseDetectionPanel token={token} farmId={activeFarmId} diseases={diseases} onChanged={loadDiseases} />}
         {activeView === "insights" && <FarmerInsightCenter insights={insights} analyses={analyses} />}
         {activeView === "tools" && (
           <FarmerToolsPanel token={token} analyses={analyses} loans={loans} market={market} notifications={notifications} language={language} />
         )}
-        {activeView === "market" && <MarketPanel token={token} market={market} onChanged={() => Promise.all([loadMarket(), loadLoans()])} />}
-        {activeView === "loans" && <FarmerLoanPanel token={token} loans={loans} onChanged={loadLoans} />}
-        {activeView === "insurance" && <InsurancePanel token={token} insurance={insurance} onChanged={loadInsurance} />}
+        {activeView === "market" && <MarketPanel token={token} farmId={activeFarmId} market={market} onChanged={() => Promise.all([loadMarket(), loadLoans()])} />}
+        {activeView === "loans" && <FarmerLoanPanel token={token} farmId={activeFarmId} loans={loans} onChanged={loadLoans} />}
+        {activeView === "insurance" && <InsurancePanel token={token} farmId={activeFarmId} insurance={insurance} onChanged={loadInsurance} />}
         {activeView === "account" && <PasswordPanel token={token} />}
       </section>
     </div>
@@ -1108,13 +1137,114 @@ function Metric({ icon, label, value }) {
   );
 }
 
-function SoilAnalysisForm({ token, onCreated }) {
+function FarmSwitcher({ token, farms, activeFarmId, onUserChange }) {
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ name: "", location: "", landArea: "", landUnit: "acre", primaryCrop: "" });
+  const [busy, setBusy] = useState("");
+  const [error, setError] = useState("");
+
+  function updateField(field, value) {
+    setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  async function switchFarm(farmId) {
+    if (!farmId || farmId === activeFarmId) return;
+    setBusy(`switch-${farmId}`);
+    setError("");
+    try {
+      const data = await apiRequest("/api/auth/active-farm", {
+        token,
+        method: "PATCH",
+        body: { farmId }
+      });
+      onUserChange(data.user);
+    } catch (err) {
+      setError(err.message || "Farm switch failed.");
+    } finally {
+      setBusy("");
+    }
+  }
+
+  async function addFarm(event) {
+    event.preventDefault();
+    setBusy("add");
+    setError("");
+    try {
+      const validation = farmClientSchema.safeParse(form);
+      if (!validation.success) throw new Error(firstValidationMessage(validation));
+      const data = await apiRequest("/api/auth/farms", {
+        token,
+        method: "POST",
+        body: validation.data
+      });
+      onUserChange(data.user);
+      setForm({ name: "", location: "", landArea: "", landUnit: "acre", primaryCrop: "" });
+      setOpen(false);
+    } catch (err) {
+      setError(err.message || "Could not add farm.");
+    } finally {
+      setBusy("");
+    }
+  }
+
+  return (
+    <section className="farm-switcher" aria-label="Farm switcher">
+      <div className="farm-switcher-head">
+        <span className="eyebrow">Farm workspace</span>
+        <button className="small-button" type="button" onClick={() => setOpen((current) => !current)}>
+          <UserPlus size={15} />
+          Add
+        </button>
+      </div>
+      <select value={activeFarmId} onChange={(event) => switchFarm(event.target.value)}>
+        {farms.map((farm) => (
+          <option key={farm.id || farm.name} value={farm.id}>
+            {farm.name}
+          </option>
+        ))}
+      </select>
+      {error && <p className="row-error">{error}</p>}
+      {open && (
+        <form className="farm-add-form" onSubmit={addFarm}>
+          <input value={form.name} onChange={(event) => updateField("name", event.target.value)} placeholder="Farm name" required />
+          <input value={form.location} onChange={(event) => updateField("location", event.target.value)} placeholder="Location" />
+          <div className="split-input input-shell">
+            <Ruler size={16} />
+            <input type="number" min="0" step="0.01" value={form.landArea} onChange={(event) => updateField("landArea", event.target.value)} placeholder="Area" />
+            <select value={form.landUnit} onChange={(event) => updateField("landUnit", event.target.value)}>
+              <option value="acre">Acre</option>
+              <option value="hectare">Hectare</option>
+              <option value="bigha">Bigha</option>
+            </select>
+          </div>
+          <input value={form.primaryCrop} onChange={(event) => updateField("primaryCrop", event.target.value)} placeholder="Primary crop" />
+          <button className="secondary-button" disabled={busy === "add"}>
+            <Sprout size={16} />
+            {busy === "add" ? "Adding" : "Save farm"}
+          </button>
+        </form>
+      )}
+    </section>
+  );
+}
+
+function SoilAnalysisForm({ token, farmId, activeFarm, onCreated }) {
   const [form, setForm] = useState(emptyAnalysisForm);
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState("");
   const [result, setResult] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setForm((current) => ({
+      ...current,
+      crop: current.crop || activeFarm?.primaryCrop || "",
+      location: current.location || activeFarm?.location || "",
+      landArea: current.landArea || activeFarm?.landArea || "",
+      landUnit: activeFarm?.landUnit || current.landUnit
+    }));
+  }, [farmId]);
 
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -1139,6 +1269,7 @@ function SoilAnalysisForm({ token, onCreated }) {
 
       const body = new FormData();
       Object.entries(form).forEach(([key, value]) => body.append(key, value));
+      body.append("farmId", farmId || "");
       body.append("photo", photo);
 
       const data = await apiRequest("/api/analyses", {
@@ -1148,7 +1279,13 @@ function SoilAnalysisForm({ token, onCreated }) {
       });
 
       setResult(data.analysis.result);
-      setForm(emptyAnalysisForm);
+      setForm({
+        ...emptyAnalysisForm,
+        crop: activeFarm?.primaryCrop || "",
+        location: activeFarm?.location || "",
+        landArea: activeFarm?.landArea || "",
+        landUnit: activeFarm?.landUnit || "acre"
+      });
       setPhoto(null);
       setPreview("");
       await onCreated();
@@ -1164,7 +1301,7 @@ function SoilAnalysisForm({ token, onCreated }) {
       <section className="form-card">
         <div className="section-heading">
           <span className="eyebrow">New field report</span>
-          <h2>Upload soil photo and crop details</h2>
+          <h2>{activeFarm?.name ? `${activeFarm.name}: soil report` : "Upload soil photo and crop details"}</h2>
         </div>
         {error && <p className="error-banner">{error}</p>}
         <form className="analysis-form" onSubmit={submitAnalysis}>
@@ -1344,7 +1481,7 @@ function ResultCard({ result }) {
   );
 }
 
-function SoilIdentifierUpload({ token, onCreated }) {
+function SoilIdentifierUpload({ token, farmId, onCreated }) {
   const [form, setForm] = useState({
     landType: "unknown",
     location: "",
@@ -1377,6 +1514,7 @@ function SoilIdentifierUpload({ token, onCreated }) {
 
       const body = new FormData();
       Object.entries(form).forEach(([key, value]) => body.append(key, value));
+      body.append("farmId", farmId || "");
       body.append("photo", photo);
 
       const data = await apiRequest("/api/analyses/identify-soil", {
@@ -1894,7 +2032,7 @@ function AiAssistantPanel({ token, latest, language }) {
   );
 }
 
-function DiseaseDetectionPanel({ token, diseases, onChanged }) {
+function DiseaseDetectionPanel({ token, farmId, diseases, onChanged }) {
   const [form, setForm] = useState({ crop: "", location: "", symptoms: "", notes: "", photo: null });
   const [preview, setPreview] = useState("");
   const [result, setResult] = useState(null);
@@ -1921,6 +2059,7 @@ function DiseaseDetectionPanel({ token, diseases, onChanged }) {
       if (!validation.success) throw new Error(firstValidationMessage(validation));
 
       const payload = new FormData();
+      payload.append("farmId", farmId || "");
       payload.append("crop", form.crop);
       payload.append("location", form.location);
       payload.append("symptoms", form.symptoms);
@@ -2033,6 +2172,7 @@ function DiseaseResultCard({ disease }) {
         <span>{result.crop || disease.input?.crop || "Crop"}</span>
         <span>{Number(result.confidence || 0).toFixed(0)}% confidence</span>
         {disease.farmerName && <span>{disease.farmerName}</span>}
+        {!disease.farmerName && disease.farmName && <span>{disease.farmName}</span>}
       </div>
       <RecommendationList title="Urgent actions" items={result.urgentActions} />
       <RecommendationList title="Treatment" items={result.treatments} />
@@ -2056,7 +2196,7 @@ function RecommendationList({ title, items = [] }) {
   );
 }
 
-function MarketPanel({ token, market, onChanged }) {
+function MarketPanel({ token, farmId, market, onChanged }) {
   const [quantities, setQuantities] = useState({});
   const [repayment, setRepayment] = useState({
     loanId: "",
@@ -2098,7 +2238,7 @@ function MarketPanel({ token, market, onChanged }) {
       await apiRequest("/api/market/orders", {
         token,
         method: "POST",
-        body: { itemId: item.id, quantity: validation.data.quantity }
+        body: { itemId: item.id, quantity: validation.data.quantity, farmId }
       });
 
       setQuantity(item.id, 1);
@@ -2288,7 +2428,7 @@ function MarketPanel({ token, market, onChanged }) {
   );
 }
 
-function FarmerLoanPanel({ token, loans, onChanged }) {
+function FarmerLoanPanel({ token, farmId, loans, onChanged }) {
   const [form, setForm] = useState({
     amount: "",
     purpose: "",
@@ -2318,7 +2458,7 @@ function FarmerLoanPanel({ token, loans, onChanged }) {
       await apiRequest("/api/loans", {
         token,
         method: "POST",
-        body: form
+        body: { ...form, farmId }
       });
 
       setForm({
@@ -2487,6 +2627,7 @@ function LoanCard({ loan, adminMode = false, onDecision }) {
         <span>{loan.crop || "Crop not set"}</span>
         <span>{loan.landArea ? `${loan.landArea} ${loan.landUnit}` : "Land not set"}</span>
         {adminMode && <span>{loan.farmerName}</span>}
+        {!adminMode && loan.farmName && <span>{loan.farmName}</span>}
       </div>
 
       {loan.farmerNote && <p className="loan-note">{loan.farmerNote}</p>}
@@ -2516,7 +2657,7 @@ function LoanCard({ loan, adminMode = false, onDecision }) {
   );
 }
 
-function InsurancePanel({ token, insurance, onChanged }) {
+function InsurancePanel({ token, farmId, insurance, onChanged }) {
   const [form, setForm] = useState({
     crop: "",
     landArea: "",
@@ -2547,7 +2688,7 @@ function InsurancePanel({ token, insurance, onChanged }) {
       await apiRequest("/api/insurance", {
         token,
         method: "POST",
-        body: form
+        body: { ...form, farmId }
       });
 
       setForm({
@@ -2690,6 +2831,7 @@ function InsuranceCard({ insurance, adminMode = false, onDecision }) {
         <span>{insurance.season || "Season not set"}</span>
         <span>{insurance.location || "Location not set"}</span>
         {adminMode && <span>{insurance.farmerName}</span>}
+        {!adminMode && insurance.farmName && <span>{insurance.farmName}</span>}
       </div>
       {insurance.farmerNote && <p className="loan-note">{insurance.farmerNote}</p>}
       {insurance.adminNote && <p className="loan-note admin-note">{insurance.adminNote}</p>}
@@ -2907,6 +3049,7 @@ function AnalysisCard({ analysis, adminMode = false, onStatusChange }) {
           <span>{analysis.input.landArea} {analysis.input.landUnit}</span>
           <span>{analysis.result.healthScore} health</span>
           {adminMode && <span>{analysis.farmerName}</span>}
+          {!adminMode && analysis.farmName && <span>{analysis.farmName}</span>}
         </div>
         <div className="analysis-actions">
           <button className="small-button" onClick={() => printAnalysisReport(analysis)}>

@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const loanApplicationSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    farmId: { type: String, trim: true, default: "", index: true },
+    farmName: { type: String, trim: true, maxlength: 160, default: "" },
     amount: { type: Number, required: true, min: 1000, max: 10000000 },
     purpose: { type: String, required: true, trim: true, maxlength: 200 },
     crop: { type: String, trim: true, maxlength: 120, default: "" },

@@ -785,6 +785,36 @@ textarea:focus {
   overflow-wrap: anywhere;
 }
 
+.farm-switcher {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-soft);
+}
+
+.farm-switcher-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.farm-switcher select,
+.farm-switcher input {
+  width: 100%;
+  min-height: 40px;
+}
+
+.farm-add-form {
+  display: grid;
+  gap: 8px;
+}
+
+.farm-add-form .secondary-button {
+  width: 100%;
+}
+
 .side-nav {
   display: grid;
   gap: 6px;
