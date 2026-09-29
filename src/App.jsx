@@ -4,6 +4,7 @@ import {
   BarChart3,
   Banknote,
   Bell,
+  Bookmark,
   Bot,
   Calculator,
   Camera,
@@ -11,6 +12,9 @@ import {
   CheckCircle2,
   CloudSun,
   ClipboardList,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
   Clock3,
   Download,
   Droplets,
@@ -33,6 +37,8 @@ import {
   Search,
   ShieldCheck,
   ShoppingCart,
+  Shuffle,
+  Sparkles,
   Sprout,
   Sun,
   Target,
@@ -115,29 +121,6 @@ const drainageOptions = [
   ["good", "Good"],
   ["moderate", "Moderate"],
   ["poor", "Poor"]
-];
-
-const newsItems = [
-  {
-    label: "Weather",
-    title: "Check rain before irrigation",
-    detail: "Use the weather tool before watering or spraying."
-  },
-  {
-    label: "Mandi",
-    title: "Wheat and paddy demo prices updated",
-    detail: "Compare crop prices before planning storage or sales."
-  },
-  {
-    label: "Scheme",
-    title: "Loan approvals now credit wallet balance",
-    detail: "Approved money can be used in the farmer market."
-  },
-  {
-    label: "Advisory",
-    title: "Download soil reports for records",
-    detail: "Reports can be printed or saved as PDF from History."
-  }
 ];
 
 const mandiPrices = [
@@ -428,8 +411,7 @@ function assistantAnswerLines(answer) {
   return String(answer || "")
     .replace(/\r/g, "\n")
     .split(/\n+/)
-    .flatMap((line) => line.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [line])
-    .map((line) => line.trim().replace(/^[-*\d.]+\s*/, ""))
+    .map((line) => line.trim().replace(/^(?:[-*•]|\d+[.)])\s*/, ""))
     .filter(Boolean);
 }
 
@@ -1014,22 +996,163 @@ function Dashboard({ session, onLogout, theme, onThemeToggle, language, onLangua
 }
 
 function FloatingNewsBanner() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [stale, setStale] = useState(false);
+  const [error, setError] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [savedOnly, setSavedOnly] = useState(false);
+  const [saved, setSaved] = useState(() => {
+    try {
+      const value = JSON.parse(window.localStorage.getItem("krishsense-saved-news") || "[]");
+      return Array.isArray(value) ? value.filter((item) => item && typeof item === "object" && typeof item.url === "string") : [];
+    } catch { return []; }
+  });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [surprise, setSurprise] = useState(false);
+  const [seedUnlocked, setSeedUnlocked] = useState(() => {
+    try { return window.localStorage.getItem("krishsense-golden-seed") === "found"; } catch { return false; }
+  });
+  const [seedMessage, setSeedMessage] = useState(false);
+  const labelClicks = useRef([]);
+  const seedTimer = useRef(null);
+
+  useEffect(() => {
+    let active = true;
+    async function loadNews() {
+      try {
+        const data = await apiRequest("/api/news");
+        if (!active) return;
+        setItems(data.items || []);
+        setStale(Boolean(data.stale));
+        setError(false);
+      } catch {
+        if (active) setError(true);
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+
+    loadNews();
+    const refreshTimer = window.setInterval(loadNews, 10 * 60 * 1000);
+    return () => {
+      active = false;
+      window.clearInterval(refreshTimer);
+    };
+  }, [refreshKey]);
+
+  useEffect(() => () => window.clearTimeout(seedTimer.current), []);
+
+  const dateLabel = (value) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short" }).format(date);
+  };
+
+  const selectedItem = items.length ? items[selectedIndex % items.length] : null;
+  const visibleItems = savedOnly ? saved : items;
+  const isStorySaved = (item) => saved.some((story) => story.url === item.url);
+  const categoryFor = (title = "") => {
+    if (/price|market|mandi|trade|export|import|crop rate/i.test(title)) return "Markets";
+    if (/scheme|fund|loan|policy|government|minister|subsidy|msp/i.test(title)) return "Policy";
+    if (/disease|pest|rust|blight|virus|health/i.test(title)) return "Crop health";
+    if (/study|research|science|technology|ai |innovation/i.test(title)) return "Research";
+    if (/rain|monsoon|drought|flood|weather|temperature/i.test(title)) return "Weather";
+    return "Field report";
+  };
+
+  function toggleSaved(item) {
+    setSaved((current) => {
+      const isSaved = current.some((story) => story.url === item.url);
+      const next = isSaved ? current.filter((story) => story.url !== item.url) : [item, ...current].slice(0, 30);
+      try { window.localStorage.setItem("krishsense-saved-news", JSON.stringify(next)); } catch { /* Keep this session's bookmarks usable if storage is blocked. */ }
+      return next;
+    });
+  }
+
+  function moveHeadline(direction) {
+    if (items.length < 2) return;
+    setSelectedIndex((current) => (current + direction + items.length) % items.length);
+  }
+
+  function surpriseMe() {
+    if (!items.length) return;
+    const next = items.length === 1 ? 0 : (selectedIndex + 1 + Math.floor(Math.random() * (items.length - 1))) % items.length;
+    setSelectedIndex(next);
+    setSurprise(true);
+    window.setTimeout(() => setSurprise(false), 1100);
+  }
+
+  function handleNewsLabel() {
+    setExpanded((value) => !value);
+    const now = Date.now();
+    labelClicks.current = [...labelClicks.current.filter((time) => now - time < 1800), now];
+    if (labelClicks.current.length >= 5 && !seedUnlocked) {
+      setSeedUnlocked(true);
+      setSeedMessage(true);
+      try { window.localStorage.setItem("krishsense-golden-seed", "found"); } catch { /* The discovery still works for this visit. */ }
+      window.clearTimeout(seedTimer.current);
+      seedTimer.current = window.setTimeout(() => setSeedMessage(false), 5200);
+      labelClicks.current = [];
+    }
+  }
+
   return (
-    <aside className="floating-news" aria-label="Farm news and alerts">
-      <div className="floating-news-label">
-        <Newspaper size={17} />
-        Updates
-      </div>
-      <div className="news-ticker-viewport">
-        <div className="news-ticker">
-          {[...newsItems, ...newsItems].map((item, index) => (
-            <span key={`${item.title}-${index}`}>
-              <strong>{item.label}</strong>
-              {item.title}
-            </span>
-          ))}
+    <aside className={`floating-news${expanded ? " is-expanded" : ""}`} aria-label="Latest agriculture news">
+      <div className="news-topline">
+        <button className="floating-news-label" type="button" onClick={handleNewsLabel} aria-expanded={expanded} title="Open the farm news desk">
+          <span className="news-label-icon"><Newspaper size={17} /></span>
+          <span>Farm news</span>
+          <span className="news-live-dot" aria-label="Live feed" />
+        </button>
+        <div className="news-desk-mark"><span>FIELD DISPATCH</span><i /> INDIA AGRICULTURE</div>
+        <div className="news-feature-controls">
+          <button className="news-control-button news-surprise-button" type="button" onClick={surpriseMe} disabled={!items.length} title="Surprise me with a headline" aria-label="Surprise me with a headline"><Shuffle size={16} /><span>Surprise me</span></button>
+          {selectedItem && <button className={`news-control-button news-save-button${isStorySaved(selectedItem) ? " is-saved" : ""}`} type="button" onClick={() => toggleSaved(selectedItem)} title={isStorySaved(selectedItem) ? "Remove saved headline" : "Save this headline"} aria-label={isStorySaved(selectedItem) ? "Remove saved headline" : "Save this headline"}><Bookmark size={17} fill={isStorySaved(selectedItem) ? "currentColor" : "none"} /></button>}
+          <button className="news-control-button news-expand-button" type="button" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded} title={expanded ? "Close news desk" : "Explore all headlines"} aria-label={expanded ? "Close news desk" : "Explore all headlines"}>{expanded ? <ChevronUp size={17} /> : <span>Explore <ChevronRight size={15} /></span>}</button>
         </div>
       </div>
+
+      <div className={`news-featured${surprise ? " is-surprise" : ""}`} aria-live="polite">
+        <div className="news-feature-copy">
+          {loading && <span className="news-feed-state"><span className="news-loading-pulse" /> Gathering field dispatches…</span>}
+          {!loading && error && <span className="news-feed-state">Headlines unavailable. <a href="https://news.google.com/search?q=agriculture+India&hl=en-IN&gl=IN&ceid=IN%3Aen" target="_blank" rel="noreferrer">Open agriculture news</a></span>}
+          {!loading && !error && !selectedItem && <span className="news-feed-state">No recent agriculture headlines found.</span>}
+          {selectedItem && <>
+            <span className="news-topic"><Sparkles size={12} /> {categoryFor(selectedItem.title)}</span>
+            <a className="news-feature-title" href={selectedItem.url} target="_blank" rel="noreferrer">{selectedItem.title}</a>
+            <span className="news-feature-meta">{selectedItem.source} <i /> {dateLabel(selectedItem.publishedAt)}{stale ? " · cached" : ""}</span>
+          </>}
+        </div>
+        {items.length > 1 && <div className="news-pager">
+          <span>{String((selectedIndex % items.length) + 1).padStart(2, "0")} <i>/</i> {String(items.length).padStart(2, "0")}</span>
+          <button className="news-control-button" type="button" onClick={() => moveHeadline(-1)} title="Previous headline" aria-label="Previous headline"><ChevronLeft size={17} /></button>
+          <button className="news-control-button" type="button" onClick={() => moveHeadline(1)} title="Next headline" aria-label="Next headline"><ChevronRight size={17} /></button>
+        </div>}
+      </div>
+
+      {seedMessage && <div className="news-seed-toast" role="status"><span className="news-seed-sprout"><Sprout size={22} /></span><span><strong>Golden seed found!</strong><small>May your next season be a good one.</small></span><Sparkles size={17} /></div>}
+
+      {expanded && <section className="news-library" aria-label="Agriculture headlines">
+        <div className="news-library-heading">
+          <div><span className="eyebrow">The field dispatch</span><h3>Stories shaping the season</h3></div>
+          <div className="news-library-actions">
+            <div className="news-filter-toggle" role="group" aria-label="Filter headlines">
+              <button type="button" className={!savedOnly ? "active" : ""} onClick={() => setSavedOnly(false)}>Latest <span>{items.length}</span></button>
+              <button type="button" className={savedOnly ? "active" : ""} onClick={() => setSavedOnly(true)}>Saved <span>{saved.length}</span></button>
+            </div>
+            <button className="news-control-button" type="button" onClick={() => { setLoading(true); setError(false); setRefreshKey((key) => key + 1); }} title="Refresh headlines" aria-label="Refresh headlines"><RefreshCw size={16} className={loading ? "news-refreshing" : ""} /></button>
+          </div>
+        </div>
+        {visibleItems.length ? <div className="news-library-grid">
+          {visibleItems.map((item, index) => <article className="news-library-card" key={item.url} style={{ "--story-index": index }}>
+            <div className="news-library-card-top"><span className="news-topic">{categoryFor(item.title)}</span><button className={`news-card-save${isStorySaved(item) ? " is-saved" : ""}`} type="button" onClick={() => toggleSaved(item)} aria-label={isStorySaved(item) ? "Remove saved headline" : "Save headline"} title={isStorySaved(item) ? "Remove saved headline" : "Save headline"}><Bookmark size={16} fill={isStorySaved(item) ? "currentColor" : "none"} /></button></div>
+            <a className="news-library-title" href={item.url} target="_blank" rel="noreferrer">{item.title}<span aria-hidden="true">↗</span></a>
+            <div className="news-library-meta"><span>{item.source}</span><time dateTime={item.publishedAt}>{dateLabel(item.publishedAt)}</time></div>
+          </article>)}
+        </div> : <div className="news-saved-empty"><Bookmark size={20} /><span>{savedOnly ? "No saved stories yet. Bookmark a headline to keep it here." : "No recent headlines to show."}</span></div>}
+        {seedUnlocked && <div className="news-seed-footer"><Sprout size={16} /> Golden seed club member <span>✦</span></div>}
+      </section>}
     </aside>
   );
 }
@@ -1197,7 +1320,7 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
         {activeView === "disease" && <DiseaseDetectionPanel key={activeFarmId} token={token} farmId={activeFarmId} diseases={diseases} onChanged={loadDiseases} />}
         {activeView === "insights" && <FarmerInsightCenter insights={insights} analyses={analyses} />}
         {activeView === "tools" && (
-          <FarmerToolsPanel token={token} analyses={analyses} loans={loans} market={market} notifications={notifications} language={language} />
+          <FarmerToolsPanel token={token} analyses={analyses} diseases={diseases} tasks={tasks} activeFarm={activeFarm} loans={loans} market={market} notifications={notifications} language={language} />
         )}
         {activeView === "market" && <MarketPanel key={activeFarmId} token={token} farmId={activeFarmId} market={market} onChanged={() => Promise.all([loadMarket(), loadLoans()])} />}
         {activeView === "loans" && <FarmerLoanPanel key={activeFarmId} token={token} farmId={activeFarmId} loans={loans} onChanged={loadLoans} />}
@@ -1955,7 +2078,7 @@ function SignalBars({ entries, emptyLabel }) {
   );
 }
 
-function FarmerToolsPanel({ token, analyses, loans, market, notifications, language }) {
+function FarmerToolsPanel({ token, analyses, diseases, tasks, activeFarm, loans, market, notifications, language }) {
   const latest = analyses[0];
 
   return (
@@ -1979,7 +2102,7 @@ function FarmerToolsPanel({ token, analyses, loans, market, notifications, langu
         <CropRecommendationPanel latest={latest} />
         <EmiCalculator />
         <NotificationPanel notifications={notifications} />
-        <AiAssistantPanel token={token} latest={latest} language={language} />
+        <AiAssistantPanel key={activeFarm?.id || activeFarm?.name || "farm"} token={token} latest={latest} latestDisease={diseases[0]} tasks={tasks} farm={activeFarm} language={language} />
       </div>
     </div>
   );
@@ -2197,15 +2320,17 @@ function NotificationPanel({ notifications }) {
   );
 }
 
-function AiAssistantPanel({ token, latest, language }) {
+function AiAssistantPanel({ token, latest, latestDisease, tasks, farm, language }) {
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [messages, setMessages] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const crop = farm?.primaryCrop || latest?.input?.crop;
   const quickQuestions = [
-    "What should I do next for this soil?",
-    "Which fertilizer is safe for my crop?",
-    "How should I plan irrigation this week?"
+    "What should I do next this week?",
+    crop ? `How should I care for ${crop} at this stage?` : "How should I care for my crop this week?",
+    "How can I check whether my crop has a disease?",
+    "How do I use a battery sprayer safely?"
   ];
 
   async function askAssistant(event) {
@@ -2218,24 +2343,38 @@ function AiAssistantPanel({ token, latest, language }) {
 
     setBusy(true);
     setError("");
-    setAnswer("");
     try {
+      const history = messages.slice(-8).map(({ role, content }) => ({ role, content }));
       const data = await apiRequest("/api/assistant/chat", {
         token,
         method: "POST",
         body: {
           question: trimmedQuestion,
+          history,
           context: {
             soilType: latest?.result?.soilType || "",
-            crop: latest?.input?.crop || "",
-            location: latest?.input?.location || "",
+            crop: crop || "",
+            location: farm?.location || latest?.input?.location || "",
             healthScore: latest?.result?.healthScore || "",
+            farmName: farm?.name || "",
+            farmArea: farm?.landArea ? `${farm.landArea} ${farm.landUnit || ""}`.trim() : "",
+            latestDisease: latestDisease?.diseaseName || "",
+            upcomingTasks: tasks
+              .filter((task) => task.status === "planned")
+              .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+              .slice(0, 3)
+              .map((task) => `${task.title} (${task.category}${task.dueDate ? `, due ${formatDay(task.dueDate)}` : ""})`),
             language,
             languageName: getLanguageName(language)
           }
         }
       });
-      setAnswer(data.answer);
+      setMessages((current) => [
+        ...current,
+        { role: "user", content: trimmedQuestion },
+        { role: "assistant", content: data.answer, source: data.source || "unknown" }
+      ]);
+      setQuestion("");
     } catch (err) {
       setError(err.message || "Assistant failed.");
     } finally {
@@ -2248,38 +2387,48 @@ function AiAssistantPanel({ token, latest, language }) {
       <div className="tool-heading">
         <Bot size={22} />
         <div>
-          <span className="eyebrow">AI assistant</span>
-          <h3>Ask a farming question</h3>
+          <span className="eyebrow">AI farming assistant{farm?.name ? ` · ${farm.name}` : ""}</span>
+          <h3>Get practical next steps</h3>
         </div>
+      </div>
+      <p className="assistant-context-note">
+        Answers use this farm’s crop, saved reports and upcoming tasks. Check local weather, product labels and soil-test results before acting.
+      </p>
+      <div className="assistant-thread" aria-live="polite" aria-label="Assistant conversation">
+        {messages.length === 0 ? (
+          <p className="assistant-welcome">Ask about crop care, soil, irrigation, pests or planning. You can ask follow-up questions too.</p>
+        ) : messages.map((message, index) => (
+          <article className={`assistant-message ${message.role}`} key={`${message.role}-${index}`}>
+            <span>{message.role === "assistant" ? (message.source === "fallback" ? "General guidance · AI unavailable" : "Krishsense") : "You"}</span>
+            <div>{assistantAnswerLines(message.content).map((line, lineIndex) => <p key={`${line}-${lineIndex}`}>{line}</p>)}</div>
+          </article>
+        ))}
+        {busy && <p className="assistant-thinking"><span className="loading-dot" /> Preparing farm-specific guidance…</p>}
       </div>
       <form className="assistant-form" onSubmit={askAssistant}>
         <textarea
           rows={3}
           value={question}
           onChange={(event) => setQuestion(event.target.value)}
-          placeholder="Example: Which fertilizer should I use for wheat in loamy soil?"
+          placeholder={crop ? `Ask a follow-up about ${crop} or this farm…` : "Ask a farming question or a follow-up…"}
           required
         />
         <div className="assistant-quick-row">
           {quickQuestions.map((item) => (
-            <button className="chip-button" type="button" key={item} onClick={() => setQuestion(item)}>
+            <button className="chip-button" type="button" key={item} disabled={busy} onClick={() => setQuestion(item)}>
               {item}
             </button>
           ))}
         </div>
-        <button className="primary-button" disabled={busy || question.trim().length < 3}>
-          <Bot size={17} />
-          {busy ? "Thinking" : "Ask assistant"}
-        </button>
+        <div className="assistant-actions">
+          <button className="primary-button" disabled={busy || question.trim().length < 3}>
+            <Bot size={17} />
+            {busy ? "Thinking" : "Ask assistant"}
+          </button>
+          {messages.length > 0 && <button className="small-button" type="button" disabled={busy} onClick={() => setMessages([])}>Clear chat</button>}
+        </div>
       </form>
       {error && <p className="error-banner">{error}</p>}
-      {answer && (
-        <div className="assistant-answer" aria-live="polite">
-          {assistantAnswerLines(answer).map((line, index) => (
-            <p key={`${line}-${index}`}>{line}</p>
-          ))}
-        </div>
-      )}
     </section>
   );
 }

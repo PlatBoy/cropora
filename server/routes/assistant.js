@@ -8,12 +8,13 @@ export const assistantRouter = Router();
 
 assistantRouter.post("/chat", requireAuth, validateBody(assistantChatSchema), async (req, res, next) => {
   try {
-    const answer = await askFarmingAssistant({
+    const result = await askFarmingAssistant({
       question: req.body.question,
+      history: req.body.history,
       context: req.body.context
     });
 
-    res.json({ answer });
+    res.json(result);
   } catch (error) {
     next(error);
   }

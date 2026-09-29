@@ -15,14 +15,15 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^5.0.0",
     "@google/genai": "^1.48.0",
+    "@vitejs/plugin-react": "^5.0.0",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.8.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
+    "fast-xml-parser": "^5.11.2",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.468.0",

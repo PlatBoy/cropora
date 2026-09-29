@@ -15,6 +15,7 @@ import { ensureSeedAdmin } from "./services/users.js";
 import { insuranceRouter } from "./routes/insurance.js";
 import { loansRouter } from "./routes/loans.js";
 import { marketRouter } from "./routes/market.js";
+import { newsRouter } from "./routes/news.js";
 import { tasksRouter } from "./routes/tasks.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -75,6 +76,7 @@ app.use("/api/diseases", diseasesRouter);
 app.use("/api/insurance", insuranceRouter);
 app.use("/api/loans", loansRouter);
 app.use("/api/market", marketRouter);
+app.use("/api/news", newsRouter);
 app.use("/api/tasks", tasksRouter);
 app.use("/api/assistant", assistantRouter);
 app.use("/api/admin", adminRouter);

@@ -149,11 +149,19 @@ export const loanRepaymentSchema = z.object({
 
 export const assistantChatSchema = z.object({
   question: z.string().trim().min(3).max(700),
+  history: z.array(z.object({
+    role: z.enum(["user", "assistant"]),
+    content: z.string().trim().min(1).max(700)
+  })).max(8).optional().default([]),
   context: z
     .object({
       soilType: z.string().trim().max(80).optional().default(""),
       crop: z.string().trim().max(120).optional().default(""),
       location: z.string().trim().max(160).optional().default(""),
+      farmName: z.string().trim().max(120).optional().default(""),
+      farmArea: z.string().trim().max(80).optional().default(""),
+      latestDisease: z.string().trim().max(120).optional().default(""),
+      upcomingTasks: z.array(z.string().trim().max(180)).max(3).optional().default([]),
       healthScore: z.union([z.string(), z.number()]).optional().default(""),
       language: z.string().trim().max(12).optional().default("en"),
       languageName: z.string().trim().max(80).optional().default("English")
