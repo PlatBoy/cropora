@@ -10,6 +10,7 @@ Production-ready farmer soil analysis app with secure auth, Gemini multimodal so
 - Cloudinary stores uploaded soil images permanently.
 - MongoDB stores users, reports, statuses, AI results, and image metadata.
 - Each farmer can add multiple farms and switch between farm-specific soil reports, loans, market orders, disease checks, and insurance.
+- Farmers can create crop activity tasks, set due dates, and track completion separately for each farm.
 - Admins review reports, users, loans, insurance, and report status.
 
 ## Required Services

@@ -121,6 +121,19 @@ export const marketOrderSchema = z.object({
   quantity: z.coerce.number().int().min(1).max(100)
 });
 
+export const farmTaskSchema = z.object({
+  farmId: optionalFarmId,
+  title: z.string().trim().min(3).max(160),
+  crop: z.string().trim().max(120).optional().default(""),
+  category: z.enum(["sowing", "irrigation", "fertilizer", "scouting", "harvest", "other"]).default("other"),
+  dueDate: z.iso.datetime(),
+  notes: z.string().trim().max(500).optional().default("")
+});
+
+export const farmTaskStatusSchema = z.object({
+  status: z.enum(["planned", "completed"])
+});
+
 export const orderStatusSchema = z.object({
   status: z.enum(["confirmed", "packed", "delivered"])
 });

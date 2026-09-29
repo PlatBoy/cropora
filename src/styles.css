@@ -832,6 +832,142 @@ textarea:focus {
   gap: 18px;
 }
 
+.recommendation-strip {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.8fr) minmax(0, 2fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--warning-line);
+  border-left: 4px solid var(--amber);
+  border-radius: 8px;
+  background: var(--warning-bg);
+}
+
+.recommendation-strip > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.recommendation-strip > div strong {
+  color: var(--ink);
+}
+
+.recommendation-strip .eyebrow {
+  color: var(--warning-ink);
+}
+
+.recommendation-strip ul {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--copy-strong);
+  line-height: 1.4;
+}
+
+.planner-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.planner-form-card .section-heading p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.planner-tasks {
+  min-width: 0;
+}
+
+.planner-summary,
+.task-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.planner-summary {
+  margin-bottom: 12px;
+}
+
+.planner-summary h2,
+.task-title-row h3 {
+  margin: 3px 0 0;
+}
+
+.planner-summary > span {
+  color: var(--muted);
+  font-weight: 800;
+  text-align: right;
+}
+
+.planner-empty {
+  padding: 34px 18px;
+}
+
+.task-list {
+  display: grid;
+  gap: 8px;
+}
+
+.task-row {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.task-row.completed {
+  opacity: 0.76;
+}
+
+.task-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+}
+
+.task-copy {
+  min-width: 0;
+}
+
+.task-title-row h3 {
+  overflow-wrap: anywhere;
+}
+
+.task-copy > p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.task-copy .task-notes {
+  color: var(--copy);
+}
+
+.task-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.status-badge.overdue {
+  color: var(--error-ink);
+  background: var(--error-bg);
+  border-color: var(--error-line);
+}
+
 .metric-row,
 .admin-metrics {
   display: grid;
@@ -1974,6 +2110,7 @@ td {
   .auth-shell,
   .dashboard-grid,
   .work-surface,
+  .planner-layout,
   .identifier-grid,
   .insight-hero,
   .tools-hero,
@@ -2050,6 +2187,7 @@ td {
   }
 
   .metric-row,
+  .recommendation-strip,
   .admin-metrics,
   .insight-summary,
   .insight-columns,
@@ -2066,6 +2204,22 @@ td {
   .product-card,
   .soil-mix-grid {
     grid-template-columns: 1fr;
+  }
+
+  .recommendation-strip {
+    align-items: start;
+  }
+
+  .task-row {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .task-actions {
+    grid-column: 2;
+  }
+
+  .task-title-row {
+    align-items: flex-start;
   }
 
   .market-wallet,

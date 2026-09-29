@@ -7,6 +7,7 @@ import {
   Bot,
   Calculator,
   Camera,
+  CalendarDays,
   CheckCircle2,
   CloudSun,
   ClipboardList,
@@ -217,6 +218,21 @@ const marketPurchaseClientSchema = z.object({
   quantity: z.coerce.number().int().min(1, "Quantity must be at least 1.").max(100, "Quantity is too high.")
 });
 
+const farmTaskClientSchema = z.object({
+  title: z.string().trim().min(3, "Add a clear task name.").max(160),
+  crop: z.string().trim().max(120),
+  category: z.enum(["sowing", "irrigation", "fertilizer", "scouting", "harvest", "other"]),
+  dueDate: z.string().min(1, "Choose a due date."),
+  notes: z.string().trim().max(500)
+});
+
+function tomorrowDateInput() {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  const offset = date.getTimezoneOffset();
+  return new Date(date.getTime() - offset * 60000).toISOString().slice(0, 10);
+}
+
 const loanRepaymentClientSchema = z.object({
   loanId: z.string().min(1, "Select a loan."),
   amount: z.coerce.number().min(1, "Enter repayment amount."),
@@ -274,6 +290,14 @@ function formatDate(value) {
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit"
+  }).format(new Date(value));
+}
+
+function formatDay(value) {
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
   }).format(new Date(value));
 }
 
@@ -528,7 +552,25 @@ function buildFarmerInsights(analyses, loans) {
   };
 }
 
-function buildNotifications(analyses, loans, market) {
+function buildFarmRecommendations(analyses, diseases, tasks, farm) {
+  const recommendations = [];
+  const latest = analyses[0];
+  const pendingTasks = tasks.filter((task) => task.status === "planned");
+  const overdueTasks = pendingTasks.filter((task) => new Date(task.dueDate) < new Date(new Date().toDateString()));
+  const highSeverity = diseases.find((report) => report.result?.severity === "High");
+
+  if (overdueTasks.length) recommendations.push(`Review ${overdueTasks.length} overdue farm task${overdueTasks.length === 1 ? "" : "s"} and reschedule what is still needed.`);
+  if (highSeverity) recommendations.push(`Check the ${highSeverity.input?.crop || farm?.primaryCrop || "affected"} crop for the high-risk issue found in your latest photo report.`);
+  if (latest?.result?.riskLevel === "High") recommendations.push("Your latest soil report flags high risk. Confirm its advice with a local soil test before changing fertilizer doses.");
+  if (latest && Number(latest.result?.healthScore) < 60) recommendations.push("Soil health is below 60 in the latest report. Check the report's nutrient and drainage notes, then compare with a lab test.");
+  if (!latest) recommendations.push("Upload a soil photo and add your crop and field details to get farm-specific guidance.");
+  if (!pendingTasks.length && farm?.primaryCrop) recommendations.push(`Add a scouting or irrigation task for ${farm.primaryCrop} so this farm's next action is easy to track.`);
+  if (farm?.location && latest?.input?.location && farm.location !== latest.input.location) recommendations.push("Update the report location to match this farm profile for more relevant local weather checks.");
+
+  return [...new Set(recommendations)].slice(0, 4);
+}
+
+function buildNotifications(analyses, loans, market, tasks) {
   const notifications = [];
   const latest = analyses[0];
   if (latest) {
@@ -552,6 +594,15 @@ function buildNotifications(analyses, loans, market) {
       detail: `${order.quantity} x ${order.itemName} for ${formatMoney(order.totalPrice)}.`
     });
   });
+  tasks
+    .filter((task) => task.status === "planned")
+    .slice(0, 2)
+    .forEach((task) => {
+      notifications.push({
+        title: `Farm task: ${task.title}`,
+        detail: `Due ${formatDay(task.dueDate)} · ${task.farmName}`
+      });
+    });
   if (!notifications.length) {
     notifications.push({
       title: "Welcome to Krishsense",
@@ -990,6 +1041,7 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
   const [diseases, setDiseases] = useState([]);
   const [insurance, setInsurance] = useState([]);
   const [loans, setLoans] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [market, setMarket] = useState(emptyMarketState);
   const [loading, setLoading] = useState(true);
   const farms = accountUser.farms?.length ? accountUser.farms : [{ id: "", name: accountUser.farmName || "Main farm" }];
@@ -1023,15 +1075,24 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
     setInsurance(data.insurance);
   }
 
+  async function loadTasks() {
+    const data = await apiRequest(withFarm("/api/tasks", activeFarmId), { token });
+    setTasks(data.tasks);
+  }
+
   useEffect(() => {
-    Promise.all([loadAnalyses(), loadLoans(), loadMarket(), loadDiseases(), loadInsurance()]).catch(() => setLoading(false));
+    Promise.all([loadAnalyses(), loadLoans(), loadMarket(), loadDiseases(), loadInsurance(), loadTasks()]).catch(() => setLoading(false));
   }, [activeFarmId]);
 
   const latest = analyses[0];
   const pending = analyses.filter((analysis) => analysis.status === "pending").length;
   const pendingLoans = loans.filter((loan) => loan.status === "pending").length;
   const insights = useMemo(() => buildFarmerInsights(analyses, loans), [analyses, loans]);
-  const notifications = useMemo(() => buildNotifications(analyses, loans, market), [analyses, loans, market]);
+  const recommendations = useMemo(
+    () => buildFarmRecommendations(analyses, diseases, tasks, activeFarm),
+    [analyses, diseases, tasks, activeFarm]
+  );
+  const notifications = useMemo(() => buildNotifications(analyses, loans, market, tasks), [analyses, loans, market, tasks]);
 
   return (
     <div className="dashboard-grid">
@@ -1077,6 +1138,10 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
             <Calculator size={18} />
             Farm tools
           </button>
+          <button className={activeView === "planner" ? "active" : ""} onClick={() => setActiveView("planner")}>
+            <CalendarDays size={18} />
+            Crop planner
+          </button>
           <button className={activeView === "market" ? "active" : ""} onClick={() => setActiveView("market")}>
             <ShoppingCart size={18} />
             Market
@@ -1108,17 +1173,35 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
           <Metric icon={<Wallet size={19} />} label="Balance" value={formatMoney(market.account?.walletBalance || 0)} />
         </div>
 
-        {activeView === "analysis" && <SoilAnalysisForm token={token} farmId={activeFarmId} activeFarm={activeFarm} onCreated={loadAnalyses} />}
-        {activeView === "identify" && <SoilIdentifierUpload token={token} farmId={activeFarmId} onCreated={loadAnalyses} />}
+        {recommendations.length > 0 && (
+          <section className="recommendation-strip" aria-label="Recommendations for this farm">
+            <div>
+              <span className="eyebrow">For {activeFarm?.name || "this farm"}</span>
+              <strong>Recommended next steps</strong>
+            </div>
+            <ul>
+              {recommendations.slice(0, 2).map((item) => <li key={item}>{item}</li>)}
+            </ul>
+            <small>Based on this farm's profile, saved reports, and open tasks.</small>
+            <button className="small-button" onClick={() => setActiveView("planner")}>
+              <CalendarDays size={15} />
+              Plan a task
+            </button>
+          </section>
+        )}
+
+        {activeView === "analysis" && <SoilAnalysisForm key={activeFarmId} token={token} farmId={activeFarmId} activeFarm={activeFarm} onCreated={loadAnalyses} />}
+        {activeView === "identify" && <SoilIdentifierUpload key={activeFarmId} token={token} farmId={activeFarmId} onCreated={loadAnalyses} />}
         {activeView === "history" && <AnalysisHistory analyses={analyses} loading={loading} />}
-        {activeView === "disease" && <DiseaseDetectionPanel token={token} farmId={activeFarmId} diseases={diseases} onChanged={loadDiseases} />}
+        {activeView === "planner" && <CropTaskPlanner key={activeFarmId} token={token} farm={activeFarm} farmId={activeFarmId} tasks={tasks} onChanged={loadTasks} />}
+        {activeView === "disease" && <DiseaseDetectionPanel key={activeFarmId} token={token} farmId={activeFarmId} diseases={diseases} onChanged={loadDiseases} />}
         {activeView === "insights" && <FarmerInsightCenter insights={insights} analyses={analyses} />}
         {activeView === "tools" && (
           <FarmerToolsPanel token={token} analyses={analyses} loans={loans} market={market} notifications={notifications} language={language} />
         )}
-        {activeView === "market" && <MarketPanel token={token} farmId={activeFarmId} market={market} onChanged={() => Promise.all([loadMarket(), loadLoans()])} />}
-        {activeView === "loans" && <FarmerLoanPanel token={token} farmId={activeFarmId} loans={loans} onChanged={loadLoans} />}
-        {activeView === "insurance" && <InsurancePanel token={token} farmId={activeFarmId} insurance={insurance} onChanged={loadInsurance} />}
+        {activeView === "market" && <MarketPanel key={activeFarmId} token={token} farmId={activeFarmId} market={market} onChanged={() => Promise.all([loadMarket(), loadLoans()])} />}
+        {activeView === "loans" && <FarmerLoanPanel key={activeFarmId} token={token} farmId={activeFarmId} loans={loans} onChanged={loadLoans} />}
+        {activeView === "insurance" && <InsurancePanel key={activeFarmId} token={token} farmId={activeFarmId} insurance={insurance} onChanged={loadInsurance} />}
         {activeView === "account" && <PasswordPanel token={token} />}
       </section>
     </div>
@@ -1133,6 +1216,175 @@ function Metric({ icon, label, value }) {
         <p>{label}</p>
         <strong>{value}</strong>
       </div>
+    </div>
+  );
+}
+
+function CropTaskPlanner({ token, farm, farmId, tasks, onChanged }) {
+  const [form, setForm] = useState({
+    title: "",
+    crop: farm?.primaryCrop || "",
+    category: "scouting",
+    dueDate: tomorrowDateInput(),
+    notes: ""
+  });
+  const [busy, setBusy] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const todayStart = new Date(new Date().toDateString());
+  const pending = tasks.filter((task) => task.status === "planned");
+  const overdueCount = pending.filter((task) => new Date(task.dueDate) < todayStart).length;
+
+  useEffect(() => {
+    setForm((current) => ({ ...current, crop: current.crop || farm?.primaryCrop || "" }));
+  }, [farmId]);
+
+  async function addTask(event) {
+    event.preventDefault();
+    const parsed = farmTaskClientSchema.safeParse(form);
+    if (!parsed.success) {
+      setError(firstValidationMessage(parsed));
+      return;
+    }
+    setBusy("add");
+    setError("");
+    setMessage("");
+    try {
+      await apiRequest("/api/tasks", {
+        token,
+        method: "POST",
+        body: {
+          ...parsed.data,
+          farmId,
+          dueDate: new Date(`${parsed.data.dueDate}T12:00:00`).toISOString()
+        }
+      });
+      setForm((current) => ({ ...current, title: "", notes: "" }));
+      setMessage("Task added to this farm's plan.");
+      await onChanged();
+    } catch (err) {
+      setError(err.message || "Could not add task.");
+    } finally {
+      setBusy("");
+    }
+  }
+
+  async function updateTask(task, status) {
+    setBusy(task.id);
+    setError("");
+    try {
+      await apiRequest(`/api/tasks/${task.id}/status`, { token, method: "PATCH", body: { status } });
+      await onChanged();
+    } catch (err) {
+      setError(err.message || "Could not update task.");
+    } finally {
+      setBusy("");
+    }
+  }
+
+  async function removeTask(task) {
+    setBusy(task.id);
+    setError("");
+    try {
+      await apiRequest(`/api/tasks/${task.id}`, { token, method: "DELETE" });
+      await onChanged();
+    } catch (err) {
+      setError(err.message || "Could not remove task.");
+    } finally {
+      setBusy("");
+    }
+  }
+
+  return (
+    <div className="planner-layout">
+      <section className="form-card planner-form-card">
+        <div className="section-heading">
+          <span className="eyebrow">Farm activity plan</span>
+          <h2>{farm?.name || "Crop planner"}</h2>
+          <p>Keep upcoming crop work in one place for this farm.</p>
+        </div>
+        {error && <p className="error-banner">{error}</p>}
+        {message && <p className="success-banner">{message}</p>}
+        <form className="stack-form" onSubmit={addTask}>
+          <label>
+            Task
+            <input value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} placeholder="e.g. Inspect lower leaves for pests" required />
+          </label>
+          <div className="form-grid">
+            <label>
+              Crop
+              <input value={form.crop} onChange={(event) => setForm({ ...form, crop: event.target.value })} placeholder="Crop name" />
+            </label>
+            <label>
+              Activity
+              <select value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })}>
+                <option value="sowing">Sowing</option>
+                <option value="irrigation">Irrigation</option>
+                <option value="fertilizer">Fertilizer</option>
+                <option value="scouting">Crop scouting</option>
+                <option value="harvest">Harvest</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+            <label>
+              Due date
+              <input type="date" value={form.dueDate} onChange={(event) => setForm({ ...form, dueDate: event.target.value })} required />
+            </label>
+          </div>
+          <label>
+            Notes
+            <textarea value={form.notes} onChange={(event) => setForm({ ...form, notes: event.target.value })} rows={3} placeholder="Optional details" />
+          </label>
+          <button className="primary-button" disabled={busy === "add"}>
+            <CalendarDays size={17} />
+            {busy === "add" ? "Adding task" : "Add to farm plan"}
+          </button>
+        </form>
+      </section>
+
+      <section className="planner-tasks">
+        <div className="planner-summary">
+          <div>
+            <span className="eyebrow">{farm?.primaryCrop || "Farm tasks"}</span>
+            <h2>Upcoming work</h2>
+          </div>
+          <span>{pending.length} open{overdueCount ? ` · ${overdueCount} overdue` : ""}</span>
+        </div>
+        {!tasks.length ? (
+          <div className="empty-state planner-empty">
+            <CalendarDays size={32} />
+            <h3>No tasks planned</h3>
+            <p>Start with a crop scouting check or schedule the next irrigation.</p>
+          </div>
+        ) : (
+          <div className="task-list">
+            {tasks.map((task) => {
+              const overdue = task.status === "planned" && new Date(task.dueDate) < todayStart;
+              return (
+                <article className={`task-row ${task.status}`} key={task.id}>
+                  <span className="task-icon"><CalendarDays size={18} /></span>
+                  <div className="task-copy">
+                    <div className="task-title-row">
+                      <h3>{task.title}</h3>
+                      <span className={`status-badge ${overdue ? "overdue" : task.status}`}>{overdue ? "Overdue" : titleCase(task.status)}</span>
+                    </div>
+                    <p>{titleCase(task.category)}{task.crop ? ` · ${task.crop}` : ""} · {formatDay(task.dueDate)}</p>
+                    {task.notes && <p className="task-notes">{task.notes}</p>}
+                  </div>
+                  <div className="task-actions">
+                    <button className="icon-button" type="button" disabled={busy === task.id} onClick={() => updateTask(task, task.status === "completed" ? "planned" : "completed")} title={task.status === "completed" ? "Reopen task" : "Mark complete"} aria-label={task.status === "completed" ? "Reopen task" : "Mark complete"}>
+                      <CheckCircle2 size={17} />
+                    </button>
+                    <button className="icon-button" type="button" disabled={busy === task.id} onClick={() => removeTask(task)} title="Delete task" aria-label="Delete task">
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

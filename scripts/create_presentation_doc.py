@@ -159,6 +159,7 @@ def add_feature_table(doc):
         ("Loans", "Farmer applies for a loan. Admin approves or rejects it."),
         ("Market", "Farmer buys seeds, fertiliser, equipment, or a tractor using the account balance."),
         ("Admin portal", "Admin can review reports, approve loans, ban farmers, remove farmers, and reset farmer passwords."),
+        ("Crop planner", "Farmer adds crop work with a due date, then marks it done for the selected farm."),
     ]
     table = doc.add_table(rows=1, cols=2)
     set_table_width(table, [2.0, 4.5])

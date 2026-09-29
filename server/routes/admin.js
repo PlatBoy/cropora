@@ -8,6 +8,7 @@ import { InsuranceApplication } from "../models/InsuranceApplication.js";
 import { LoanApplication } from "../models/LoanApplication.js";
 import { MarketOrder } from "../models/MarketOrder.js";
 import { User } from "../models/User.js";
+import { FarmTask } from "../models/FarmTask.js";
 import { adminPasswordResetSchema, loanStatusSchema, orderStatusSchema, statusSchema, userStatusSchema } from "../validation/schemas.js";
 import { HttpError, notFound } from "../utils/httpError.js";
 
@@ -200,6 +201,7 @@ adminRouter.delete("/users/:id", async (req, res, next) => {
       MarketOrder.deleteMany({ user: user._id }),
       DiseaseReport.deleteMany({ user: user._id }),
       InsuranceApplication.deleteMany({ user: user._id }),
+      FarmTask.deleteMany({ user: user._id }),
       user.deleteOne()
     ]);
 
