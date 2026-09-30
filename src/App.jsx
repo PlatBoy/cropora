@@ -4007,7 +4007,7 @@ function AdminUserRow({ user, onStatusChange, onPasswordReset, onRemove }) {
 }
 
 function AdminDashboard({ token, language }) {
-  const [tab, setTab] = useState("reports");
+  const [tab, setTab] = useState("overview");
   const [analyses, setAnalyses] = useState([]);
   const [insurance, setInsurance] = useState([]);
   const [loans, setLoans] = useState([]);
@@ -4136,6 +4136,10 @@ function AdminDashboard({ token, language }) {
       </section>
 
       <div className="segmented-control admin-tabs" role="tablist" aria-label="Admin views">
+        <button className={tab === "overview" ? "active" : ""} onClick={() => setTab("overview")}>
+          <Gauge size={16} />
+          Overview
+        </button>
         <button className={tab === "reports" ? "active" : ""} onClick={() => setTab("reports")}>
           <ClipboardList size={16} />
           Reports
@@ -4169,6 +4173,16 @@ function AdminDashboard({ token, language }) {
         </div>
       ) : (
         <>
+          {tab === "overview" && (
+            <AdminOverviewPanel
+              analyses={analyses}
+              loans={loans}
+              insurance={insurance}
+              orders={orders}
+              onNavigate={setTab}
+            />
+          )}
+
           {tab === "reports" && (
             <AdminReportsPanel analyses={analyses} onStatusChange={updateStatus} />
           )}
@@ -4193,49 +4207,205 @@ function AdminDashboard({ token, language }) {
           {tab === "orders" && <AdminOrdersPanel orders={orders} onStatusChange={updateOrderStatus} />}
 
           {tab === "users" && (
-            <>
-              <section className="history-toolbar">
-                <button className="secondary-button" disabled={!users.length} onClick={() => exportUsersCsv(users)}>
-                  <Download size={17} />
-                  Export users
-                </button>
-              </section>
-              <div className="table-shell">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Status</th>
-                      <th>Farm</th>
-                      <th>Reports</th>
-                      <th>Diseases</th>
-                      <th>Loans</th>
-                      <th>Insurance</th>
-                      <th>Orders</th>
-                      <th>Password</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((user) => (
-                      <AdminUserRow
-                        key={user.id}
-                        user={user}
-                        onStatusChange={updateUserStatus}
-                        onPasswordReset={resetUserPassword}
-                        onRemove={removeUser}
-                      />
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
+            <AdminUsersPanel
+              users={users}
+              onStatusChange={updateUserStatus}
+              onPasswordReset={resetUserPassword}
+              onRemove={removeUser}
+            />
           )}
 
           {tab === "analytics" && <AdminAnalyticsPanel analyses={analyses} loans={loans} insurance={insurance} orders={orders} topSoils={topSoils} stats={stats} />}
         </>
+      )}
+    </div>
+  );
+}
+
+function AdminOverviewPanel({ analyses, loans, insurance, orders, onNavigate }) {
+  const highRiskCount = analyses.filter((analysis) => analysis.result?.riskLevel === "High").length;
+  const queues = [
+    { label: "Reports to review", count: analyses.filter((item) => item.status === "pending").length, tab: "reports", icon: <ClipboardList size={18} /> },
+    { label: "Loan decisions", count: loans.filter((item) => item.status === "pending").length, tab: "loans", icon: <HandCoins size={18} /> },
+    { label: "Insurance decisions", count: insurance.filter((item) => item.status === "pending").length, tab: "insurance", icon: <ShieldCheck size={18} /> },
+    { label: "Orders to fulfil", count: orders.filter((item) => item.status !== "delivered").length, tab: "orders", icon: <ShoppingCart size={18} /> },
+    { label: "High-risk fields", count: highRiskCount, tab: "reports", icon: <AlertTriangle size={18} />, risk: true }
+  ];
+  const activity = [
+    ...analyses.map((item) => ({
+      id: `report-${item.id}`,
+      date: item.createdAt,
+      tab: "reports",
+      icon: <FlaskConical size={17} />,
+      title: "Soil report",
+      detail: [item.farmerName || "Farmer", item.input?.crop || item.result?.soilType || "Field analysis"].filter(Boolean).join(" · "),
+      status: item.status,
+      risk: item.result?.riskLevel
+    })),
+    ...loans.map((item) => ({
+      id: `loan-${item.id}`,
+      date: item.createdAt,
+      tab: "loans",
+      icon: <HandCoins size={17} />,
+      title: "Loan application",
+      detail: `${item.farmerName || "Farmer"} · ${formatMoney(item.amount)}`,
+      status: item.status
+    })),
+    ...insurance.map((item) => ({
+      id: `insurance-${item.id}`,
+      date: item.createdAt,
+      tab: "insurance",
+      icon: <ShieldCheck size={17} />,
+      title: "Insurance application",
+      detail: `${item.farmerName || "Farmer"} · ${item.crop || "Crop cover"}`,
+      status: item.status
+    })),
+    ...orders.map((item) => ({
+      id: `order-${item.id}`,
+      date: item.createdAt,
+      tab: "orders",
+      icon: <ShoppingCart size={17} />,
+      title: "Market order",
+      detail: `${item.farmerName || "Farmer"} · ${item.itemName || "Purchase"}`,
+      status: item.status
+    }))
+  ]
+    .filter((item) => Number.isFinite(new Date(item.date).getTime()))
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 8);
+
+  return (
+    <section className="admin-command-grid">
+      <div className="form-card admin-command-panel">
+        <div className="section-heading compact-heading">
+          <span className="eyebrow">Operations</span>
+          <h2>Needs attention</h2>
+        </div>
+        <div className="admin-queue-list">
+          {queues.map((queue) => (
+            <div className={`admin-queue-row${queue.risk ? " is-risk" : ""}`} key={queue.label}>
+              <span className="admin-queue-icon">{queue.icon}</span>
+              <div className="admin-queue-copy">
+                <strong>{queue.label}</strong>
+                <span>{queue.count ? `${queue.count} item${queue.count === 1 ? "" : "s"} waiting` : "All clear"}</span>
+              </div>
+              <strong className="admin-queue-count">{queue.count}</strong>
+              <button className="small-button" type="button" onClick={() => onNavigate(queue.tab)}>
+                Open
+                <ChevronRight size={15} />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="form-card admin-command-panel">
+        <div className="section-heading compact-heading">
+          <span className="eyebrow">Live from your records</span>
+          <h2>Recent activity</h2>
+        </div>
+        {activity.length ? (
+          <div className="admin-activity-list">
+            {activity.map((item) => (
+              <button className="admin-activity-row" type="button" key={item.id} onClick={() => onNavigate(item.tab)}>
+                <span className="admin-activity-icon">{item.icon}</span>
+                <span className="admin-activity-copy">
+                  <strong>{item.title}</strong>
+                  <span>{item.detail}</span>
+                  <time dateTime={item.date}>{formatDate(item.date)}</time>
+                </span>
+                <span className={`status-badge ${item.risk === "High" ? "follow_up" : item.status}`}>
+                  {item.risk === "High" ? "High risk" : titleCase(item.status)}
+                </span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="admin-activity-empty">
+            <Clock3 size={22} />
+            <span>New farmer activity will appear here.</span>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function AdminUsersPanel({ users, onStatusChange, onPasswordReset, onRemove }) {
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
+  const filteredUsers = useMemo(() => {
+    const search = query.trim().toLowerCase();
+    return users
+      .filter((user) => {
+        const matchesStatus = statusFilter === "all" || (statusFilter === "active" ? user.isActive : !user.isActive);
+        const haystack = [user.name, user.email, user.role, user.farmName].filter(Boolean).join(" ").toLowerCase();
+        return matchesStatus && (!search || haystack.includes(search));
+      })
+      .sort((a, b) => sortBy === "reports"
+        ? Number(b.analysisCount || 0) - Number(a.analysisCount || 0)
+        : new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  }, [users, query, statusFilter, sortBy]);
+
+  return (
+    <div className="admin-stack">
+      <section className="history-toolbar admin-user-toolbar">
+        <label>
+          Find a farmer
+          <span className="input-shell">
+            <Search size={17} />
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name, email, or farm" />
+          </span>
+        </label>
+        <label>
+          Account status
+          <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+            <option value="all">All accounts</option>
+            <option value="active">Active</option>
+            <option value="banned">Banned</option>
+          </select>
+        </label>
+        <label>
+          Sort by
+          <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+            <option value="newest">Recently joined</option>
+            <option value="reports">Most reports</option>
+          </select>
+        </label>
+        <button className="secondary-button" disabled={!filteredUsers.length} onClick={() => exportUsersCsv(filteredUsers)}>
+          <Download size={17} />
+          Export {filteredUsers.length} users
+        </button>
+      </section>
+      <p className="admin-user-count">Showing <strong>{filteredUsers.length}</strong> of {users.length} accounts</p>
+      {filteredUsers.length ? (
+        <div className="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Farm</th><th>Reports</th>
+                <th>Diseases</th><th>Loans</th><th>Insurance</th><th>Orders</th><th>Password</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user) => (
+                <AdminUserRow
+                  key={user.id}
+                  user={user}
+                  onStatusChange={onStatusChange}
+                  onPasswordReset={onPasswordReset}
+                  onRemove={onRemove}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="empty-state">
+          <Search size={34} />
+          <h3>No matching users</h3>
+        </div>
       )}
     </div>
   );

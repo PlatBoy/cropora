@@ -2689,8 +2689,130 @@ html[dir="rtl"] .lang-switch-menu button {
 }
 
 .admin-tabs {
-  width: min(980px, 100%);
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: 100%;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.admin-command-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.admin-command-panel {
+  min-width: 0;
+  padding: 18px;
+}
+
+.admin-queue-list,
+.admin-activity-list {
+  display: grid;
+}
+
+.admin-queue-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 0;
+  border-top: 1px solid var(--line);
+}
+
+.admin-queue-icon,
+.admin-activity-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: var(--green-dark);
+  background: var(--chip-bg);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.admin-queue-row.is-risk .admin-queue-icon {
+  color: var(--warning-ink);
+  background: var(--warning-bg);
+  border-color: var(--warning-line);
+}
+
+.admin-queue-copy,
+.admin-activity-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.admin-queue-copy strong,
+.admin-activity-copy strong {
+  color: var(--ink);
+  font-size: 0.88rem;
+}
+
+.admin-queue-copy > span,
+.admin-activity-copy > span,
+.admin-activity-copy time {
+  color: var(--muted);
+  font-size: 0.77rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-queue-count {
+  min-width: 28px;
+  color: var(--green-dark);
+  font-size: 1.1rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-queue-row.is-risk .admin-queue-count {
+  color: var(--warning-ink);
+}
+
+.admin-activity-row {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 0;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.admin-activity-row:hover .admin-activity-copy strong {
+  color: var(--green-dark);
+}
+
+.admin-activity-copy time {
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-activity-empty {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+.admin-user-count {
+  margin: -6px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.admin-user-count strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .table-shell {
@@ -2894,7 +3016,8 @@ td {
   .tools-grid,
   .analytics-grid,
   .market-bottom-grid,
-  .admin-hero {
+  .admin-hero,
+  .admin-command-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2912,6 +3035,10 @@ td {
 
   .admin-metrics {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .insight-summary,
@@ -3042,6 +3169,7 @@ td {
   .analytics-grid,
   .analytics-summary,
   .history-toolbar,
+  .admin-user-toolbar,
   .form-grid,
   .score-grid,
   .mini-form-grid,
@@ -3054,6 +3182,29 @@ td {
 
   .recommendation-strip {
     align-items: start;
+  }
+
+  .admin-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-queue-row {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .admin-queue-row .small-button {
+    grid-column: 2 / -1;
+    justify-self: start;
+  }
+
+  .admin-activity-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .admin-activity-row .status-badge {
+    grid-column: 2;
+    justify-self: start;
   }
 
   .task-row {
