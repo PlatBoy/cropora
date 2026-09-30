@@ -742,6 +742,10 @@ html[dir="rtl"] .lang-switch-menu button {
 }
 
 .farm-buddy {
+  --buddy-ink: #e7e9e8;
+  --buddy-subtle: #9ba19d;
+  --buddy-line: #646b67;
+  --buddy-surface: #111412;
   position: fixed;
   right: 18px;
   bottom: 16px;
@@ -752,15 +756,22 @@ html[dir="rtl"] .lang-switch-menu button {
   pointer-events: none;
 }
 
+:root[data-theme="light"] .farm-buddy {
+  --buddy-ink: #252927;
+  --buddy-subtle: #656c68;
+  --buddy-line: #b6bbb8;
+  --buddy-surface: #ffffff;
+}
+
 .farm-buddy-trigger {
   width: 74px;
   height: 74px;
   display: grid;
   place-items: center;
   padding: 0;
-  color: var(--ink);
-  background: var(--panel);
-  border: 1px solid var(--line);
+  color: var(--buddy-ink);
+  background: var(--buddy-surface);
+  border: 1px solid var(--buddy-line);
   border-radius: 18px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(12px);
@@ -771,13 +782,13 @@ html[dir="rtl"] .lang-switch-menu button {
 .farm-buddy-trigger:hover,
 .farm-buddy-trigger.is-open {
   transform: translateY(-2px);
-  border-color: var(--muted);
+  border-color: var(--buddy-subtle);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
 }
 
 .farm-buddy-trigger:focus-visible,
 .farm-buddy-tip button:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--buddy-ink);
   outline-offset: 3px;
 }
 
@@ -792,12 +803,12 @@ html[dir="rtl"] .lang-switch-menu button {
   width: 68px;
   height: 62px;
   overflow: visible;
-  color: var(--ink);
+  color: var(--buddy-ink);
 }
 
 .plough-sun {
   fill: none;
-  stroke: var(--muted);
+  stroke: var(--buddy-subtle);
   stroke-width: 1.4;
   animation: plough-sun-drift 3.2s ease-in-out infinite;
 }
@@ -805,13 +816,13 @@ html[dir="rtl"] .lang-switch-menu button {
 .plough-horizon,
 .plough-furrow {
   fill: none;
-  stroke: var(--muted);
+  stroke: var(--buddy-subtle);
   stroke-width: 1.4;
   stroke-linecap: round;
 }
 
 .plough-furrow {
-  stroke: var(--line);
+  stroke: var(--buddy-line);
 }
 
 .plough-furrow-back {
@@ -827,16 +838,16 @@ html[dir="rtl"] .lang-switch-menu button {
 .plough-body,
 .plough-head,
 .plough-arm {
-  fill: var(--ink);
+  fill: var(--buddy-ink);
 }
 
 .plough-hat {
-  fill: var(--ink);
+  fill: var(--buddy-ink);
 }
 
 .plough-legs {
   fill: none;
-  stroke: var(--ink);
+  stroke: var(--buddy-ink);
   stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -847,7 +858,7 @@ html[dir="rtl"] .lang-switch-menu button {
 
 .plough-tool {
   fill: none;
-  stroke: var(--ink);
+  stroke: var(--buddy-ink);
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -857,15 +868,15 @@ html[dir="rtl"] .lang-switch-menu button {
 }
 
 .plough-blade {
-  fill: var(--ink);
+  fill: var(--buddy-ink);
 }
 
 .farm-buddy-tip {
   width: min(290px, calc(100vw - 28px));
   padding: 14px;
-  color: var(--copy);
-  background: var(--panel);
-  border: 1px solid var(--line);
+  color: var(--buddy-ink);
+  background: var(--buddy-surface);
+  border: 1px solid var(--buddy-line);
   border-radius: 8px;
   box-shadow: 0 14px 38px rgba(0, 0, 0, 0.26);
   pointer-events: auto;
@@ -881,7 +892,7 @@ html[dir="rtl"] .lang-switch-menu button {
 .farm-buddy-tip-heading {
   justify-content: space-between;
   gap: 10px;
-  color: var(--ink);
+  color: var(--buddy-ink);
   font-size: 0.82rem;
   font-weight: 850;
 }
@@ -896,15 +907,15 @@ html[dir="rtl"] .lang-switch-menu button {
   display: grid;
   place-items: center;
   padding: 0;
-  color: var(--muted);
+  color: var(--buddy-subtle);
   background: transparent;
-  border: 1px solid var(--line);
+  border: 1px solid var(--buddy-line);
   border-radius: 6px;
 }
 
 .farm-buddy-tip p {
   margin: 10px 0 12px;
-  color: var(--ink);
+  color: var(--buddy-ink);
   font-size: 0.92rem;
   font-weight: 700;
   line-height: 1.45;
@@ -916,9 +927,9 @@ html[dir="rtl"] .lang-switch-menu button {
   align-items: center;
   gap: 7px;
   padding: 0 9px;
-  color: var(--ink);
-  background: var(--panel);
-  border: 1px solid var(--line);
+  color: var(--buddy-ink);
+  background: var(--buddy-surface);
+  border: 1px solid var(--buddy-line);
   border-radius: 6px;
   font-size: 0.78rem;
   font-weight: 800;
