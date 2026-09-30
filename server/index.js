@@ -32,8 +32,9 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         connectSrc: ["'self'", "https://api.open-meteo.com", "https://geocoding-api.open-meteo.com", ...clientOrigins],
+        frameSrc: ["'self'", "https://challenges.cloudflare.com"],
         imgSrc: ["'self'", "data:", "https:"],
-        scriptSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://challenges.cloudflare.com"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         fontSrc: ["'self'", "data:"]
       }
@@ -63,7 +64,7 @@ app.use(
 app.get("/api/health", (_req, res) => {
   res.json({
     ok: true,
-    service: "krishsense",
+    service: "krishisense",
     database: "mongodb",
     imageStorage: "cloudinary",
     ai: "gemini"
@@ -99,7 +100,7 @@ await ensureSeedAdmin();
 
 if (!process.env.VERCEL && env.NODE_ENV !== "test") {
   app.listen(env.PORT, () => {
-    console.log(`Krishsense API running at http://localhost:${env.PORT}`);
+    console.log(`Krishisense API running at http://localhost:${env.PORT}`);
   });
 }
 

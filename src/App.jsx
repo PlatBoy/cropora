@@ -5,6 +5,7 @@ import {
   Banknote,
   Bell,
   Bookmark,
+  BookOpen,
   Bot,
   Calculator,
   Camera,
@@ -57,7 +58,8 @@ import { z } from "zod";
 
 const SESSION_KEY = "cropura-session";
 const THEME_KEY = "cropura-theme";
-const LANG_KEY = "cropura-lang";
+const LANG_KEY = "krishsense-lang";
+const LEGACY_LANG_KEY = "cropura-lang";
 
 const LANGUAGES = [
   { code: "en", label: "EN", name: "English" },
@@ -76,6 +78,37 @@ const LANGUAGES = [
   { code: "as", label: "AS", name: "Assamese" },
   { code: "es", label: "ES", name: "Spanish" }
 ];
+const UI_COPY_KEYS = [
+  "changeLanguage", "adminConsole", "farmerDesk", "logOut", "secureAccess", "welcomeBack",
+  "createFarmerAccount", "login", "register", "email", "password", "name", "farmName",
+  "phone", "signIn", "signingIn", "createAccount", "creating", "soilAnalysis", "soilIdentifier",
+  "history", "diseaseDetection", "insights", "farmTools", "cropPlanner", "market", "loans",
+  "insurance", "account", "activeFarm", "analyses", "pendingReview", "latestSoil", "diseaseChecks",
+  "loanRequests", "averageHealth", "balance", "recommendedNextSteps", "planTask", "mainFarm"
+];
+const UI_COPY_ROWS = {
+  en: ["Change language", "Admin console", "Farmer desk", "Log out", "Secure access", "Welcome back", "Create farmer account", "Login", "Register", "Email", "Password", "Name", "Farm name", "Phone", "Sign in", "Signing in…", "Create account", "Creating…", "Soil analysis", "Soil identifier", "History", "Disease detection", "Insights", "Farm tools", "Crop planner", "Market", "Loans", "Insurance", "Account", "Active farm", "Analyses", "Pending review", "Latest soil", "Disease checks", "Loan requests", "Average health", "Balance", "Recommended next steps", "Plan a task", "Main farm"],
+  hi: ["भाषा बदलें", "प्रशासक पैनल", "किसान डेस्क", "लॉग आउट", "सुरक्षित प्रवेश", "वापसी पर स्वागत है", "किसान खाता बनाएँ", "लॉगिन", "पंजीकरण", "ईमेल", "पासवर्ड", "नाम", "खेत का नाम", "फ़ोन", "साइन इन करें", "साइन इन हो रहा है…", "खाता बनाएँ", "बनाया जा रहा है…", "मिट्टी विश्लेषण", "मिट्टी पहचान", "इतिहास", "फसल रोग पहचान", "जानकारी", "खेती के उपकरण", "फसल योजना", "बाज़ार", "ऋण", "बीमा", "खाता", "सक्रिय खेत", "विश्लेषण", "समीक्षा लंबित", "नवीनतम मिट्टी", "रोग जाँच", "ऋण अनुरोध", "औसत स्वास्थ्य", "शेष राशि", "अगले सुझाए गए कदम", "काम की योजना बनाएँ", "मुख्य खेत"],
+  pa: ["ਭਾਸ਼ਾ ਬਦਲੋ", "ਐਡਮਿਨ ਪੈਨਲ", "ਕਿਸਾਨ ਡੈਸਕ", "ਲੌਗ ਆਉਟ", "ਸੁਰੱਖਿਅਤ ਦਾਖਲਾ", "ਜੀ ਆਇਆਂ ਨੂੰ", "ਕਿਸਾਨ ਖਾਤਾ ਬਣਾਓ", "ਲੌਗਇਨ", "ਰਜਿਸਟਰ", "ਈਮੇਲ", "ਪਾਸਵਰਡ", "ਨਾਮ", "ਖੇਤ ਦਾ ਨਾਮ", "ਫ਼ੋਨ", "ਸਾਈਨ ਇਨ", "ਸਾਈਨ ਇਨ ਹੋ ਰਿਹਾ ਹੈ…", "ਖਾਤਾ ਬਣਾਓ", "ਬਣਾਇਆ ਜਾ ਰਿਹਾ ਹੈ…", "ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ", "ਮਿੱਟੀ ਦੀ ਪਛਾਣ", "ਇਤਿਹਾਸ", "ਫ਼ਸਲ ਰੋਗ ਦੀ ਪਛਾਣ", "ਝਲਕ", "ਖੇਤੀ ਸੰਦ", "ਫ਼ਸਲ ਯੋਜਨਾ", "ਬਾਜ਼ਾਰ", "ਕਰਜ਼ੇ", "ਬੀਮਾ", "ਖਾਤਾ", "ਚੱਲ ਰਿਹਾ ਖੇਤ", "ਵਿਸ਼ਲੇਸ਼ਣ", "ਸਮੀਖਿਆ ਬਾਕੀ", "ਤਾਜ਼ਾ ਮਿੱਟੀ", "ਰੋਗ ਜਾਂਚਾਂ", "ਕਰਜ਼ਾ ਅਰਜ਼ੀਆਂ", "ਔਸਤ ਸਿਹਤ", "ਬਕਾਇਆ", "ਅਗਲੇ ਸੁਝਾਏ ਕਦਮ", "ਕੰਮ ਦੀ ਯੋਜਨਾ ਬਣਾਓ", "ਮੁੱਖ ਖੇਤ"],
+  bn: ["ভাষা পরিবর্তন করুন", "অ্যাডমিন প্যানেল", "কৃষক ড্যাশবোর্ড", "লগ আউট", "নিরাপদ প্রবেশ", "ফিরে আসায় স্বাগতম", "কৃষক অ্যাকাউন্ট তৈরি করুন", "লগইন", "নিবন্ধন", "ইমেল", "পাসওয়ার্ড", "নাম", "খামারের নাম", "ফোন", "সাইন ইন", "সাইন ইন হচ্ছে…", "অ্যাকাউন্ট তৈরি করুন", "তৈরি হচ্ছে…", "মাটির বিশ্লেষণ", "মাটি শনাক্তকরণ", "ইতিহাস", "রোগ শনাক্তকরণ", "অন্তর্দৃষ্টি", "খামারের সরঞ্জাম", "ফসল পরিকল্পনা", "বাজার", "ঋণ", "বীমা", "অ্যাকাউন্ট", "সক্রিয় খামার", "বিশ্লেষণ", "পর্যালোচনা বাকি", "সর্বশেষ মাটি", "রোগ পরীক্ষা", "ঋণের আবেদন", "গড় স্বাস্থ্য", "ব্যালেন্স", "পরবর্তী প্রস্তাবিত কাজ", "কাজের পরিকল্পনা করুন", "প্রধান খামার"],
+  ta: ["மொழியை மாற்று", "நிர்வாகப் பலகம்", "விவசாயி முகப்பு", "வெளியேறு", "பாதுகாப்பான அணுகல்", "மீண்டும் வரவேற்கிறோம்", "விவசாயி கணக்கை உருவாக்கு", "உள்நுழை", "பதிவு செய்", "மின்னஞ்சல்", "கடவுச்சொல்", "பெயர்", "பண்ணையின் பெயர்", "தொலைபேசி", "உள்நுழை", "உள்நுழைகிறது…", "கணக்கை உருவாக்கு", "உருவாக்குகிறது…", "மண் பகுப்பாய்வு", "மண் அடையாளம்", "வரலாறு", "பயிர் நோய் கண்டறிதல்", "நுண்ணறிவுகள்", "பண்ணைக் கருவிகள்", "பயிர் திட்டம்", "சந்தை", "கடன்கள்", "காப்பீடு", "கணக்கு", "செயலில் உள்ள பண்ணை", "பகுப்பாய்வுகள்", "மதிப்பாய்வு நிலுவை", "சமீபத்திய மண்", "நோய் சோதனைகள்", "கடன் கோரிக்கைகள்", "சராசரி நிலம்", "இருப்பு", "அடுத்த பரிந்துரைகள்", "பணியைத் திட்டமிடு", "முதன்மைப் பண்ணை"],
+  te: ["భాషను మార్చండి", "అడ్మిన్ ప్యానెల్", "రైతు డ్యాష్‌బోర్డ్", "లాగ్ అవుట్", "సురక్షిత ప్రవేశం", "తిరిగి స్వాగతం", "రైతు ఖాతా సృష్టించండి", "లాగిన్", "నమోదు", "ఈమెయిల్", "పాస్‌వర్డ్", "పేరు", "పొలం పేరు", "ఫోన్", "సైన్ ఇన్", "సైన్ ఇన్ అవుతోంది…", "ఖాతా సృష్టించండి", "సృష్టిస్తోంది…", "మట్టి విశ్లేషణ", "మట్టి గుర్తింపు", "చరిత్ర", "పంట వ్యాధి గుర్తింపు", "విశ్లేషణలు", "వ్యవసాయ పరికరాలు", "పంట ప్రణాళిక", "మార్కెట్", "రుణాలు", "బీమా", "ఖాతా", "ప్రస్తుత పొలం", "విశ్లేషణలు", "సమీక్ష పెండింగ్", "తాజా మట్టి", "వ్యాధి తనిఖీలు", "రుణ అభ్యర్థనలు", "సగటు ఆరోగ్యం", "నిల్వ", "తదుపరి సూచనలు", "పని ప్రణాళిక", "ప్రధాన పొలం"],
+  mr: ["भाषा बदला", "प्रशासक पॅनेल", "शेतकरी डॅशबोर्ड", "बाहेर पडा", "सुरक्षित प्रवेश", "पुन्हा स्वागत आहे", "शेतकरी खाते तयार करा", "लॉगिन", "नोंदणी", "ईमेल", "पासवर्ड", "नाव", "शेताचे नाव", "फोन", "साइन इन", "साइन इन होत आहे…", "खाते तयार करा", "तयार होत आहे…", "मातीचे विश्लेषण", "मातीची ओळख", "इतिहास", "पीक रोग ओळख", "आढावा", "शेतीची साधने", "पीक नियोजन", "बाजार", "कर्ज", "विमा", "खाते", "सक्रिय शेत", "विश्लेषणे", "पुनरावलोकन प्रलंबित", "नवीनतम माती", "रोग तपासणी", "कर्ज विनंत्या", "सरासरी आरोग्य", "शिल्लक", "पुढील शिफारसी", "कामाचे नियोजन करा", "मुख्य शेत"],
+  gu: ["ભાષા બદલો", "એડમિન પેનલ", "ખેડૂત ડેશબોર્ડ", "લૉગ આઉટ", "સુરક્ષિત પ્રવેશ", "ફરી સ્વાગત છે", "ખેડૂત ખાતું બનાવો", "લૉગિન", "નોંધણી", "ઇમેઇલ", "પાસવર્ડ", "નામ", "ખેતરનું નામ", "ફોન", "સાઇન ઇન", "સાઇન ઇન થઈ રહ્યું છે…", "ખાતું બનાવો", "બનાવવામાં આવી રહ્યું છે…", "માટીનું વિશ્લેષણ", "માટી ઓળખ", "ઇતિહાસ", "પાક રોગ ઓળખ", "માહિતી", "ખેતીનાં સાધનો", "પાક આયોજન", "બજાર", "લોન", "વીમો", "ખાતું", "સક્રિય ખેતર", "વિશ્લેષણ", "સમીક્ષા બાકી", "નવીનતમ માટી", "રોગ તપાસ", "લોન વિનંતીઓ", "સરેરાશ આરોગ્ય", "બેલેન્સ", "આગળનાં સૂચિત પગલાં", "કામનું આયોજન કરો", "મુખ્ય ખેતર"],
+  kn: ["ಭಾಷೆ ಬದಲಿಸಿ", "ನಿರ್ವಾಹಕ ಫಲಕ", "ರೈತ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್", "ಲಾಗ್ ಔಟ್", "ಸುರಕ್ಷಿತ ಪ್ರವೇಶ", "ಮತ್ತೆ ಸ್ವಾಗತ", "ರೈತರ ಖಾತೆ ರಚಿಸಿ", "ಲಾಗಿನ್", "ನೋಂದಣಿ", "ಇಮೇಲ್", "ಪಾಸ್‌ವರ್ಡ್", "ಹೆಸರು", "ಜಮೀನಿನ ಹೆಸರು", "ದೂರವಾಣಿ", "ಸೈನ್ ಇನ್", "ಸೈನ್ ಇನ್ ಆಗುತ್ತಿದೆ…", "ಖಾತೆ ರಚಿಸಿ", "ರಚಿಸಲಾಗುತ್ತಿದೆ…", "ಮಣ್ಣಿನ ವಿಶ್ಲೇಷಣೆ", "ಮಣ್ಣಿನ ಗುರುತು", "ಇತಿಹಾಸ", "ಬೆಳೆ ರೋಗ ಪತ್ತೆ", "ಒಳನೋಟಗಳು", "ಕೃಷಿ ಉಪಕರಣಗಳು", "ಬೆಳೆ ಯೋಜನೆ", "ಮಾರುಕಟ್ಟೆ", "ಸಾಲಗಳು", "ವಿಮೆ", "ಖಾತೆ", "ಸಕ್ರಿಯ ಜಮೀನು", "ವಿಶ್ಲೇಷಣೆಗಳು", "ಪರಿಶೀಲನೆ ಬಾಕಿ", "ಇತ್ತೀಚಿನ ಮಣ್ಣು", "ರೋಗ ಪರಿಶೀಲನೆ", "ಸಾಲದ ವಿನಂತಿಗಳು", "ಸರಾಸರಿ ಆರೋಗ್ಯ", "ಬಾಕಿ ಮೊತ್ತ", "ಮುಂದಿನ ಶಿಫಾರಸುಗಳು", "ಕೆಲಸ ಯೋಜಿಸಿ", "ಮುಖ್ಯ ಜಮೀನು"],
+  ml: ["ഭാഷ മാറ്റുക", "അഡ്മിൻ പാനൽ", "കർഷക ഡാഷ്ബോർഡ്", "ലോഗ് ഔട്ട്", "സുരക്ഷിത പ്രവേശനം", "വീണ്ടും സ്വാഗതം", "കർഷക അക്കൗണ്ട് സൃഷ്ടിക്കുക", "ലോഗിൻ", "രജിസ്റ്റർ", "ഇമെയിൽ", "പാസ്‌വേഡ്", "പേര്", "കൃഷിയിടത്തിന്റെ പേര്", "ഫോൺ", "സൈൻ ഇൻ", "സൈൻ ഇൻ ചെയ്യുന്നു…", "അക്കൗണ്ട് സൃഷ്ടിക്കുക", "സൃഷ്ടിക്കുന്നു…", "മണ്ണ് വിശകലനം", "മണ്ണ് തിരിച്ചറിയൽ", "ചരിത്രം", "വിള രോഗ നിർണയം", "അവലോകനങ്ങൾ", "കൃഷി ഉപകരണങ്ങൾ", "വിള ആസൂത്രണം", "വിപണി", "വായ്പകൾ", "ഇൻഷുറൻസ്", "അക്കൗണ്ട്", "സജീവ കൃഷിയിടം", "വിശകലനങ്ങൾ", "പരിശോധന കാത്തിരിക്കുന്നു", "ഏറ്റവും പുതിയ മണ്ണ്", "രോഗ പരിശോധനകൾ", "വായ്പ അപേക്ഷകൾ", "ശരാശരി ആരോഗ്യം", "ബാക്കി", "അടുത്ത നിർദേശങ്ങൾ", "ഒരു ജോലി ആസൂത്രണം ചെയ്യുക", "പ്രധാന കൃഷിയിടം"],
+  ur: ["زبان تبدیل کریں", "منتظم پینل", "کسان ڈیش بورڈ", "لاگ آؤٹ", "محفوظ رسائی", "واپسی پر خوش آمدید", "کسان کا اکاؤنٹ بنائیں", "لاگ اِن", "رجسٹر", "ای میل", "پاس ورڈ", "نام", "کھیت کا نام", "فون", "سائن اِن", "سائن اِن ہو رہا ہے…", "اکاؤنٹ بنائیں", "بنایا جا رہا ہے…", "مٹی کا تجزیہ", "مٹی کی شناخت", "تاریخ", "فصل کی بیماری کی شناخت", "معلومات", "زرعی آلات", "فصل کی منصوبہ بندی", "بازار", "قرضے", "انشورنس", "اکاؤنٹ", "فعال کھیت", "تجزیے", "جائزہ باقی", "تازہ ترین مٹی", "بیماری کی جانچ", "قرض کی درخواستیں", "اوسط صحت", "بیلنس", "اگلے تجویز کردہ اقدامات", "کام کی منصوبہ بندی کریں", "اہم کھیت"],
+  ne: ["भाषा परिवर्तन गर्नुहोस्", "प्रशासक प्यानल", "किसान ड्यासबोर्ड", "लगआउट", "सुरक्षित पहुँच", "फेरि स्वागत छ", "किसान खाता बनाउनुहोस्", "लगइन", "दर्ता", "इमेल", "पासवर्ड", "नाम", "खेतको नाम", "फोन", "साइन इन", "साइन इन हुँदैछ…", "खाता बनाउनुहोस्", "बनाउँदै…", "माटो विश्लेषण", "माटो पहिचान", "इतिहास", "बाली रोग पहिचान", "जानकारी", "खेतीका उपकरण", "बाली योजना", "बजार", "ऋण", "बीमा", "खाता", "सक्रिय खेत", "विश्लेषण", "समीक्षा बाँकी", "पछिल्लो माटो", "रोग जाँच", "ऋण अनुरोध", "औसत स्वास्थ्य", "ब्यालेन्स", "अर्का सिफारिस गरिएका काम", "कामको योजना बनाउनुहोस्", "मुख्य खेत"],
+  or: ["ଭାଷା ବଦଳାନ୍ତୁ", "ଆଡମିନ୍ ପ୍ୟାନେଲ୍", "ଚାଷୀ ଡ୍ୟାସବୋର୍ଡ", "ଲଗ୍ ଆଉଟ୍", "ସୁରକ୍ଷିତ ପ୍ରବେଶ", "ପୁଣି ସ୍ୱାଗତ", "ଚାଷୀ ଖାତା ତିଆରି କରନ୍ତୁ", "ଲଗଇନ୍", "ପଞ୍ଜୀକରଣ", "ଇମେଲ୍", "ପାସୱାର୍ଡ", "ନାମ", "ଖେତର ନାମ", "ଫୋନ୍", "ସାଇନ୍ ଇନ୍", "ସାଇନ୍ ଇନ୍ ହେଉଛି…", "ଖାତା ତିଆରି କରନ୍ତୁ", "ତିଆରି ହେଉଛି…", "ମାଟି ବିଶ୍ଳେଷଣ", "ମାଟି ଚିହ୍ନଟ", "ଇତିହାସ", "ଫସଲ ରୋଗ ଚିହ୍ନଟ", "ସୂଚନା", "ଚାଷ ଉପକରଣ", "ଫସଲ ଯୋଜନା", "ବଜାର", "ଋଣ", "ବୀମା", "ଖାତା", "ସକ୍ରିୟ ଖେତ", "ବିଶ୍ଳେଷଣ", "ସମୀକ୍ଷା ବାକି", "ସର୍ବଶେଷ ମାଟି", "ରୋଗ ଯାଞ୍ଚ", "ଋଣ ଅନୁରୋଧ", "ହାରାହାରି ସ୍ୱାସ୍ଥ୍ୟ", "ବାଲାନ୍ସ", "ପରବର୍ତ୍ତୀ ପରାମର୍ଶ", "କାମ ଯୋଜନା କରନ୍ତୁ", "ମୁଖ୍ୟ ଖେତ"],
+  as: ["ভাষা সলনি কৰক", "এডমিন পেনেল", "কৃষক ডেশ্বব’ৰ্ড", "লগ আউট", "সুৰক্ষিত প্ৰৱেশ", "পুনৰ স্বাগতম", "কৃষকৰ একাউণ্ট সৃষ্টি কৰক", "লগইন", "পঞ্জীয়ন", "ইমেইল", "পাছৱৰ্ড", "নাম", "পথাৰৰ নাম", "ফোন", "ছাইন ইন", "ছাইন ইন হৈ আছে…", "একাউণ্ট সৃষ্টি কৰক", "সৃষ্টি হৈ আছে…", "মাটিৰ বিশ্লেষণ", "মাটি চিনাক্তকৰণ", "ইতিহাস", "শস্যৰ ৰোগ চিনাক্তকৰণ", "অন্তৰ্দৃষ্টি", "কৃষি সঁজুলি", "শস্য পৰিকল্পনা", "বজাৰ", "ঋণ", "বীমা", "একাউণ্ট", "সক্ৰিয় পথাৰ", "বিশ্লেষণ", "পৰ্যালোচনা বাকী", "শেহতীয়া মাটি", "ৰোগ পৰীক্ষা", "ঋণৰ অনুৰোধ", "গড় স্বাস্থ্য", "বেলেঞ্চ", "পৰৱৰ্তী পৰামৰ্শ", "কামৰ পৰিকল্পনা কৰক", "মুখ্য পথাৰ"],
+  es: ["Cambiar idioma", "Panel de administración", "Panel del agricultor", "Cerrar sesión", "Acceso seguro", "Te damos la bienvenida", "Crear cuenta de agricultor", "Iniciar sesión", "Registrarse", "Correo electrónico", "Contraseña", "Nombre", "Nombre de la granja", "Teléfono", "Entrar", "Iniciando sesión…", "Crear cuenta", "Creando…", "Análisis del suelo", "Identificador de suelo", "Historial", "Detección de enfermedades", "Información", "Herramientas agrícolas", "Planificador de cultivos", "Mercado", "Préstamos", "Seguro", "Cuenta", "Granja activa", "Análisis", "Revisión pendiente", "Suelo más reciente", "Revisiones de enfermedades", "Solicitudes de préstamo", "Salud media", "Saldo", "Próximos pasos recomendados", "Planificar una tarea", "Granja principal"]
+};
+const MANUAL_LABELS = {
+  en: "User manual", hi: "उपयोगकर्ता मार्गदर्शिका", pa: "ਵਰਤੋਂਕਾਰ ਮੈਨੂਅਲ", bn: "ব্যবহারকারী নির্দেশিকা",
+  ta: "பயனர் வழிகாட்டி", te: "వినియోగదారు మార్గదర్శి", mr: "वापरकर्ता मार्गदर्शिका", gu: "વપરાશકર્તા માર્ગદર્શિકા",
+  kn: "ಬಳಕೆದಾರರ ಮಾರ್ಗದರ್ಶಿ", ml: "ഉപയോക്തൃ മാർഗ്ഗദർശി", ur: "صارف کی رہنمائی", ne: "प्रयोगकर्ता मार्गदर्शिका",
+  or: "ବ୍ୟବହାରକାରୀ ମାର୍ଗଦର୍ଶିକା", as: "ব্যৱহাৰকাৰীৰ নিৰ্দেশিকা", es: "Manual de usuario"
+};
 const fieldImage =
   "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80";
 
@@ -155,7 +188,8 @@ const cropRecommendationMap = {
 
 const loginClientSchema = z.object({
   email: z.string().email("Enter a valid email."),
-  password: z.string().min(1, "Password is required.")
+  password: z.string().min(1, "Password is required."),
+  turnstileToken: z.string().max(2048).optional().default("")
 });
 
 const registerClientSchema = z.object({
@@ -163,7 +197,8 @@ const registerClientSchema = z.object({
   email: z.string().email("Enter a valid email."),
   password: z.string().min(8, "Use at least 8 characters."),
   farmName: z.string().optional(),
-  phone: z.string().optional()
+  phone: z.string().optional(),
+  turnstileToken: z.string().max(2048).optional().default("")
 });
 
 const fieldReportClientSchema = z.object({
@@ -266,6 +301,34 @@ async function apiRequest(path, { token, method = "GET", body, headers = {} } = 
   return data;
 }
 
+let turnstileScriptPromise;
+
+function loadTurnstileScript() {
+  if (window.turnstile) return Promise.resolve(window.turnstile);
+  if (turnstileScriptPromise) return turnstileScriptPromise;
+
+  turnstileScriptPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      if (window.turnstile) resolve(window.turnstile);
+      else {
+        turnstileScriptPromise = undefined;
+        reject(new Error("Human verification loaded without its API."));
+      }
+    };
+    script.onerror = () => {
+      turnstileScriptPromise = undefined;
+      reject(new Error("Human verification could not load."));
+    };
+    document.head.appendChild(script);
+  });
+
+  return turnstileScriptPromise;
+}
+
 function formatDate(value) {
   return new Intl.DateTimeFormat("en", {
     month: "short",
@@ -300,8 +363,10 @@ function formatMoney(value) {
 
 function getInitialLanguage() {
   try {
-    const savedLang = localStorage.getItem(LANG_KEY);
-    if (LANGUAGES.some((lang) => lang.code === savedLang)) return savedLang;
+    const savedLanguage = localStorage.getItem(LANG_KEY);
+    const legacyLanguage = localStorage.getItem(LEGACY_LANG_KEY);
+    if (LANGUAGES.some((lang) => lang.code === savedLanguage)) return savedLanguage;
+    if (LANGUAGES.some((lang) => lang.code === legacyLanguage)) return legacyLanguage;
   } catch {
     return "en";
   }
@@ -310,6 +375,16 @@ function getInitialLanguage() {
 
 function getLanguageName(language) {
   return LANGUAGES.find((lang) => lang.code === language)?.name || "English";
+}
+
+const UI_COPY = Object.fromEntries(UI_COPY_KEYS.map((key, index) => [
+  key,
+  Object.fromEntries(Object.entries(UI_COPY_ROWS).map(([code, row]) => [code, row[index]]))
+]));
+
+function text(language, key) {
+  if (key === "userManual") return MANUAL_LABELS[language] || MANUAL_LABELS.en;
+  return UI_COPY[key]?.[language] || UI_COPY[key]?.en || key;
 }
 
 function withFarm(path, farmId) {
@@ -431,7 +506,7 @@ function printAnalysisReport(analysis) {
   const html = `<!doctype html>
 <html>
   <head>
-    <title>Krishsense Soil Report</title>
+    <title>Krishisense Soil Report</title>
     <style>
       body { font-family: Arial, sans-serif; color: #17231b; padding: 28px; line-height: 1.45; }
       h1 { margin: 0 0 4px; color: #21663a; }
@@ -444,7 +519,7 @@ function printAnalysisReport(analysis) {
     </style>
   </head>
   <body>
-    <h1>Krishsense Soil Report</h1>
+    <h1>Krishisense Soil Report</h1>
     <p class="muted">${escapeHtml(formatDate(analysis.createdAt))}</p>
     ${analysis.photoUrl ? `<img src="${escapeHtml(analysis.photoUrl)}" alt="Soil" style="width:180px;height:130px;object-fit:cover;border-radius:8px" />` : ""}
     <table>${rows.map(([label, value]) => `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value ?? "Not available")}</td></tr>`).join("")}</table>
@@ -587,7 +662,7 @@ function buildNotifications(analyses, loans, market, tasks) {
     });
   if (!notifications.length) {
     notifications.push({
-      title: "Welcome to Krishsense",
+      title: "Welcome to Krishisense",
       detail: "Upload soil photos, apply for loans, and track farm tools here."
     });
   }
@@ -620,7 +695,13 @@ function App() {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    localStorage.setItem(LANG_KEY, language);
+    document.documentElement.dir = language === "ur" ? "rtl" : "ltr";
+    try {
+      localStorage.setItem(LANG_KEY, language);
+      localStorage.removeItem(LEGACY_LANG_KEY);
+    } catch {
+      // The language still works for this session if storage is unavailable.
+    }
   }, [language]);
 
   useEffect(() => {
@@ -652,7 +733,7 @@ function App() {
     return (
       <main className="loading-screen">
         <Sprout size={34} />
-        <span>Opening Krishsense</span>
+        <span>Opening Krishisense</span>
       </main>
     );
   }
@@ -725,9 +806,19 @@ function LanguageSwitcher({ language, onChange }) {
     function handleClickOutside(event) {
       if (rootRef.current && !rootRef.current.contains(event.target)) setOpen(false);
     }
+    function handleKeyDown(event) {
+      if (event.key === "Escape" && open) {
+        setOpen(false);
+        rootRef.current?.querySelector(".lang-switch-trigger")?.focus();
+      }
+    }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
 
   return (
     <div className="lang-switch" ref={rootRef}>
@@ -737,7 +828,8 @@ function LanguageSwitcher({ language, onChange }) {
         onClick={() => setOpen((value) => !value)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        title="Change language"
+        aria-label={`${text(language, "changeLanguage")}: ${current.name}`}
+        title={text(language, "changeLanguage")}
       >
         <Globe size={16} />
         <span>{current.label}</span>
@@ -749,12 +841,14 @@ function LanguageSwitcher({ language, onChange }) {
             <li key={lang.code}>
               <button
                 type="button"
+                lang={lang.code}
                 role="option"
                 aria-selected={lang.code === language}
                 className={lang.code === language ? "active" : ""}
                 onClick={() => {
                   onChange(lang.code);
                   setOpen(false);
+                  rootRef.current?.querySelector(".lang-switch-trigger")?.focus();
                 }}
               >
                 {lang.name}
@@ -767,10 +861,58 @@ function LanguageSwitcher({ language, onChange }) {
   );
 }
 
+function TurnstileWidget({ siteKey, action, theme, onToken, onError }) {
+  const mountRef = useRef(null);
+  const callbacksRef = useRef({ onToken, onError });
+  callbacksRef.current = { onToken, onError };
+
+  useEffect(() => {
+    let active = true;
+    let widgetId;
+
+    loadTurnstileScript()
+      .then((turnstile) => {
+        if (!active || !mountRef.current || !turnstile) return;
+        widgetId = turnstile.render(mountRef.current, {
+          sitekey: siteKey,
+          action,
+          theme: theme === "dark" ? "dark" : "light",
+          size: window.innerWidth <= 420 ? "compact" : "normal",
+          callback: (token) => {
+            callbacksRef.current.onError("");
+            callbacksRef.current.onToken(token);
+          },
+          "expired-callback": () => {
+            callbacksRef.current.onToken("");
+            callbacksRef.current.onError("The security check expired. Complete it again.");
+          },
+          "error-callback": () => {
+            callbacksRef.current.onToken("");
+            callbacksRef.current.onError("The security check could not be verified. Please retry.");
+          }
+        });
+      })
+      .catch(() => {
+        if (active) callbacksRef.current.onError("Human verification could not load. Check your connection and retry.");
+      });
+
+    return () => {
+      active = false;
+      if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
+    };
+  }, [siteKey, action, theme]);
+
+  return <div className="turnstile-widget" ref={mountRef} />;
+}
+
 function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }) {
   const [mode, setMode] = useState("login");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [captchaConfig, setCaptchaConfig] = useState({ loading: true, required: true, siteKey: "", error: "" });
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaCycle, setCaptchaCycle] = useState(0);
+  const [captchaWidgetError, setCaptchaWidgetError] = useState("");
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [registerForm, setRegisterForm] = useState({
     name: "",
@@ -780,12 +922,40 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     phone: ""
   });
 
+  useEffect(() => {
+    let active = true;
+    apiRequest("/api/auth/captcha-config")
+      .then((config) => {
+        if (active) setCaptchaConfig({ loading: false, required: Boolean(config.required), siteKey: config.siteKey || "", error: "" });
+      })
+      .catch(() => {
+        if (active) setCaptchaConfig({ loading: false, required: true, siteKey: "", error: "Could not reach security settings. Refresh the page and try again." });
+      });
+    return () => { active = false; };
+  }, []);
+
+  const captchaReady = !captchaConfig.loading
+    && !captchaConfig.error
+    && (!captchaConfig.required || Boolean(captchaConfig.siteKey && captchaToken));
+
+  function changeMode(nextMode) {
+    setMode(nextMode);
+    setError("");
+    setCaptchaToken("");
+    setCaptchaWidgetError("");
+    setCaptchaCycle((cycle) => cycle + 1);
+  }
+
   async function submitLogin(event, quickCredentials) {
     event?.preventDefault();
+    if (!captchaReady) {
+      setError("Complete the security check before signing in.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
-      const credentials = quickCredentials || loginForm;
+      const credentials = { ...(quickCredentials || loginForm), turnstileToken: captchaToken };
       const validation = loginClientSchema.safeParse(credentials);
       if (!validation.success) throw new Error(firstValidationMessage(validation));
       const nextSession = await apiRequest("/api/auth/login", {
@@ -797,15 +967,24 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
       setError(err.message);
     } finally {
       setBusy(false);
+      if (captchaConfig.required) {
+        setCaptchaToken("");
+        setCaptchaWidgetError("");
+        setCaptchaCycle((cycle) => cycle + 1);
+      }
     }
   }
 
   async function submitRegister(event) {
     event.preventDefault();
+    if (!captchaReady) {
+      setError("Complete the security check before creating your account.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
-      const validation = registerClientSchema.safeParse(registerForm);
+      const validation = registerClientSchema.safeParse({ ...registerForm, turnstileToken: captchaToken });
       if (!validation.success) throw new Error(firstValidationMessage(validation));
       const nextSession = await apiRequest("/api/auth/register", {
         method: "POST",
@@ -816,8 +995,43 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
       setError(err.message);
     } finally {
       setBusy(false);
+      if (captchaConfig.required) {
+        setCaptchaToken("");
+        setCaptchaWidgetError("");
+        setCaptchaCycle((cycle) => cycle + 1);
+      }
     }
   }
+
+  const captchaControl = captchaConfig.loading ? (
+    <p className="turnstile-status">Loading security check…</p>
+  ) : captchaConfig.required && captchaConfig.siteKey ? (
+    <div className="auth-captcha">
+      <span className="auth-captcha-label"><ShieldCheck size={15} /> Quick security check</span>
+      <TurnstileWidget
+        key={`${mode}-${captchaCycle}`}
+        siteKey={captchaConfig.siteKey}
+        action={mode}
+        theme={theme}
+        onToken={setCaptchaToken}
+        onError={setCaptchaWidgetError}
+      />
+      {captchaWidgetError && (
+        <div className="turnstile-error-row" role="status">
+          <p className="turnstile-status error">{captchaWidgetError}</p>
+          <button className="small-button" type="button" onClick={() => {
+            setCaptchaWidgetError("");
+            setCaptchaToken("");
+            setCaptchaCycle((cycle) => cycle + 1);
+          }}>Retry</button>
+        </div>
+      )}
+    </div>
+  ) : captchaConfig.required ? (
+    <p className="turnstile-status error" role="status">
+      {captchaConfig.error || "CAPTCHA is not configured yet. Add the Cloudflare Turnstile keys to the server environment."}
+    </p>
+  ) : null;
 
   return (
     <main className="auth-shell">
@@ -828,7 +1042,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <Sprout size={24} />
           </span>
           <div>
-            <p>Krishsense</p>
+            <p>Krishisense</p>
             <h1>Soil decisions for every field</h1>
           </div>
         </div>
@@ -855,18 +1069,18 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         </div>
 
         <div className="panel-heading">
-          <span className="eyebrow">Secure access</span>
-          <h2>{mode === "login" ? "Welcome back" : "Create farmer account"}</h2>
+          <span className="eyebrow">{text(language, "secureAccess")}</span>
+          <h2>{text(language, mode === "login" ? "welcomeBack" : "createFarmerAccount")}</h2>
         </div>
 
         <div className="segmented-control" role="tablist" aria-label="Authentication mode">
-          <button className={mode === "login" ? "active" : ""} onClick={() => setMode("login")}>
+          <button type="button" className={mode === "login" ? "active" : ""} onClick={() => changeMode("login")}>
             <Lock size={16} />
-            Login
+            {text(language, "login")}
           </button>
-          <button className={mode === "register" ? "active" : ""} onClick={() => setMode("register")}>
+          <button type="button" className={mode === "register" ? "active" : ""} onClick={() => changeMode("register")}>
             <UserPlus size={16} />
-            Register
+            {text(language, "register")}
           </button>
         </div>
 
@@ -875,7 +1089,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         {mode === "login" ? (
           <form className="stack-form" onSubmit={submitLogin}>
             <label>
-              Email
+              {text(language, "email")}
               <span className="input-shell">
                 <Mail size={17} />
                 <input
@@ -887,7 +1101,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
               </span>
             </label>
             <label>
-              Password
+              {text(language, "password")}
               <span className="input-shell">
                 <Lock size={17} />
                 <input
@@ -898,15 +1112,16 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
                 />
               </span>
             </label>
-            <button className="primary-button" disabled={busy}>
+            {captchaControl}
+            <button className="primary-button" disabled={busy || !captchaReady}>
               <ShieldCheck size={18} />
-              {busy ? "Signing in" : "Sign in"}
+              {busy ? text(language, "signingIn") : text(language, "signIn")}
             </button>
           </form>
         ) : (
           <form className="stack-form" onSubmit={submitRegister}>
             <label>
-              Name
+              {text(language, "name")}
               <input
                 value={registerForm.name}
                 onChange={(event) => setRegisterForm({ ...registerForm, name: event.target.value })}
@@ -914,7 +1129,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
               />
             </label>
             <label>
-              Email
+              {text(language, "email")}
               <input
                 type="email"
                 value={registerForm.email}
@@ -923,7 +1138,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
               />
             </label>
             <label>
-              Password
+              {text(language, "password")}
               <input
                 type="password"
                 minLength={8}
@@ -933,22 +1148,23 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
               />
             </label>
             <label>
-              Farm name
+              {text(language, "farmName")}
               <input
                 value={registerForm.farmName}
                 onChange={(event) => setRegisterForm({ ...registerForm, farmName: event.target.value })}
               />
             </label>
             <label>
-              Phone
+              {text(language, "phone")}
               <input
                 value={registerForm.phone}
                 onChange={(event) => setRegisterForm({ ...registerForm, phone: event.target.value })}
               />
             </label>
-            <button className="primary-button" disabled={busy}>
+            {captchaControl}
+            <button className="primary-button" disabled={busy || !captchaReady}>
               <UserPlus size={18} />
-              {busy ? "Creating" : "Create account"}
+              {busy ? text(language, "creating") : text(language, "createAccount")}
             </button>
           </form>
         )}
@@ -967,8 +1183,8 @@ function Dashboard({ session, onLogout, theme, onThemeToggle, language, onLangua
             <Sprout size={23} />
           </span>
           <div>
-            <strong>Krishsense</strong>
-            <span>{session.user.role === "admin" ? "Admin console" : farmName || "Farmer desk"}</span>
+            <strong>Krishisense</strong>
+            <span>{session.user.role === "admin" ? text(language, "adminConsole") : farmName || text(language, "farmerDesk")}</span>
           </div>
         </div>
         <div className="topbar-actions">
@@ -978,7 +1194,7 @@ function Dashboard({ session, onLogout, theme, onThemeToggle, language, onLangua
             {session.user.role === "admin" ? <ShieldCheck size={16} /> : <Wheat size={16} />}
             {session.user.name}
           </span>
-          <button className="icon-button" onClick={onLogout} title="Log out" aria-label="Log out">
+          <button className="icon-button" onClick={onLogout} title={text(language, "logOut")} aria-label={text(language, "logOut")}>
             <LogOut size={18} />
           </button>
         </div>
@@ -1167,7 +1383,7 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
   const [tasks, setTasks] = useState([]);
   const [market, setMarket] = useState(emptyMarketState);
   const [loading, setLoading] = useState(true);
-  const farms = accountUser.farms?.length ? accountUser.farms : [{ id: "", name: accountUser.farmName || "Main farm" }];
+  const farms = accountUser.farms?.length ? accountUser.farms : [{ id: "", name: accountUser.farmName || text(language, "mainFarm") }];
   const activeFarmId = accountUser.activeFarmId || farms[0]?.id || "";
   const activeFarm = farms.find((farm) => farm.id === activeFarmId) || farms[0];
 
@@ -1223,7 +1439,7 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
         <div className="profile-block">
           <img src={fieldImage} alt="Farm rows" />
           <div>
-            <span>{activeFarm?.name || "Farm profile"}</span>
+            <span>{activeFarm?.name || text(language, "farmProfile")}</span>
             <strong>{accountUser.name}</strong>
           </div>
         </div>
@@ -1236,71 +1452,75 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
             onFarmChange(nextUser.farmName);
           }}
         />
-        <nav className="side-nav" aria-label="Farmer dashboard">
+        <nav className="side-nav" aria-label={text(language, "farmerDesk")}>
           <button className={activeView === "analysis" ? "active" : ""} onClick={() => setActiveView("analysis")}>
             <Camera size={18} />
-            Soil analysis
+            {text(language, "soilAnalysis")}
           </button>
           <button className={activeView === "identify" ? "active" : ""} onClick={() => setActiveView("identify")}>
             <Search size={18} />
-            Soil identifier
+            {text(language, "soilIdentifier")}
           </button>
           <button className={activeView === "history" ? "active" : ""} onClick={() => setActiveView("history")}>
             <ClipboardList size={18} />
-            History
+            {text(language, "history")}
           </button>
           <button className={activeView === "disease" ? "active" : ""} onClick={() => setActiveView("disease")}>
             <AlertTriangle size={18} />
-            Disease detect
+            {text(language, "diseaseDetection")}
           </button>
           <button className={activeView === "insights" ? "active" : ""} onClick={() => setActiveView("insights")}>
             <TrendingUp size={18} />
-            Insights
+            {text(language, "insights")}
           </button>
           <button className={activeView === "tools" ? "active" : ""} onClick={() => setActiveView("tools")}>
             <Calculator size={18} />
-            Farm tools
+            {text(language, "farmTools")}
           </button>
           <button className={activeView === "planner" ? "active" : ""} onClick={() => setActiveView("planner")}>
             <CalendarDays size={18} />
-            Crop planner
+            {text(language, "cropPlanner")}
           </button>
           <button className={activeView === "market" ? "active" : ""} onClick={() => setActiveView("market")}>
             <ShoppingCart size={18} />
-            Market
+            {text(language, "market")}
           </button>
           <button className={activeView === "loans" ? "active" : ""} onClick={() => setActiveView("loans")}>
             <HandCoins size={18} />
-            Loans
+            {text(language, "loans")}
           </button>
           <button className={activeView === "insurance" ? "active" : ""} onClick={() => setActiveView("insurance")}>
             <ShieldCheck size={18} />
-            Insurance
+            {text(language, "insurance")}
           </button>
           <button className={activeView === "account" ? "active" : ""} onClick={() => setActiveView("account")}>
             <KeyRound size={18} />
-            Account
+            {text(language, "account")}
+          </button>
+          <button className={activeView === "manual" ? "active" : ""} onClick={() => setActiveView("manual")}>
+            <BookOpen size={18} />
+            {text(language, "userManual")}
           </button>
         </nav>
       </aside>
 
       <section className="content-area">
         <div className="metric-row">
-          <Metric icon={<Sprout size={19} />} label="Active farm" value={activeFarm?.name || "Main farm"} />
-          <Metric icon={<FlaskConical size={19} />} label="Analyses" value={analyses.length} />
-          <Metric icon={<Clock3 size={19} />} label="Pending review" value={pending} />
-          <Metric icon={<Leaf size={19} />} label="Latest soil" value={latest?.result.soilType || "None"} />
-          <Metric icon={<AlertTriangle size={19} />} label="Disease checks" value={diseases.length} />
-          <Metric icon={<HandCoins size={19} />} label="Loan requests" value={pendingLoans ? `${pendingLoans} pending` : loans.length} />
-          <Metric icon={<TrendingUp size={19} />} label="Avg health" value={insights.averageHealth ?? "None"} />
-          <Metric icon={<Wallet size={19} />} label="Balance" value={formatMoney(market.account?.walletBalance || 0)} />
+          <Metric icon={<Sprout size={19} />} label={text(language, "activeFarm")} value={activeFarm?.name || text(language, "mainFarm")} />
+          <Metric icon={<FlaskConical size={19} />} label={text(language, "analyses")} value={analyses.length} />
+          <Metric icon={<Clock3 size={19} />} label={text(language, "pendingReview")} value={pending} />
+          <Metric icon={<Leaf size={19} />} label={text(language, "latestSoil")} value={latest?.result.soilType || "None"} />
+          <Metric icon={<AlertTriangle size={19} />} label={text(language, "diseaseChecks")} value={diseases.length} />
+          <Metric icon={<HandCoins size={19} />} label={text(language, "loanRequests")} value={pendingLoans ? `${pendingLoans} pending` : loans.length} />
+          <Metric icon={<TrendingUp size={19} />} label={text(language, "averageHealth")} value={insights.averageHealth ?? "None"} />
+          <Metric icon={<Wallet size={19} />} label={text(language, "balance")} value={formatMoney(market.account?.walletBalance || 0)} />
         </div>
 
         {recommendations.length > 0 && (
           <section className="recommendation-strip" aria-label="Recommendations for this farm">
             <div>
               <span className="eyebrow">For {activeFarm?.name || "this farm"}</span>
-              <strong>Recommended next steps</strong>
+              <strong>{text(language, "recommendedNextSteps")}</strong>
             </div>
             <ul>
               {recommendations.slice(0, 2).map((item) => <li key={item}>{item}</li>)}
@@ -1308,7 +1528,7 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
             <small>Based on this farm's profile, saved reports, and open tasks.</small>
             <button className="small-button" onClick={() => setActiveView("planner")}>
               <CalendarDays size={15} />
-              Plan a task
+              {text(language, "planTask")}
             </button>
           </section>
         )}
@@ -1326,8 +1546,106 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
         {activeView === "loans" && <FarmerLoanPanel key={activeFarmId} token={token} farmId={activeFarmId} loans={loans} onChanged={loadLoans} />}
         {activeView === "insurance" && <InsurancePanel key={activeFarmId} token={token} farmId={activeFarmId} insurance={insurance} onChanged={loadInsurance} />}
         {activeView === "account" && <PasswordPanel token={token} />}
+        {activeView === "manual" && <UserManualPanel language={language} onNavigate={setActiveView} />}
       </section>
     </div>
+  );
+}
+
+function UserManualPanel({ language, onNavigate }) {
+  const manualSections = [
+    {
+      title: "Set up your farms",
+      steps: [
+        "Use the farm selector in the left sidebar to switch farms or add another one.",
+        "Choose the farm you want before opening reports, tasks, loans, or market activity; each farm keeps its own records."
+      ],
+      action: "",
+      view: ""
+    },
+    {
+      title: "Create a soil report",
+      steps: [
+        "Open Soil analysis and enter the field area, location, crop, and the soil details you know.",
+        "Submit the form and review the returned report. Add a laboratory soil test for reliable pH and nutrient decisions."
+      ],
+      action: "Open soil analysis",
+      view: "analysis"
+    },
+    {
+      title: "Identify soil from a photo",
+      steps: [
+        "Open Soil identifier and upload a clear, close photo of the soil in natural light.",
+        "Read the predicted soil type and confidence score as a visual estimate, not a lab measurement."
+      ],
+      action: "Identify soil",
+      view: "identify"
+    },
+    {
+      title: "Check a crop for disease",
+      steps: [
+        "Open Disease detection, select the crop, describe the symptoms, and upload a sharp photo of the affected plant.",
+        "Use the result to guide inspection. Confirm uncertain or severe cases with a local agriculture officer before treatment."
+      ],
+      action: "Open disease detection",
+      view: "disease"
+    },
+    {
+      title: "Plan work and ask for guidance",
+      steps: [
+        "Use Crop planner to record field tasks and due dates; check Farm tools for saved reports, weather, market information, and the assistant.",
+        "AI suggestions are general guidance. Check local conditions and product labels before irrigation, fertilizer, or pesticide decisions."
+      ],
+      action: "Open crop planner",
+      view: "planner"
+    },
+    {
+      title: "Use market, loans, and insurance",
+      steps: [
+        "Market orders, loan requests, and insurance applications are submitted from their respective sections and may require admin review.",
+        "The displayed wallet and approval workflow are in-app records; they do not transfer real money or create a real bank loan or insurance policy."
+      ],
+      action: "Open market",
+      view: "market"
+    },
+    {
+      title: "Review records and protect your account",
+      steps: [
+        "Use History to revisit soil reports. Open Account to change your password, and log out when you finish on a shared device.",
+        "If sign-in or registration asks for a security check, complete the CAPTCHA before submitting the form."
+      ],
+      action: "Open history",
+      view: "history"
+    }
+  ];
+
+  return (
+    <section className="user-manual" aria-labelledby="user-manual-title">
+      <div className="tool-heading">
+        <BookOpen size={22} />
+        <div>
+          <span className="eyebrow">{text(language, "userManual")}</span>
+          <h2 id="user-manual-title">Krishisense quick guide</h2>
+        </div>
+      </div>
+      <p className="user-manual-intro">Follow these steps to set up a farm, understand your reports, and use the main tools.</p>
+      <div className="user-manual-topics">
+        {manualSections.map((section, index) => (
+          <article className="user-manual-topic" key={section.title}>
+            <span className="eyebrow">{String(index + 1).padStart(2, "0")}</span>
+            <h3>{section.title}</h3>
+            <ol>
+              {section.steps.map((step) => <li key={step}>{step}</li>)}
+            </ol>
+            {section.action && (
+              <button className="small-button" type="button" onClick={() => onNavigate(section.view)}>
+                {section.action}<ChevronRight size={15} />
+              </button>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -2399,7 +2717,7 @@ function AiAssistantPanel({ token, latest, latestDisease, tasks, farm, language 
           <p className="assistant-welcome">Ask about crop care, soil, irrigation, pests or planning. You can ask follow-up questions too.</p>
         ) : messages.map((message, index) => (
           <article className={`assistant-message ${message.role}`} key={`${message.role}-${index}`}>
-            <span>{message.role === "assistant" ? (message.source === "fallback" ? "General guidance · AI unavailable" : "Krishsense") : "You"}</span>
+            <span>{message.role === "assistant" ? (message.source === "fallback" ? "General guidance · AI unavailable" : "Krishisense") : "You"}</span>
             <div>{assistantAnswerLines(message.content).map((line, lineIndex) => <p key={`${line}-${lineIndex}`}>{line}</p>)}</div>
           </article>
         ))}

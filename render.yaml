@@ -17,6 +17,10 @@ services:
         generateValue: true
       - key: JWT_EXPIRES_IN
         value: 7d
+      - key: TURNSTILE_SITE_KEY
+        sync: false
+      - key: TURNSTILE_SECRET_KEY
+        sync: false
       - key: MONGODB_URI
         sync: false
       - key: GEMINI_API_KEY
@@ -36,4 +40,4 @@ services:
       - key: ADMIN_PASSWORD
         sync: false
       - key: ADMIN_NAME
-        value: Krishsense Admin
+        value: Krishisense Admin

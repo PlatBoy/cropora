@@ -18,7 +18,17 @@ const envSchema = z.object({
   CLOUDINARY_FOLDER: z.string().default("krishsense/soil-photos"),
   ADMIN_EMAIL: z.string().email().optional(),
   ADMIN_PASSWORD: z.string().min(8).optional(),
-  ADMIN_NAME: z.string().default("Krishsense Admin")
+  ADMIN_NAME: z.string().default("Krishisense Admin"),
+  TURNSTILE_SITE_KEY: z.string().trim().min(1).optional(),
+  TURNSTILE_SECRET_KEY: z.string().trim().min(1).optional()
+}).superRefine((values, context) => {
+  if (Boolean(values.TURNSTILE_SITE_KEY) !== Boolean(values.TURNSTILE_SECRET_KEY)) {
+    context.addIssue({
+      code: "custom",
+      path: ["TURNSTILE_SECRET_KEY"],
+      message: "TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY must be configured together."
+    });
+  }
 });
 
 export const env = envSchema.parse(process.env);

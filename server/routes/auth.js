@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import rateLimit from "express-rate-limit";
 import { Router } from "express";
 import { requireAuth, signToken } from "../middleware/auth.js";
 import { validateBody } from "../middleware/validate.js";
@@ -10,8 +11,47 @@ import { LoanApplication } from "../models/LoanApplication.js";
 import { MarketOrder } from "../models/MarketOrder.js";
 import { activeFarmSchema, farmSchema, loginSchema, passwordChangeSchema, registerSchema } from "../validation/schemas.js";
 import { HttpError } from "../utils/httpError.js";
+import { getTurnstileConfig, verifyTurnstile } from "../services/turnstile.js";
 
 export const authRouter = Router();
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  skipSuccessfulRequests: true,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Too many login attempts. Wait a few minutes and try again." }
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Too many accounts were created from this network. Try again later." }
+});
+
+function verifyHuman(action) {
+  return async (req, _res, next) => {
+    try {
+      let expectedHostname;
+      try { expectedHostname = new URL(req.get("origin")).hostname; } catch { expectedHostname = undefined; }
+      await verifyTurnstile(req.body.turnstileToken, {
+        remoteIp: req.ip,
+        expectedAction: action,
+        expectedHostname
+      });
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+}
+
+authRouter.get("/captcha-config", (_req, res) => {
+  res.set("Cache-Control", "no-store").json(getTurnstileConfig());
+});
 
 async function ensureFarmerFarm(user) {
   if (user.role !== "farmer") return;
@@ -44,7 +84,7 @@ async function ensureFarmerFarm(user) {
   }
 }
 
-authRouter.post("/register", validateBody(registerSchema), async (req, res, next) => {
+authRouter.post("/register", registerLimiter, validateBody(registerSchema), verifyHuman("register"), async (req, res, next) => {
   try {
     const existing = await User.findOne({ email: req.body.email });
     if (existing) throw new HttpError(409, "Email is already registered");
@@ -68,7 +108,7 @@ authRouter.post("/register", validateBody(registerSchema), async (req, res, next
   }
 });
 
-authRouter.post("/login", validateBody(loginSchema), async (req, res, next) => {
+authRouter.post("/login", loginLimiter, validateBody(loginSchema), verifyHuman("login"), async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).select("+passwordHash");
     if (!user || !user.isActive) throw new HttpError(401, "Invalid email or password");

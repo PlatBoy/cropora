@@ -5,12 +5,14 @@ export const registerSchema = z.object({
   email: z.email().toLowerCase(),
   password: z.string().min(8).max(128),
   farmName: z.string().trim().max(160).optional().default(""),
-  phone: z.string().trim().max(40).optional().default("")
+  phone: z.string().trim().max(40).optional().default(""),
+  turnstileToken: z.string().max(2048).optional().default("")
 });
 
 export const loginSchema = z.object({
   email: z.email().toLowerCase(),
-  password: z.string().min(1)
+  password: z.string().min(1),
+  turnstileToken: z.string().max(2048).optional().default("")
 });
 
 export const passwordChangeSchema = z.object({
