@@ -1369,12 +1369,29 @@ function FarmBuddy({ language }) {
         title={text(language, "name")}
       >
         <span className="farm-buddy-scene" aria-hidden="true">
-          <span className="farm-buddy-sun" />
-          <span className="farm-buddy-plant">
-            <Sprout className="farm-buddy-sprout" size={32} strokeWidth={2.6} />
-            <span className="farm-buddy-face"><i /><i /><b /></span>
-          </span>
-          <span className="farm-buddy-ground" />
+          <svg className="farm-buddy-plough-scene" viewBox="0 0 84 72" focusable="false">
+            <circle className="plough-sun" cx="72" cy="11" r="5" />
+            <path className="plough-horizon" d="M5 53 Q21 49 37 53 T79 52" />
+            <path className="plough-furrow" d="M8 61 Q27 56 46 61 T81 60" />
+            <path className="plough-furrow plough-furrow-back" d="M12 67 Q30 62 49 67 T82 66" />
+            <g className="plough-tool">
+              <path d="M54 36 64 45 68 56" />
+              <path d="M57 35 67 43 72 54" />
+              <path d="M64 45 72 48 75 57" />
+              <path className="plough-blade" d="m69 56 7 1-4 4z" />
+            </g>
+            <g className="plough-farmer">
+              <g className="plough-legs">
+                <path d="m39 43-7 10 1 3" />
+                <path d="m45 43 4 9-2 4" />
+              </g>
+              <path className="plough-body" d="M36 28q5-2 9 2l4 13-11 4-7-11z" />
+              <circle className="plough-head" cx="39" cy="23" r="5" />
+              <path className="plough-hat" d="M32 19q1-6 8-6 6 0 8 5l-3 2H32zm-2 1h21v2H30z" />
+              <path className="plough-arm" d="m42 31 8 2 8 4-2 3-11-3-7-1z" />
+              <path className="plough-arm" d="m36 32-5 5 9 5 2-3-5-4 5-2z" />
+            </g>
+          </svg>
         </span>
       </button>
     </aside>

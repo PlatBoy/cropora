@@ -788,80 +788,75 @@ html[dir="rtl"] .lang-switch-menu button {
   display: block;
 }
 
-.farm-buddy-sun {
-  position: absolute;
-  top: 2px;
-  right: 3px;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: var(--amber);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--amber) 14%, transparent);
-  animation: farm-buddy-sunrise 3.2s ease-in-out infinite;
-}
-
-.farm-buddy-plant {
-  position: absolute;
-  left: 9px;
-  bottom: 9px;
-  z-index: 2;
-  width: 43px;
-  display: grid;
-  justify-items: center;
-  animation: farm-buddy-bob 3s ease-in-out infinite;
-}
-
-.farm-buddy-sprout {
+.farm-buddy-plough-scene {
+  width: 68px;
+  height: 62px;
+  overflow: visible;
   color: var(--green);
-  filter: drop-shadow(0 2px 2px color-mix(in srgb, var(--green) 26%, transparent));
-  animation: farm-buddy-sway 2.7s ease-in-out infinite;
-  transform-origin: bottom center;
 }
 
-.farm-buddy-face {
-  position: relative;
-  width: 38px;
-  height: 25px;
-  margin-top: -3px;
-  border: 1px solid color-mix(in srgb, var(--green) 65%, var(--line));
-  border-radius: 12px 12px 15px 15px;
-  background: color-mix(in srgb, var(--green) 34%, var(--panel));
-  box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--green) 16%, transparent);
+.plough-sun {
+  fill: var(--amber);
+  animation: plough-sun-drift 3.2s ease-in-out infinite;
 }
 
-.farm-buddy-face i {
-  position: absolute;
-  top: 8px;
-  left: 10px;
-  width: 3px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--ink);
+.plough-horizon,
+.plough-furrow {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.4;
+  stroke-linecap: round;
 }
 
-.farm-buddy-face i:nth-child(2) {
-  left: 23px;
+.plough-furrow {
+  stroke: color-mix(in srgb, var(--amber) 65%, var(--line));
+  stroke-dasharray: 18 4;
+  animation: plough-furrow-roll 4s linear infinite;
 }
 
-.farm-buddy-face b {
-  position: absolute;
-  left: 16px;
-  bottom: 5px;
-  width: 7px;
-  height: 4px;
-  border-bottom: 1.5px solid var(--ink);
-  border-radius: 0 0 8px 8px;
+.plough-furrow-back {
+  opacity: 0.68;
+  animation-duration: 5s;
+  animation-direction: reverse;
 }
 
-.farm-buddy-ground {
-  position: absolute;
-  left: 6px;
-  bottom: 4px;
-  width: 47px;
-  height: 10px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--amber) 62%, var(--panel));
-  box-shadow: 0 3px 0 color-mix(in srgb, var(--amber) 22%, var(--panel));
+.plough-farmer {
+  animation: plough-farmer-step 1.4s ease-in-out infinite;
+  transform-origin: 41px 45px;
+}
+
+.plough-body,
+.plough-head,
+.plough-arm {
+  fill: var(--green);
+}
+
+.plough-hat {
+  fill: var(--amber);
+}
+
+.plough-legs {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: plough-legs-step 1.4s ease-in-out infinite alternate;
+  transform-origin: 41px 43px;
+}
+
+.plough-tool {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: plough-tool-pull 1.4s ease-in-out infinite;
+  transform-origin: 65px 47px;
+}
+
+.plough-blade {
+  fill: var(--amber);
 }
 
 .farm-buddy-tip {
@@ -928,19 +923,28 @@ html[dir="rtl"] .lang-switch-menu button {
   font-weight: 800;
 }
 
-@keyframes farm-buddy-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-
-@keyframes farm-buddy-sway {
-  0%, 100% { transform: rotate(-5deg); }
-  50% { transform: rotate(5deg); }
-}
-
-@keyframes farm-buddy-sunrise {
+@keyframes plough-sun-drift {
   0%, 100% { transform: translateY(2px); }
   50% { transform: translateY(-2px); }
+}
+
+@keyframes plough-furrow-roll {
+  to { stroke-dashoffset: -44; }
+}
+
+@keyframes plough-farmer-step {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.2px); }
+}
+
+@keyframes plough-legs-step {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
+}
+
+@keyframes plough-tool-pull {
+  0%, 100% { transform: rotate(0); }
+  50% { transform: rotate(-1.8deg); }
 }
 
 @keyframes farm-buddy-tip-in {
@@ -1480,9 +1484,11 @@ html[dir="rtl"] .lang-switch-menu button {
   .news-seed-toast,
   .news-seed-sprout,
   .news-refreshing,
-  .farm-buddy-sun,
-  .farm-buddy-plant,
-  .farm-buddy-sprout,
+  .plough-sun,
+  .plough-furrow,
+  .plough-farmer,
+  .plough-legs,
+  .plough-tool,
   .farm-buddy-tip,
   .data-refresh-dot,
   .data-refresh-spinning,
