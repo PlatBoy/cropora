@@ -53,7 +53,7 @@ import {
   Users,
   Wheat
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { getIntlLocale, localize, setActiveLocale } from "./i18n.js";
 
@@ -382,10 +382,113 @@ const UI_COPY = Object.fromEntries(UI_COPY_KEYS.map((key, index) => [
   key,
   Object.fromEntries(Object.entries(UI_COPY_ROWS).map(([code, row]) => [code, row[index]]))
 ]));
+const LIVE_COPY_KEYS = ["farmData", "updated", "refreshData", "refreshingData", "syncWarning"];
+const LIVE_COPY_ROWS = {
+  en: ["Farm data", "Updated", "Refresh data", "Refreshing…", "Some data may be out of date"],
+  hi: ["खेत का डेटा", "अपडेट हुआ", "डेटा रीफ़्रेश करें", "रीफ़्रेश हो रहा है…", "कुछ डेटा पुराना हो सकता है"],
+  pa: ["ਖੇਤ ਦਾ ਡਾਟਾ", "ਅੱਪਡੇਟ ਹੋਇਆ", "ਡਾਟਾ ਤਾਜ਼ਾ ਕਰੋ", "ਤਾਜ਼ਾ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…", "ਕੁਝ ਡਾਟਾ ਪੁਰਾਣਾ ਹੋ ਸਕਦਾ ਹੈ"],
+  bn: ["খামারের তথ্য", "আপডেট হয়েছে", "খামারের তথ্য রিফ্রেশ করুন", "রিফ্রেশ হচ্ছে…", "কিছু তথ্য পুরোনো হতে পারে"],
+  ta: ["பண்ணைத் தரவு", "புதுப்பிக்கப்பட்டது", "பண்ணைத் தரவைப் புதுப்பிக்கவும்", "புதுப்பிக்கப்படுகிறது…", "சில தரவுகள் பழையதாக இருக்கலாம்"],
+  te: ["పొలం సమాచారం", "నవీకరించబడింది", "పొలం సమాచారాన్ని రిఫ్రెష్ చేయండి", "రిఫ్రెష్ అవుతోంది…", "కొంత సమాచారం పాతదై ఉండవచ్చు"],
+  mr: ["शेताचा डेटा", "अपडेट झाले", "शेताचा डेटा रिफ्रेश करा", "रिफ्रेश होत आहे…", "काही डेटा जुना असू शकतो"],
+  gu: ["ખેતરની માહિતી", "અપડેટ થયું", "ખેતરની માહિતી રિફ્રેશ કરો", "રિફ્રેશ થઈ રહ્યું છે…", "કેટલીક માહિતી જૂની હોઈ શકે"],
+  kn: ["ಜಮೀನಿನ ಮಾಹಿತಿ", "ನವೀಕರಿಸಲಾಗಿದೆ", "ಜಮೀನಿನ ಮಾಹಿತಿಯನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ", "ರಿಫ್ರೆಶ್ ಆಗುತ್ತಿದೆ…", "ಕೆಲವು ಮಾಹಿತಿ ಹಳೆಯದಾಗಿರಬಹುದು"],
+  ml: ["കൃഷിയിട ഡാറ്റ", "പുതുക്കി", "കൃഷിയിട ഡാറ്റ പുതുക്കുക", "പുതുക്കുന്നു…", "ചില വിവരങ്ങൾ പഴയതായിരിക്കാം"],
+  ur: ["کھیت کا ڈیٹا", "اپ ڈیٹ ہوا", "کھیت کا ڈیٹا ریفریش کریں", "ریفریش ہو رہا ہے…", "کچھ ڈیٹا پرانا ہو سکتا ہے"],
+  ne: ["खेतको विवरण", "अपडेट भयो", "खेतको विवरण रिफ्रेस गर्नुहोस्", "रिफ्रेस हुँदैछ…", "केही विवरण पुराना हुन सक्छन्"],
+  or: ["ଚାଷ ତଥ୍ୟ", "ଅଦ୍ୟତନ ହେଲା", "ଚାଷ ତଥ୍ୟ ସତେଜ କରନ୍ତୁ", "ସତେଜ ହେଉଛି…", "କିଛି ତଥ୍ୟ ପୁରୁଣା ହୋଇପାରେ"],
+  as: ["পথাৰৰ তথ্য", "আপডেট হৈছে", "পথাৰৰ তথ্য সতেজ কৰক", "সতেজ হৈ আছে…", "কিছুমান তথ্য পুৰণি হ’ব পাৰে"],
+  es: ["Datos de la granja", "Actualizado", "Actualizar datos", "Actualizando…", "Algunos datos podrían estar desactualizados"]
+};
+const LIVE_COPY = Object.fromEntries(LIVE_COPY_KEYS.map((key, index) => [
+  key,
+  Object.fromEntries(Object.entries(LIVE_COPY_ROWS).map(([code, row]) => [code, row[index]]))
+]));
 
 function text(language, key) {
   if (key === "userManual") return MANUAL_LABELS[language] || MANUAL_LABELS.en;
-  return UI_COPY[key]?.[language] || UI_COPY[key]?.en || key;
+  return LIVE_COPY[key]?.[language] || UI_COPY[key]?.[language] || LIVE_COPY[key]?.en || UI_COPY[key]?.en || key;
+}
+
+function useLiveRefresh(refreshData) {
+  const refreshHandler = useRef(refreshData);
+  const requestInFlight = useRef(false);
+  const refreshQueued = useRef(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
+  const [hasRefreshError, setHasRefreshError] = useState(false);
+
+  const refresh = useCallback(async () => {
+    if (requestInFlight.current) {
+      refreshQueued.current = true;
+      return;
+    }
+    requestInFlight.current = true;
+    setRefreshing(true);
+    try {
+      await refreshHandler.current();
+      setLastUpdatedAt(Date.now());
+      setHasRefreshError(false);
+    } catch {
+      setHasRefreshError(true);
+    } finally {
+      requestInFlight.current = false;
+      setRefreshing(false);
+      if (refreshQueued.current) {
+        refreshQueued.current = false;
+        window.setTimeout(refresh, 0);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshHandler.current = refreshData;
+    refresh();
+  }, [refreshData, refresh]);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      if (!document.hidden) refresh();
+    }, 120000);
+    const refreshWhenVisible = () => {
+      if (!document.hidden) refresh();
+    };
+    window.addEventListener("focus", refreshWhenVisible);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshWhenVisible);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
+  }, [refresh]);
+
+  return { refresh, refreshing, lastUpdatedAt, hasRefreshError };
+}
+
+function DataRefreshStatus({ language, refresh, refreshing, lastUpdatedAt, hasRefreshError }) {
+  const updatedTime = lastUpdatedAt
+    ? new Intl.DateTimeFormat(getIntlLocale(), { hour: "2-digit", minute: "2-digit" }).format(lastUpdatedAt)
+    : "";
+
+  return (
+    <div className={`data-refresh-status${hasRefreshError ? " has-error" : ""}`} role="status" aria-live="polite">
+      <span className="data-refresh-dot" aria-hidden="true" />
+      <strong>{text(language, hasRefreshError ? "syncWarning" : "farmData")}</strong>
+      <span className="data-refresh-time">
+        {lastUpdatedAt ? <><span>{text(language, "updated")}</span> <time>{updatedTime}</time></> : text(language, "refreshingData")}
+      </span>
+      <button
+        className="data-refresh-button"
+        type="button"
+        onClick={refresh}
+        disabled={refreshing}
+        title={text(language, "refreshData")}
+        aria-label={text(language, "refreshData")}
+      >
+        <RefreshCw size={16} className={refreshing ? "data-refresh-spinning" : ""} />
+      </button>
+    </div>
+  );
 }
 
 function withFarm(path, farmId) {
@@ -1205,7 +1308,7 @@ function Dashboard({ session, onLogout, theme, onThemeToggle, language, onLangua
       <FloatingNewsBanner />
 
       {session.user.role === "admin" ? (
-        <AdminDashboard token={session.token} />
+        <AdminDashboard token={session.token} language={language} />
       ) : (
         <FarmerDashboard token={session.token} user={session.user} language={language} onFarmChange={setFarmName} />
       )}
@@ -1389,41 +1492,45 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
   const activeFarmId = accountUser.activeFarmId || farms[0]?.id || "";
   const activeFarm = farms.find((farm) => farm.id === activeFarmId) || farms[0];
 
-  async function loadAnalyses() {
-    setLoading(true);
-    const data = await apiRequest(withFarm("/api/analyses", activeFarmId), { token });
-    setAnalyses(data.analyses);
-    setLoading(false);
-  }
+  const loadAnalyses = useCallback(async () => {
+    try {
+      const data = await apiRequest(withFarm("/api/analyses", activeFarmId), { token });
+      setAnalyses(data.analyses);
+    } finally {
+      setLoading(false);
+    }
+  }, [token, activeFarmId]);
 
-  async function loadLoans() {
+  const loadLoans = useCallback(async () => {
     const data = await apiRequest(withFarm("/api/loans", activeFarmId), { token });
     setLoans(data.loans);
-  }
+  }, [token, activeFarmId]);
 
-  async function loadMarket() {
+  const loadMarket = useCallback(async () => {
     const data = await apiRequest(withFarm("/api/market", activeFarmId), { token });
     setMarket(data);
-  }
+  }, [token, activeFarmId]);
 
-  async function loadDiseases() {
+  const loadDiseases = useCallback(async () => {
     const data = await apiRequest(withFarm("/api/diseases", activeFarmId), { token });
     setDiseases(data.diseases);
-  }
+  }, [token, activeFarmId]);
 
-  async function loadInsurance() {
+  const loadInsurance = useCallback(async () => {
     const data = await apiRequest(withFarm("/api/insurance", activeFarmId), { token });
     setInsurance(data.insurance);
-  }
+  }, [token, activeFarmId]);
 
-  async function loadTasks() {
+  const loadTasks = useCallback(async () => {
     const data = await apiRequest(withFarm("/api/tasks", activeFarmId), { token });
     setTasks(data.tasks);
-  }
+  }, [token, activeFarmId]);
 
-  useEffect(() => {
-    Promise.all([loadAnalyses(), loadLoans(), loadMarket(), loadDiseases(), loadInsurance(), loadTasks()]).catch(() => setLoading(false));
-  }, [activeFarmId]);
+  const refreshFarmData = useCallback(async () => {
+    await Promise.all([loadAnalyses(), loadLoans(), loadMarket(), loadDiseases(), loadInsurance(), loadTasks()]);
+  }, [loadAnalyses, loadLoans, loadMarket, loadDiseases, loadInsurance, loadTasks]);
+
+  const sync = useLiveRefresh(refreshFarmData);
 
   const latest = analyses[0];
   const pending = analyses.filter((analysis) => analysis.status === "pending").length;
@@ -1507,6 +1614,7 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
       </aside>
 
       <section className="content-area">
+        <DataRefreshStatus language={language} {...sync} />
         <div className="metric-row">
           <Metric icon={<Sprout size={19} />} label={text(language, "activeFarm")} value={activeFarm?.name || text(language, "mainFarm")} />
           <Metric icon={<FlaskConical size={19} />} label={text(language, "analyses")} value={analyses.length} />
@@ -3898,7 +4006,7 @@ function AdminUserRow({ user, onStatusChange, onPasswordReset, onRemove }) {
   );
 }
 
-function AdminDashboard({ token }) {
+function AdminDashboard({ token, language }) {
   const [tab, setTab] = useState("reports");
   const [analyses, setAnalyses] = useState([]);
   const [insurance, setInsurance] = useState([]);
@@ -3908,28 +4016,28 @@ function AdminDashboard({ token }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  async function loadAdminData() {
-    setLoading(true);
-    const [analysisData, loanData, insuranceData, userData, orderData, statsData] = await Promise.all([
-      apiRequest("/api/analyses", { token }),
-      apiRequest("/api/loans", { token }),
-      apiRequest("/api/insurance", { token }),
-      apiRequest("/api/admin/users", { token }),
-      apiRequest("/api/admin/orders", { token }),
-      apiRequest("/api/admin/stats", { token })
-    ]);
-    setAnalyses(analysisData.analyses);
-    setLoans(loanData.loans);
-    setInsurance(insuranceData.insurance);
-    setUsers(userData.users);
-    setOrders(orderData.orders);
-    setStats(statsData.stats);
-    setLoading(false);
-  }
+  const loadAdminData = useCallback(async () => {
+    try {
+      const [analysisData, loanData, insuranceData, userData, orderData, statsData] = await Promise.all([
+        apiRequest("/api/analyses", { token }),
+        apiRequest("/api/loans", { token }),
+        apiRequest("/api/insurance", { token }),
+        apiRequest("/api/admin/users", { token }),
+        apiRequest("/api/admin/orders", { token }),
+        apiRequest("/api/admin/stats", { token })
+      ]);
+      setAnalyses(analysisData.analyses);
+      setLoans(loanData.loans);
+      setInsurance(insuranceData.insurance);
+      setUsers(userData.users);
+      setOrders(orderData.orders);
+      setStats(statsData.stats);
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
 
-  useEffect(() => {
-    loadAdminData().catch(() => setLoading(false));
-  }, []);
+  const sync = useLiveRefresh(loadAdminData);
 
   async function updateStatus(id, status) {
     const data = await apiRequest(`/api/admin/analyses/${id}/status`, {
@@ -4011,6 +4119,7 @@ function AdminDashboard({ token }) {
 
   return (
     <div className="admin-layout">
+      <DataRefreshStatus language={language} {...sync} />
       <section className="admin-hero">
         <div>
           <span className="eyebrow">Operations</span>

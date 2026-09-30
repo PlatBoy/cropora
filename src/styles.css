@@ -1257,6 +1257,14 @@ html[dir="rtl"] .lang-switch-menu button {
   to { transform: rotate(360deg); }
 }
 
+@keyframes data-sync-pulse {
+  50% { box-shadow: 0 0 0 5px rgba(76, 203, 120, 0.12); }
+}
+
+@keyframes data-sync-spin {
+  to { transform: rotate(360deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .news-live-dot,
   .news-loading-pulse,
@@ -1265,6 +1273,8 @@ html[dir="rtl"] .lang-switch-menu button {
   .news-seed-toast,
   .news-seed-sprout,
   .news-refreshing,
+  .data-refresh-dot,
+  .data-refresh-spinning,
   .news-featured.is-surprise .news-feature-title {
     animation: none;
   }
@@ -1381,6 +1391,66 @@ html[dir="rtl"] .lang-switch-menu button {
   min-width: 0;
   display: grid;
   gap: 18px;
+}
+
+.data-refresh-status {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.data-refresh-status strong {
+  color: var(--copy-strong);
+  font-size: 0.82rem;
+}
+
+.data-refresh-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: data-sync-pulse 2.2s ease-out infinite;
+}
+
+.data-refresh-status.has-error .data-refresh-dot {
+  background: var(--amber);
+  animation: none;
+}
+
+.data-refresh-time {
+  display: inline-flex;
+  gap: 5px;
+  align-items: baseline;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-refresh-button {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  color: var(--copy);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.data-refresh-button:hover:not(:disabled) {
+  color: var(--green-dark);
+  background: var(--panel-soft);
+  border-color: var(--green);
+}
+
+.data-refresh-spinning {
+  animation: data-sync-spin 900ms linear infinite;
 }
 
 .user-manual {
@@ -2888,6 +2958,22 @@ td {
   .admin-layout {
     width: min(100% - 20px, 1320px);
     margin-top: 12px;
+  }
+
+  .data-refresh-status {
+    min-width: 0;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+
+  .data-refresh-time {
+    margin-left: auto;
+  }
+
+  .data-refresh-status strong {
+    min-width: 0;
+    max-width: calc(100% - 65px);
+    overflow-wrap: anywhere;
   }
 
   .floating-news {
