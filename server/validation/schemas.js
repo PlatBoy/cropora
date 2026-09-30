@@ -42,8 +42,10 @@ export const userStatusSchema = z.object({
 
 const optionalText = z.string().trim().max(500).optional().default("");
 const optionalFarmId = z.string().trim().max(80).optional().default("");
+const optionalLanguage = z.enum(["en", "hi", "pa", "bn", "ta", "te", "mr", "gu", "kn", "ml", "ur", "ne", "or", "as", "es"]).optional().default("en");
 
 export const analysisInputSchema = z.object({
+  language: optionalLanguage,
   farmId: optionalFarmId,
   landArea: z.string().trim().max(40).optional().default(""),
   landUnit: z.enum(["acre", "hectare", "bigha"]).optional().default("acre"),
@@ -61,6 +63,7 @@ export const analysisInputSchema = z.object({
 });
 
 export const identifierInputSchema = z.object({
+  language: optionalLanguage,
   farmId: optionalFarmId,
   landType: z
     .enum(["irrigated", "dryland", "lowland", "hilly", "river_belt", "plain", "unknown"])
@@ -93,6 +96,7 @@ export const loanStatusSchema = z.object({
 });
 
 export const diseaseInputSchema = z.object({
+  language: optionalLanguage,
   farmId: optionalFarmId,
   crop: z.string().trim().min(1).max(120),
   location: z.string().trim().max(160).optional().default(""),

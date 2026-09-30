@@ -55,6 +55,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
+import { getIntlLocale, localize, setActiveLocale } from "./i18n.js";
 
 const SESSION_KEY = "cropura-session";
 const THEME_KEY = "cropura-theme";
@@ -63,20 +64,20 @@ const LEGACY_LANG_KEY = "cropura-lang";
 
 const LANGUAGES = [
   { code: "en", label: "EN", name: "English" },
-  { code: "hi", label: "HI", name: "Hindi" },
-  { code: "pa", label: "PA", name: "Punjabi" },
-  { code: "bn", label: "BN", name: "Bengali" },
-  { code: "ta", label: "TA", name: "Tamil" },
-  { code: "te", label: "TE", name: "Telugu" },
-  { code: "mr", label: "MR", name: "Marathi" },
-  { code: "gu", label: "GU", name: "Gujarati" },
-  { code: "kn", label: "KN", name: "Kannada" },
-  { code: "ml", label: "ML", name: "Malayalam" },
-  { code: "ur", label: "UR", name: "Urdu" },
-  { code: "ne", label: "NE", name: "Nepali" },
-  { code: "or", label: "OR", name: "Odia" },
-  { code: "as", label: "AS", name: "Assamese" },
-  { code: "es", label: "ES", name: "Spanish" }
+  { code: "hi", label: "HI", name: "हिन्दी" },
+  { code: "pa", label: "PA", name: "ਪੰਜਾਬੀ" },
+  { code: "bn", label: "BN", name: "বাংলা" },
+  { code: "ta", label: "TA", name: "தமிழ்" },
+  { code: "te", label: "TE", name: "తెలుగు" },
+  { code: "mr", label: "MR", name: "मराठी" },
+  { code: "gu", label: "GU", name: "ગુજરાતી" },
+  { code: "kn", label: "KN", name: "ಕನ್ನಡ" },
+  { code: "ml", label: "ML", name: "മലയാളം" },
+  { code: "ur", label: "UR", name: "اردو" },
+  { code: "ne", label: "NE", name: "नेपाली" },
+  { code: "or", label: "OR", name: "ଓଡ଼ିଆ" },
+  { code: "as", label: "AS", name: "অসমীয়া" },
+  { code: "es", label: "ES", name: "Español" }
 ];
 const UI_COPY_KEYS = [
   "changeLanguage", "adminConsole", "farmerDesk", "logOut", "secureAccess", "welcomeBack",
@@ -330,7 +331,7 @@ function loadTurnstileScript() {
 }
 
 function formatDate(value) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat(getIntlLocale(), {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -340,7 +341,7 @@ function formatDate(value) {
 }
 
 function formatDay(value) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat(getIntlLocale(), {
     month: "short",
     day: "numeric",
     year: "numeric"
@@ -354,7 +355,7 @@ function titleCase(value) {
 }
 
 function formatMoney(value) {
-  return new Intl.NumberFormat("en-IN", {
+  return new Intl.NumberFormat(getIntlLocale(), {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0
@@ -492,21 +493,21 @@ function assistantAnswerLines(answer) {
 
 function printAnalysisReport(analysis) {
   const rows = [
-    ["Soil type", analysis.result?.soilType],
-    ["Confidence", `${analysis.result?.confidence || 0}%`],
-    ["Health score", analysis.result?.healthScore],
-    ["Risk", analysis.result?.riskLevel],
-    ["Crop", analysis.input?.crop || "Not set"],
-    ["Location", analysis.input?.location || "Not set"],
-    ["Land", `${analysis.input?.landArea || ""} ${analysis.input?.landUnit || ""}`.trim() || "Not set"],
-    ["Status", titleCase(analysis.status)]
+    [localize("Soil type"), localize(analysis.result?.soilType)],
+    [localize("Confidence"), `${analysis.result?.confidence || 0}%`],
+    [localize("Health score"), analysis.result?.healthScore],
+    [localize("Risk"), localize(analysis.result?.riskLevel)],
+    [localize("Crop"), localize(analysis.input?.crop || "Not set")],
+    [localize("Location"), analysis.input?.location || localize("Not set")],
+    [localize("Land"), `${analysis.input?.landArea || ""} ${localize(analysis.input?.landUnit || "")}`.trim() || localize("Not set")],
+    [localize("Status"), localize(titleCase(analysis.status))]
   ];
-  const recommendations = (analysis.result?.recommendations || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-  const nutrients = (analysis.result?.nutrients || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  const recommendations = (analysis.result?.recommendations || []).map((item) => `<li>${escapeHtml(localize(item))}</li>`).join("");
+  const nutrients = (analysis.result?.nutrients || []).map((item) => `<li>${escapeHtml(localize(item))}</li>`).join("");
   const html = `<!doctype html>
 <html>
   <head>
-    <title>Krishisense Soil Report</title>
+    <title>${escapeHtml(localize("Analysis result"))} · Krishisense</title>
     <style>
       body { font-family: Arial, sans-serif; color: #17231b; padding: 28px; line-height: 1.45; }
       h1 { margin: 0 0 4px; color: #21663a; }
@@ -519,15 +520,15 @@ function printAnalysisReport(analysis) {
     </style>
   </head>
   <body>
-    <h1>Krishisense Soil Report</h1>
+    <h1>${escapeHtml(localize("Analysis result"))} · Krishisense</h1>
     <p class="muted">${escapeHtml(formatDate(analysis.createdAt))}</p>
     ${analysis.photoUrl ? `<img src="${escapeHtml(analysis.photoUrl)}" alt="Soil" style="width:180px;height:130px;object-fit:cover;border-radius:8px" />` : ""}
-    <table>${rows.map(([label, value]) => `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value ?? "Not available")}</td></tr>`).join("")}</table>
-    <section><h2>Summary</h2><p>${escapeHtml(analysis.result?.summary || "No summary available.")}</p></section>
-    <section><h2>Recommendations</h2><ul>${recommendations || "<li>No recommendations available.</li>"}</ul></section>
-    <section><h2>Nutrients</h2><ul>${nutrients || "<li>No nutrient details available.</li>"}</ul></section>
-    <section><h2>Irrigation</h2><p>${escapeHtml(analysis.result?.irrigation || "No irrigation note available.")}</p></section>
-    <p class="muted">This report is guidance only. Confirm fertilizer and pH decisions with a lab soil test.</p>
+    <table>${rows.map(([label, value]) => `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value == null ? localize("Not available") : value)}</td></tr>`).join("")}</table>
+    <section><h2>${escapeHtml(localize("Summary"))}</h2><p>${escapeHtml(localize(analysis.result?.summary || "No summary available."))}</p></section>
+    <section><h2>${escapeHtml(localize("Recommendations"))}</h2><ul>${recommendations || localize("<li>No recommendations available.</li>")}</ul></section>
+    <section><h2>${escapeHtml(localize("Likely nutrients"))}</h2><ul>${nutrients || localize("<li>No nutrient details available.</li>")}</ul></section>
+    <section><h2>${escapeHtml(localize("Irrigation"))}</h2><p>${escapeHtml(localize(analysis.result?.irrigation || "No irrigation note available."))}</p></section>
+    <p class="muted">${escapeHtml(localize("AI photo analysis is guidance only. Confirm fertilizer and pH decisions with a lab soil test."))}</p>
   </body>
 </html>`;
   const reportWindow = window.open("", "_blank");
@@ -687,6 +688,7 @@ function App() {
   const [theme, setTheme] = useState(getInitialTheme);
   const [language, setLanguage] = useState(getInitialLanguage);
   const [booting, setBooting] = useState(Boolean(session?.token));
+  setActiveLocale(language);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -1533,11 +1535,11 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
           </section>
         )}
 
-        {activeView === "analysis" && <SoilAnalysisForm key={activeFarmId} token={token} farmId={activeFarmId} activeFarm={activeFarm} onCreated={loadAnalyses} />}
-        {activeView === "identify" && <SoilIdentifierUpload key={activeFarmId} token={token} farmId={activeFarmId} onCreated={loadAnalyses} />}
+        {activeView === "analysis" && <SoilAnalysisForm key={activeFarmId} token={token} farmId={activeFarmId} activeFarm={activeFarm} language={language} onCreated={loadAnalyses} />}
+        {activeView === "identify" && <SoilIdentifierUpload key={activeFarmId} token={token} farmId={activeFarmId} language={language} onCreated={loadAnalyses} />}
         {activeView === "history" && <AnalysisHistory analyses={analyses} loading={loading} />}
         {activeView === "planner" && <CropTaskPlanner key={activeFarmId} token={token} farm={activeFarm} farmId={activeFarmId} tasks={tasks} onChanged={loadTasks} />}
-        {activeView === "disease" && <DiseaseDetectionPanel key={activeFarmId} token={token} farmId={activeFarmId} diseases={diseases} onChanged={loadDiseases} />}
+        {activeView === "disease" && <DiseaseDetectionPanel key={activeFarmId} token={token} farmId={activeFarmId} language={language} diseases={diseases} onChanged={loadDiseases} />}
         {activeView === "insights" && <FarmerInsightCenter insights={insights} analyses={analyses} />}
         {activeView === "tools" && (
           <FarmerToolsPanel token={token} analyses={analyses} diseases={diseases} tasks={tasks} activeFarm={activeFarm} loans={loans} market={market} notifications={notifications} language={language} />
@@ -1632,7 +1634,7 @@ function UserManualPanel({ language, onNavigate }) {
       <div className="user-manual-topics">
         {manualSections.map((section, index) => (
           <article className="user-manual-topic" key={section.title}>
-            <span className="eyebrow">{String(index + 1).padStart(2, "0")}</span>
+            <span className="eyebrow">{new Intl.NumberFormat(getIntlLocale(), { minimumIntegerDigits: 2 }).format(index + 1)}</span>
             <h3>{section.title}</h3>
             <ol>
               {section.steps.map((step) => <li key={step}>{step}</li>)}
@@ -1921,7 +1923,7 @@ function FarmSwitcher({ token, farms, activeFarmId, onUserChange }) {
   );
 }
 
-function SoilAnalysisForm({ token, farmId, activeFarm, onCreated }) {
+function SoilAnalysisForm({ token, farmId, activeFarm, language, onCreated }) {
   const [form, setForm] = useState(emptyAnalysisForm);
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState("");
@@ -1962,6 +1964,7 @@ function SoilAnalysisForm({ token, farmId, activeFarm, onCreated }) {
 
       const body = new FormData();
       Object.entries(form).forEach(([key, value]) => body.append(key, value));
+      body.append("language", language);
       body.append("farmId", farmId || "");
       body.append("photo", photo);
 
@@ -2174,7 +2177,7 @@ function ResultCard({ result }) {
   );
 }
 
-function SoilIdentifierUpload({ token, farmId, onCreated }) {
+function SoilIdentifierUpload({ token, farmId, language, onCreated }) {
   const [form, setForm] = useState({
     landType: "unknown",
     location: "",
@@ -2207,6 +2210,7 @@ function SoilIdentifierUpload({ token, farmId, onCreated }) {
 
       const body = new FormData();
       Object.entries(form).forEach(([key, value]) => body.append(key, value));
+      body.append("language", language);
       body.append("farmId", farmId || "");
       body.append("photo", photo);
 
@@ -2718,7 +2722,7 @@ function AiAssistantPanel({ token, latest, latestDisease, tasks, farm, language 
         ) : messages.map((message, index) => (
           <article className={`assistant-message ${message.role}`} key={`${message.role}-${index}`}>
             <span>{message.role === "assistant" ? (message.source === "fallback" ? "General guidance · AI unavailable" : "Krishisense") : "You"}</span>
-            <div>{assistantAnswerLines(message.content).map((line, lineIndex) => <p key={`${line}-${lineIndex}`}>{line}</p>)}</div>
+            <div>{assistantAnswerLines(message.content).map((line, lineIndex) => <p key={`${line}-${lineIndex}`}>{message.role === "assistant" ? localize(line) : line}</p>)}</div>
           </article>
         ))}
         {busy && <p className="assistant-thinking"><span className="loading-dot" /> Preparing farm-specific guidance…</p>}
@@ -2751,7 +2755,7 @@ function AiAssistantPanel({ token, latest, latestDisease, tasks, farm, language 
   );
 }
 
-function DiseaseDetectionPanel({ token, farmId, diseases, onChanged }) {
+function DiseaseDetectionPanel({ token, farmId, language, diseases, onChanged }) {
   const [form, setForm] = useState({ crop: "", location: "", symptoms: "", notes: "", photo: null });
   const [preview, setPreview] = useState("");
   const [result, setResult] = useState(null);
@@ -2778,6 +2782,7 @@ function DiseaseDetectionPanel({ token, farmId, diseases, onChanged }) {
       if (!validation.success) throw new Error(firstValidationMessage(validation));
 
       const payload = new FormData();
+      payload.append("language", language);
       payload.append("farmId", farmId || "");
       payload.append("crop", form.crop);
       payload.append("location", form.location);

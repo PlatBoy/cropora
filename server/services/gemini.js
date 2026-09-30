@@ -13,6 +13,16 @@ const soilColors = {
   Unknown: "#8a5a36"
 };
 
+const languageNames = {
+  en: "English", hi: "Hindi", pa: "Punjabi", bn: "Bengali", ta: "Tamil",
+  te: "Telugu", mr: "Marathi", gu: "Gujarati", kn: "Kannada", ml: "Malayalam",
+  ur: "Urdu", ne: "Nepali", or: "Odia", as: "Assamese", es: "Spanish"
+};
+
+function outputLanguage(input) {
+  return languageNames[input.language] || languageNames.en;
+}
+
 const responseSchema = {
   type: "object",
   properties: {
@@ -191,6 +201,7 @@ export async function analyzeSoilPhoto({ file, input = {}, type = "soil_identifi
 You are an agronomy assistant analyzing a farmer's soil photo.
 Classify the visible soil into one of: Clay, Sandy, Loamy, Silty, Peaty, Chalky, Laterite, Alluvial, Unknown.
 Return a practical farmer-facing result. If the image is not soil or too unclear, set soilType to Unknown, confidence below 45, and explain why.
+Write every human-readable value in the JSON response in ${outputLanguage(input)}. Keep soilType and riskLevel exactly in the enum values above so the application can process them.
 
 Context:
 - Feature: ${type}
@@ -255,6 +266,7 @@ export async function analyzeCropDiseasePhoto({ file, input = {} }) {
   const prompt = `
 You are an agronomy assistant helping a farmer identify crop disease or pest damage from a plant photo.
 Return practical, safe guidance. If the photo is unclear or not a crop/plant, set diseaseName to Unknown, confidence below 45, and explain what image is needed.
+Write every human-readable value in the JSON response in ${outputLanguage(input)}. Keep severity exactly in the Low, Medium, or High enum values so the application can process it.
 
 Context:
 - Crop: ${input.crop || "not provided"}
