@@ -829,6 +829,16 @@ html[dir="rtl"] .lang-switch-menu button {
   opacity: 0.8;
 }
 
+.plough-soil {
+  fill: var(--buddy-ink);
+  opacity: 0;
+  animation: plough-soil-flick 1.15s ease-out infinite;
+}
+
+.plough-soil-back {
+  animation-delay: 70ms;
+}
+
 .plough-farmer {
   animation: plough-farmer-step 1.4s ease-in-out infinite;
   transform-box: view-box;
@@ -839,6 +849,12 @@ html[dir="rtl"] .lang-switch-menu button {
 .plough-head,
 .plough-arm {
   fill: var(--buddy-ink);
+}
+
+.plough-arm-front {
+  animation: plough-arm-push 1.15s ease-in-out infinite;
+  transform-box: view-box;
+  transform-origin: 43px 33px;
 }
 
 .plough-hat {
@@ -859,12 +875,12 @@ html[dir="rtl"] .lang-switch-menu button {
 .plough-tool {
   fill: none;
   stroke: var(--buddy-ink);
-  stroke-width: 2.2;
+  stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  animation: plough-tool-pull 1.4s ease-in-out infinite;
+  animation: plough-tool-pull 1.15s ease-in-out infinite;
   transform-box: view-box;
-  transform-origin: 65px 47px;
+  transform-origin: 57px 38px;
 }
 
 .plough-blade {
@@ -951,8 +967,21 @@ html[dir="rtl"] .lang-switch-menu button {
 }
 
 @keyframes plough-tool-pull {
-  0%, 100% { transform: rotate(0); }
-  50% { transform: rotate(-1.8deg); }
+  0%, 15% { transform: rotate(-3deg) translateY(-1px); }
+  45% { transform: rotate(6deg) translateY(1px); }
+  72%, 100% { transform: rotate(-1deg); }
+}
+
+@keyframes plough-arm-push {
+  0%, 15% { transform: rotate(-2deg); }
+  45% { transform: rotate(5deg); }
+  72%, 100% { transform: rotate(0); }
+}
+
+@keyframes plough-soil-flick {
+  0%, 42%, 100% { opacity: 0; transform: translate(0, 0); }
+  48% { opacity: 1; }
+  68% { opacity: 0; transform: translate(4px, -4px); }
 }
 
 @keyframes farm-buddy-tip-in {
@@ -1497,6 +1526,8 @@ html[dir="rtl"] .lang-switch-menu button {
   .plough-farmer,
   .plough-legs,
   .plough-tool,
+  .plough-arm-front,
+  .plough-soil,
   .farm-buddy-tip,
   .data-refresh-dot,
   .data-refresh-spinning,

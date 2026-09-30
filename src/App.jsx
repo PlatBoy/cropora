@@ -1374,6 +1374,8 @@ function FarmBuddy({ language }) {
             <path className="plough-horizon" d="M5 53 Q21 49 37 53 T79 52" />
             <path className="plough-furrow" d="M8 61 Q27 56 46 61 T81 60" />
             <path className="plough-furrow plough-furrow-back" d="M12 67 Q30 62 49 67 T82 66" />
+            <circle className="plough-soil" cx="74" cy="58" r="1.5" />
+            <circle className="plough-soil plough-soil-back" cx="71" cy="60" r="1.1" />
             <g className="plough-tool">
               <path d="M54 36 64 45 68 56" />
               <path d="M57 35 67 43 72 54" />
@@ -1388,7 +1390,7 @@ function FarmBuddy({ language }) {
               <path className="plough-body" d="M36 28q5-2 9 2l4 13-11 4-7-11z" />
               <circle className="plough-head" cx="39" cy="23" r="5" />
               <path className="plough-hat" d="M32 19q1-6 8-6 6 0 8 5l-3 2H32zm-2 1h21v2H30z" />
-              <path className="plough-arm" d="m42 31 8 2 8 4-2 3-11-3-7-1z" />
+              <path className="plough-arm plough-arm-front" d="m42 31 8 2 8 4-2 3-11-3-7-1z" />
               <path className="plough-arm" d="m36 32-5 5 9 5 2-3-5-4 5-2z" />
             </g>
           </svg>
