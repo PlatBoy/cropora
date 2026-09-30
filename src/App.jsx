@@ -404,10 +404,32 @@ const LIVE_COPY = Object.fromEntries(LIVE_COPY_KEYS.map((key, index) => [
   key,
   Object.fromEntries(Object.entries(LIVE_COPY_ROWS).map(([code, row]) => [code, row[index]]))
 ]));
+const FARM_BUDDY_KEYS = ["name", "tipTitle", "nextTip", "closeTip", "moisture", "scout", "compost", "spray"];
+const FARM_BUDDY_ROWS = {
+  en: ["Farm buddy", "Field tip", "Another tip", "Close tip", "Check soil moisture before watering.", "Inspect leaf undersides when scouting for pests.", "Add compost to improve soil structure over time.", "Avoid spraying in strong wind or peak heat."],
+  hi: ["खेत साथी", "खेत की सलाह", "अगली सलाह", "सलाह बंद करें", "पानी देने से पहले मिट्टी की नमी जांचें।", "कीटों की जांच करते समय पत्तियों के नीचे देखें।", "मिट्टी की बनावट सुधारने के लिए खाद डालें।", "तेज हवा या कड़ी धूप में छिड़काव न करें।"],
+  pa: ["ਖੇਤ ਦਾ ਸਾਥੀ", "ਖੇਤ ਦੀ ਸਲਾਹ", "ਅਗਲੀ ਸਲਾਹ", "ਸਲਾਹ ਬੰਦ ਕਰੋ", "ਪਾਣੀ ਦੇਣ ਤੋਂ ਪਹਿਲਾਂ ਮਿੱਟੀ ਦੀ ਨਮੀ ਜਾਂਚੋ।", "ਕੀੜਿਆਂ ਦੀ ਜਾਂਚ ਲਈ ਪੱਤਿਆਂ ਦੇ ਹੇਠਾਂ ਵੇਖੋ।", "ਮਿੱਟੀ ਦੀ ਬਣਤਰ ਸੁਧਾਰਨ ਲਈ ਖਾਦ ਪਾਓ।", "ਤੇਜ਼ ਹਵਾ ਜਾਂ ਤਿੱਖੀ ਧੁੱਪ ਵਿੱਚ ਛਿੜਕਾਅ ਨਾ ਕਰੋ।"],
+  bn: ["খামারের সঙ্গী", "খেতের পরামর্শ", "আরেকটি পরামর্শ", "পরামর্শ বন্ধ করুন", "জল দেওয়ার আগে মাটির আর্দ্রতা পরীক্ষা করুন।", "পোকা খুঁজতে পাতার নিচের দিক দেখুন।", "মাটির গঠন উন্নত করতে কম্পোস্ট যোগ করুন।", "জোরে বাতাস বা প্রচণ্ড গরমে স্প্রে করবেন না।"],
+  ta: ["பண்ணைத் தோழன்", "வயல் குறிப்பு", "அடுத்த குறிப்பு", "குறிப்பை மூடு", "நீர் பாய்ச்சும் முன் மண்ணின் ஈரத்தைச் சரிபார்க்கவும்.", "பூச்சிகளைத் தேட இலைகளின் அடிப்புறத்தைப் பாருங்கள்.", "மண் அமைப்பை மேம்படுத்த கம்போஸ்ட் சேர்க்கவும்.", "பலத்த காற்று அல்லது கடும் வெயிலில் தெளிக்க வேண்டாம்."],
+  te: ["పొలం నేస్తం", "పొలం చిట్కా", "మరో చిట్కా", "చిట్కాను మూసివేయండి", "నీరు పెట్టే ముందు నేల తేమను తనిఖీ చేయండి.", "పురుగుల కోసం ఆకుల అడుగు భాగాన్ని పరిశీలించండి.", "నేల నిర్మాణం మెరుగుపడేందుకు కంపోస్ట్ కలపండి.", "బలమైన గాలి లేదా తీవ్రమైన ఎండలో పిచికారీ చేయవద్దు."],
+  mr: ["शेतमित्र", "शेतातील टिप", "आणखी एक टिप", "टिप बंद करा", "पाणी देण्यापूर्वी मातीतील ओलावा तपासा.", "किडींसाठी पानांच्या खालच्या बाजूची पाहणी करा.", "मातीची रचना सुधारण्यासाठी कंपोस्ट घाला.", "जोराचा वारा किंवा कडक उन्हात फवारणी टाळा."],
+  gu: ["ખેતરનો સાથી", "ખેતરની સલાહ", "બીજી સલાહ", "સલાહ બંધ કરો", "પાણી આપતા પહેલાં જમીનની ભેજ તપાસો.", "જીવાત જોવા પાંદડાની નીચેની બાજુ તપાસો.", "જમીનની રચના સુધારવા કમ્પોસ્ટ ઉમેરો.", "તેજ પવન અથવા ભારે ગરમીમાં છંટકાવ ટાળો."],
+  kn: ["ಹೊಲದ ಗೆಳೆಯ", "ಹೊಲದ ಸಲಹೆ", "ಇನ್ನೊಂದು ಸಲಹೆ", "ಸಲಹೆ ಮುಚ್ಚಿ", "ನೀರು ಹಾಕುವ ಮೊದಲು ಮಣ್ಣಿನ ತೇವಾಂಶ ಪರಿಶೀಲಿಸಿ.", "ಕೀಟಗಳಿಗಾಗಿ ಎಲೆಗಳ ಕೆಳಭಾಗವನ್ನು ನೋಡಿ.", "ಮಣ್ಣಿನ ರಚನೆ ಉತ್ತಮಗೊಳಿಸಲು ಕಾಂಪೋಸ್ಟ್ ಸೇರಿಸಿ.", "ಬಲವಾದ ಗಾಳಿ ಅಥವಾ ತೀವ್ರ ಬಿಸಿಲಿನಲ್ಲಿ ಸಿಂಪಡಿಸಬೇಡಿ."],
+  ml: ["കൃഷിത്തോട്ട കൂട്ടുകാരൻ", "കൃഷിയിട കുറിപ്പ്", "അടുത്ത കുറിപ്പ്", "കുറിപ്പ് അടയ്ക്കുക", "നനയ്ക്കുന്നതിന് മുമ്പ് മണ്ണിലെ ഈർപ്പം പരിശോധിക്കുക.", "കീടങ്ങൾക്കായി ഇലകളുടെ അടിവശം പരിശോധിക്കുക.", "മണ്ണിന്റെ ഘടന മെച്ചപ്പെടുത്താൻ കമ്പോസ്റ്റ് ചേർക്കുക.", "ശക്തമായ കാറ്റിലോ കടുത്ത ചൂടിലോ തളിക്കരുത്."],
+  ur: ["کھیت کا ساتھی", "کھیت کی ترکیب", "اگلی ترکیب", "ترکیب بند کریں", "پانی دینے سے پہلے مٹی کی نمی جانچیں۔", "کیڑوں کی تلاش میں پتوں کی نچلی سطح دیکھیں۔", "مٹی کی ساخت بہتر بنانے کے لیے کمپوسٹ ڈالیں۔", "تیز ہوا یا سخت دھوپ میں اسپرے نہ کریں۔"],
+  ne: ["खेतको साथी", "खेतको सुझाव", "अर्को सुझाव", "सुझाव बन्द गर्नुहोस्", "पानी हाल्नुअघि माटोको चिस्यान जाँच्नुहोस्।", "कीरा खोज्न पातको तल्लो भाग हेर्नुहोस्।", "माटोको बनावट सुधार्न कम्पोस्ट थप्नुहोस्।", "तेज हावा वा कडा घाममा छर्कनु हुँदैन।"],
+  or: ["କ୍ଷେତର ସାଥୀ", "କ୍ଷେତ ଟିପ୍ସ", "ଆଉ ଏକ ଟିପ୍ସ", "ଟିପ୍ସ ବନ୍ଦ କରନ୍ତୁ", "ଜଳ ଦେବା ପୂର୍ବରୁ ମାଟିର ଆର୍ଦ୍ରତା ଯାଞ୍ଚ କରନ୍ତୁ।", "ପୋକ ଖୋଜିବା ପାଇଁ ପତ୍ରର ତଳ ପଟ ଦେଖନ୍ତୁ।", "ମାଟିର ଗଠନ ଉନ୍ନତ କରିବାକୁ କମ୍ପୋଷ୍ଟ ମିଶାନ୍ତୁ।", "ଜୋର ପବନ କିମ୍ବା ଅଧିକ ଖରାରେ ସ୍ପ୍ରେ କରନ୍ତୁ ନାହିଁ।"],
+  as: ["পথাৰৰ বন্ধু", "পথাৰৰ পৰামৰ্শ", "আন এটা পৰামৰ্শ", "পৰামৰ্শ বন্ধ কৰক", "পানী দিয়াৰ আগতে মাটিৰ আৰ্দ্ৰতা পৰীক্ষা কৰক।", "পোক বিচাৰিবলৈ পাতৰ তলৰ ফাল চাওক।", "মাটিৰ গঠন উন্নত কৰিবলৈ কম্পোষ্ট যোগ কৰক।", "প্ৰবল বতাহ বা অত্যধিক গৰমত স্প্ৰে নকৰিব।"],
+  es: ["Amigo del campo", "Consejo de campo", "Otro consejo", "Cerrar consejo", "Comprueba la humedad del suelo antes de regar.", "Revisa el envés de las hojas al buscar plagas.", "Añade compost para mejorar la estructura del suelo.", "Evita fumigar con viento fuerte o calor intenso."]
+};
+const FARM_BUDDY_COPY = Object.fromEntries(FARM_BUDDY_KEYS.map((key, index) => [
+  key,
+  Object.fromEntries(Object.entries(FARM_BUDDY_ROWS).map(([code, row]) => [code, row[index]]))
+]));
 
 function text(language, key) {
   if (key === "userManual") return MANUAL_LABELS[language] || MANUAL_LABELS.en;
-  return LIVE_COPY[key]?.[language] || UI_COPY[key]?.[language] || LIVE_COPY[key]?.en || UI_COPY[key]?.en || key;
+  return FARM_BUDDY_COPY[key]?.[language] || LIVE_COPY[key]?.[language] || UI_COPY[key]?.[language] || FARM_BUDDY_COPY[key]?.en || LIVE_COPY[key]?.en || UI_COPY[key]?.en || key;
 }
 
 function useLiveRefresh(refreshData) {
@@ -1312,7 +1334,50 @@ function Dashboard({ session, onLogout, theme, onThemeToggle, language, onLangua
       ) : (
         <FarmerDashboard token={session.token} user={session.user} language={language} onFarmChange={setFarmName} />
       )}
+      <FarmBuddy language={language} />
     </main>
+  );
+}
+
+function FarmBuddy({ language }) {
+  const [open, setOpen] = useState(false);
+  const [tipIndex, setTipIndex] = useState(0);
+  const tipKeys = ["moisture", "scout", "compost", "spray"];
+
+  return (
+    <aside className="farm-buddy" aria-label={text(language, "name")}>
+      {open && (
+        <section className="farm-buddy-tip" aria-live="polite">
+          <div className="farm-buddy-tip-heading">
+            <span><Sprout size={16} />{text(language, "tipTitle")}</span>
+            <button type="button" onClick={() => setOpen(false)} aria-label={text(language, "closeTip")} title={text(language, "closeTip")}>
+              <ChevronDown size={17} />
+            </button>
+          </div>
+          <p>{text(language, tipKeys[tipIndex])}</p>
+          <button className="farm-buddy-next" type="button" onClick={() => setTipIndex((index) => (index + 1) % tipKeys.length)}>
+            <RefreshCw size={14} />{text(language, "nextTip")}
+          </button>
+        </section>
+      )}
+      <button
+        className={`farm-buddy-trigger${open ? " is-open" : ""}`}
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-label={`${text(language, "name")}: ${text(language, open ? "closeTip" : "tipTitle")}`}
+        aria-expanded={open}
+        title={text(language, "name")}
+      >
+        <span className="farm-buddy-scene" aria-hidden="true">
+          <span className="farm-buddy-sun" />
+          <span className="farm-buddy-plant">
+            <Sprout className="farm-buddy-sprout" size={32} strokeWidth={2.6} />
+            <span className="farm-buddy-face"><i /><i /><b /></span>
+          </span>
+          <span className="farm-buddy-ground" />
+        </span>
+      </button>
+    </aside>
   );
 }
 

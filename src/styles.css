@@ -741,6 +741,213 @@ html[dir="rtl"] .lang-switch-menu button {
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
+.farm-buddy {
+  position: fixed;
+  right: 18px;
+  bottom: 16px;
+  z-index: 20;
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.farm-buddy-trigger {
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--copy-strong);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--green) 48%, var(--line));
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.farm-buddy-trigger:hover,
+.farm-buddy-trigger.is-open {
+  transform: translateY(-3px) rotate(-2deg);
+  border-color: var(--amber);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.26), 0 0 0 4px color-mix(in srgb, var(--amber) 12%, transparent);
+}
+
+.farm-buddy-trigger:focus-visible,
+.farm-buddy-tip button:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+
+.farm-buddy-scene {
+  position: relative;
+  width: 60px;
+  height: 62px;
+  display: block;
+}
+
+.farm-buddy-sun {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--amber) 14%, transparent);
+  animation: farm-buddy-sunrise 3.2s ease-in-out infinite;
+}
+
+.farm-buddy-plant {
+  position: absolute;
+  left: 9px;
+  bottom: 9px;
+  z-index: 2;
+  width: 43px;
+  display: grid;
+  justify-items: center;
+  animation: farm-buddy-bob 3s ease-in-out infinite;
+}
+
+.farm-buddy-sprout {
+  color: var(--green);
+  filter: drop-shadow(0 2px 2px color-mix(in srgb, var(--green) 26%, transparent));
+  animation: farm-buddy-sway 2.7s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.farm-buddy-face {
+  position: relative;
+  width: 38px;
+  height: 25px;
+  margin-top: -3px;
+  border: 1px solid color-mix(in srgb, var(--green) 65%, var(--line));
+  border-radius: 12px 12px 15px 15px;
+  background: color-mix(in srgb, var(--green) 34%, var(--panel));
+  box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--green) 16%, transparent);
+}
+
+.farm-buddy-face i {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  width: 3px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.farm-buddy-face i:nth-child(2) {
+  left: 23px;
+}
+
+.farm-buddy-face b {
+  position: absolute;
+  left: 16px;
+  bottom: 5px;
+  width: 7px;
+  height: 4px;
+  border-bottom: 1.5px solid var(--ink);
+  border-radius: 0 0 8px 8px;
+}
+
+.farm-buddy-ground {
+  position: absolute;
+  left: 6px;
+  bottom: 4px;
+  width: 47px;
+  height: 10px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--amber) 62%, var(--panel));
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--amber) 22%, var(--panel));
+}
+
+.farm-buddy-tip {
+  width: min(290px, calc(100vw - 28px));
+  padding: 14px;
+  color: var(--copy);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.26);
+  pointer-events: auto;
+  animation: farm-buddy-tip-in 180ms ease-out both;
+}
+
+.farm-buddy-tip-heading,
+.farm-buddy-tip-heading > span {
+  display: flex;
+  align-items: center;
+}
+
+.farm-buddy-tip-heading {
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--amber);
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.farm-buddy-tip-heading > span {
+  gap: 7px;
+}
+
+.farm-buddy-tip-heading button {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.farm-buddy-tip p {
+  margin: 10px 0 12px;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.farm-buddy-next {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 9px;
+  color: var(--green-dark);
+  background: var(--chip-bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+@keyframes farm-buddy-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes farm-buddy-sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+@keyframes farm-buddy-sunrise {
+  0%, 100% { transform: translateY(2px); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes farm-buddy-tip-in {
+  from { opacity: 0; transform: translateY(7px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .floating-news.is-expanded {
   border-color: color-mix(in srgb, var(--green) 58%, var(--line));
   box-shadow: 0 18px 44px rgba(3, 18, 11, 0.2), var(--card-shadow);
@@ -1273,6 +1480,10 @@ html[dir="rtl"] .lang-switch-menu button {
   .news-seed-toast,
   .news-seed-sprout,
   .news-refreshing,
+  .farm-buddy-sun,
+  .farm-buddy-plant,
+  .farm-buddy-sprout,
+  .farm-buddy-tip,
   .data-refresh-dot,
   .data-refresh-spinning,
   .news-featured.is-surprise .news-feature-title {
@@ -1283,12 +1494,18 @@ html[dir="rtl"] .lang-switch-menu button {
   .floating-news-label,
   .news-control-button,
   .news-library-card,
-  .news-library-title > span {
+  .news-library-title > span,
+  .farm-buddy-trigger {
     transition: none;
   }
 
   .news-library-card:hover,
   .news-control-button:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .farm-buddy-trigger:hover,
+  .farm-buddy-trigger.is-open {
     transform: none;
   }
 }
@@ -3079,6 +3296,17 @@ td {
   .topbar-actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .farm-buddy {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .farm-buddy-trigger {
+    width: 66px;
+    height: 66px;
+    border-radius: 19px;
   }
 
   .dashboard-grid,
