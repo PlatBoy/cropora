@@ -248,6 +248,13 @@ const farmTaskClientSchema = z.object({
   notes: z.string().trim().max(500)
 });
 
+const farmTaskRecordClientSchema = z.object({
+  actualCost: z.coerce.number().min(0).max(100000000),
+  harvestQuantity: z.coerce.number().min(0).max(100000000),
+  harvestUnit: z.enum(["kg", "quintal", "tonne"]),
+  saleProceeds: z.coerce.number().min(0).max(1000000000)
+});
+
 function tomorrowDateInput() {
   const date = new Date();
   date.setDate(date.getDate() + 1);
@@ -429,6 +436,33 @@ const FARM_BUDDY_COPY = Object.fromEntries(FARM_BUDDY_KEYS.map((key, index) => [
   key,
   Object.fromEntries(Object.entries(FARM_BUDDY_ROWS).map(([code, row]) => [code, row[index]]))
 ]));
+
+const FARM_LEDGER_KEYS = ["fieldRecords", "farmLogbook", "logbookNote", "loggedCosts", "recordedSales", "harvestLogs", "actualResults", "actualCost", "harvestQuantity", "saleProceeds", "saveComplete", "saving", "cancel", "spent", "sales", "completedLogbookMessage"];
+const FARM_LEDGER_ROWS = {
+  en: ["Field records", "Farm logbook", "Totals use the costs and harvest sales you record when completing tasks.", "Logged costs", "Recorded sales", "Harvest logs", "Record actual results", "Actual cost (INR)", "Harvest quantity", "Sale proceeds (INR)", "Save and complete", "Saving…", "Cancel", "Spent", "Sales", "Task completed and added to this farm's logbook."],
+  hi: ["खेत के रिकॉर्ड", "खेत की डायरी", "कुल में काम पूरा करते समय आपके दर्ज किए गए खर्च और फसल की बिक्री शामिल हैं।", "दर्ज लागत", "दर्ज बिक्री", "कटाई के रिकॉर्ड", "वास्तविक परिणाम दर्ज करें", "वास्तविक लागत (INR)", "कटाई की मात्रा", "बिक्री की राशि (INR)", "सहेजें और पूरा करें", "सहेजा जा रहा है…", "रद्द करें", "खर्च", "बिक्री", "काम पूरा हुआ और खेत की डायरी में जोड़ दिया गया।"],
+  pa: ["ਖੇਤ ਦੇ ਰਿਕਾਰਡ", "ਖੇਤ ਦੀ ਡਾਇਰੀ", "ਕੁੱਲ ਵਿੱਚ ਕੰਮ ਪੂਰਾ ਕਰਦੇ ਸਮੇਂ ਦਰਜ ਕੀਤੇ ਖਰਚੇ ਅਤੇ ਫ਼ਸਲ ਦੀ ਵਿਕਰੀ ਸ਼ਾਮਲ ਹੈ।", "ਦਰਜ ਖਰਚੇ", "ਦਰਜ ਵਿਕਰੀ", "ਵਾਢੀ ਦੇ ਰਿਕਾਰਡ", "ਅਸਲ ਨਤੀਜੇ ਦਰਜ ਕਰੋ", "ਅਸਲ ਖਰਚਾ (INR)", "ਵਾਢੀ ਦੀ ਮਾਤਰਾ", "ਵਿਕਰੀ ਦੀ ਰਕਮ (INR)", "ਸੰਭਾਲੋ ਅਤੇ ਪੂਰਾ ਕਰੋ", "ਸੰਭਾਲਿਆ ਜਾ ਰਿਹਾ ਹੈ…", "ਰੱਦ ਕਰੋ", "ਖਰਚਿਆ", "ਵਿਕਰੀ", "ਕੰਮ ਪੂਰਾ ਹੋਇਆ ਅਤੇ ਖੇਤ ਦੀ ਡਾਇਰੀ ਵਿੱਚ ਜੋੜਿਆ ਗਿਆ।"],
+  bn: ["খেতের রেকর্ড", "খামারের খাতা", "কাজ শেষ করার সময় আপনার নথিভুক্ত খরচ ও ফসল বিক্রির হিসাব এখানে যোগ হয়।", "নথিভুক্ত খরচ", "নথিভুক্ত বিক্রি", "ফসল কাটার রেকর্ড", "প্রকৃত ফলাফল লিখুন", "প্রকৃত খরচ (INR)", "ফসলের পরিমাণ", "বিক্রির অর্থ (INR)", "সংরক্ষণ করে সম্পন্ন করুন", "সংরক্ষণ হচ্ছে…", "বাতিল", "খরচ", "বিক্রি", "কাজ সম্পন্ন হয়েছে এবং খামারের খাতায় যোগ হয়েছে।"],
+  ta: ["வயல் பதிவுகள்", "பண்ணைப் பதிவேடு", "பணியை முடிக்கும்போது நீங்கள் பதிவு செய்யும் செலவுகளும் அறுவடை விற்பனையும் இங்கே கணக்கிடப்படும்.", "பதிவு செய்த செலவுகள்", "பதிவு செய்த விற்பனை", "அறுவடை பதிவுகள்", "உண்மையான முடிவுகளைப் பதிவு செய்", "உண்மையான செலவு (INR)", "அறுவடை அளவு", "விற்பனைத் தொகை (INR)", "சேமித்து முடி", "சேமிக்கப்படுகிறது…", "ரத்து செய்", "செலவு", "விற்பனை", "பணி முடிக்கப்பட்டு பண்ணைப் பதிவேட்டில் சேர்க்கப்பட்டது."],
+  te: ["పొలం రికార్డులు", "వ్యవసాయ లాగ్‌బుక్", "పని పూర్తిచేసేటప్పుడు మీరు నమోదు చేసే ఖర్చులు, పంట అమ్మకాలే ఈ మొత్తాల్లో ఉంటాయి.", "నమోదు చేసిన ఖర్చులు", "నమోదు చేసిన అమ్మకాలు", "పంట కోత రికార్డులు", "వాస్తవ ఫలితాలను నమోదు చేయండి", "వాస్తవ ఖర్చు (INR)", "పంట పరిమాణం", "అమ్మకాల మొత్తం (INR)", "సేవ్ చేసి పూర్తి చేయండి", "సేవ్ అవుతోంది…", "రద్దు చేయండి", "ఖర్చు", "అమ్మకాలు", "పని పూర్తయి వ్యవసాయ లాగ్‌బుక్‌లో చేర్చబడింది."],
+  mr: ["शेतातील नोंदी", "शेताची नोंदवही", "काम पूर्ण करताना तुम्ही नोंदवलेले खर्च आणि पीक विक्री या एकूण रकमेत समाविष्ट आहेत.", "नोंदवलेला खर्च", "नोंदवलेली विक्री", "कापणीच्या नोंदी", "प्रत्यक्ष निकाल नोंदवा", "प्रत्यक्ष खर्च (INR)", "कापणीचे प्रमाण", "विक्रीची रक्कम (INR)", "जतन करा आणि पूर्ण करा", "जतन होत आहे…", "रद्द करा", "खर्च", "विक्री", "काम पूर्ण झाले आणि शेताच्या नोंदवहीत जोडले."],
+  gu: ["ખેતરના રેકોર્ડ", "ખેતરની નોંધપોથી", "કામ પૂરું કરતી વખતે તમે નોંધેલા ખર્ચ અને પાકના વેચાણનો જ કુલમાં સમાવેશ થાય છે.", "નોંધાયેલ ખર્ચ", "નોંધાયેલ વેચાણ", "લણણીના રેકોર્ડ", "વાસ્તવિક પરિણામ નોંધો", "વાસ્તવિક ખર્ચ (INR)", "લણણીનું પ્રમાણ", "વેચાણની રકમ (INR)", "સાચવો અને પૂર્ણ કરો", "સાચવાઈ રહ્યું છે…", "રદ કરો", "ખર્ચ", "વેચાણ", "કામ પૂર્ણ થયું અને ખેતરની નોંધપોથીમાં ઉમેરાયું."],
+  kn: ["ಹೊಲದ ದಾಖಲೆಗಳು", "ಕೃಷಿ ದಾಖಲಾತಿ ಪುಸ್ತಕ", "ಕೆಲಸ ಪೂರ್ಣಗೊಳಿಸುವಾಗ ನೀವು ದಾಖಲಿಸುವ ವೆಚ್ಚ ಮತ್ತು ಬೆಳೆ ಮಾರಾಟವನ್ನು ಮಾತ್ರ ಇಲ್ಲಿ ಲೆಕ್ಕಿಸಲಾಗುತ್ತದೆ.", "ದಾಖಲಿಸಿದ ವೆಚ್ಚ", "ದಾಖಲಿಸಿದ ಮಾರಾಟ", "ಸುಗ್ಗಿಯ ದಾಖಲೆಗಳು", "ನಿಜವಾದ ಫಲಿತಾಂಶಗಳನ್ನು ದಾಖಲಿಸಿ", "ನಿಜವಾದ ವೆಚ್ಚ (INR)", "ಸುಗ್ಗಿಯ ಪ್ರಮಾಣ", "ಮಾರಾಟದ ಮೊತ್ತ (INR)", "ಉಳಿಸಿ ಪೂರ್ಣಗೊಳಿಸಿ", "ಉಳಿಸಲಾಗುತ್ತಿದೆ…", "ರದ್ದುಮಾಡಿ", "ವೆಚ್ಚ", "ಮಾರಾಟ", "ಕೆಲಸ ಪೂರ್ಣಗೊಂಡು ಕೃಷಿ ದಾಖಲಾತಿ ಪುಸ್ತಕಕ್ಕೆ ಸೇರಿಸಲಾಗಿದೆ."],
+  ml: ["കൃഷിയിട രേഖകൾ", "ഫാം രേഖാപുസ്തകം", "ജോലി പൂർത്തിയാക്കുമ്പോൾ നിങ്ങൾ രേഖപ്പെടുത്തുന്ന ചെലവും വിളവിന്റെ വിൽപ്പനയും മാത്രമാണ് ആകെ തുകയിൽ ഉൾപ്പെടുന്നത്.", "രേഖപ്പെടുത്തിയ ചെലവ്", "രേഖപ്പെടുത്തിയ വിൽപ്പന", "വിളവെടുപ്പ് രേഖകൾ", "യഥാർത്ഥ ഫലം രേഖപ്പെടുത്തുക", "യഥാർത്ഥ ചെലവ് (INR)", "വിളവിന്റെ അളവ്", "വിൽപ്പന തുക (INR)", "സൂക്ഷിച്ച് പൂർത്തിയാക്കുക", "സൂക്ഷിക്കുന്നു…", "റദ്ദാക്കുക", "ചെലവഴിച്ചത്", "വിൽപ്പന", "ജോലി പൂർത്തിയാക്കി ഫാം രേഖാപുസ്തകത്തിൽ ചേർത്തു."],
+  ur: ["کھیت کے ریکارڈ", "فارم کی ڈائری", "کل رقم میں کام مکمل کرتے وقت آپ کے درج کردہ اخراجات اور فصل کی فروخت شامل ہیں۔", "درج اخراجات", "درج فروخت", "کٹائی کے ریکارڈ", "اصل نتائج درج کریں", "اصل لاگت (INR)", "کٹائی کی مقدار", "فروخت کی رقم (INR)", "محفوظ کریں اور مکمل کریں", "محفوظ ہو رہا ہے…", "منسوخ کریں", "خرچ", "فروخت", "کام مکمل ہوا اور فارم کی ڈائری میں شامل کر دیا گیا۔"],
+  ne: ["खेतका अभिलेख", "खेतको लगबुक", "काम पूरा गर्दा तपाईंले लेख्नुभएको खर्च र बाली बिक्री मात्र जम्मा रकममा समावेश हुन्छ।", "लेखिएको खर्च", "लेखिएको बिक्री", "कटानी अभिलेख", "वास्तविक नतिजा लेख्नुहोस्", "वास्तविक लागत (INR)", "कटानीको मात्रा", "बिक्री रकम (INR)", "सुरक्षित गरी पूरा गर्नुहोस्", "सुरक्षित हुँदैछ…", "रद्द गर्नुहोस्", "खर्च", "बिक्री", "काम पूरा भयो र खेतको लगबुकमा थपियो।"],
+  or: ["କ୍ଷେତ ରେକର୍ଡ", "ଚାଷ ଖାତା", "କାମ ସମାପ୍ତ କଲାବେଳେ ଆପଣ ଲେଖିଥିବା ଖର୍ଚ୍ଚ ଏବଂ ଫସଲ ବିକ୍ରି ଏହି ମୋଟରେ ରହିଛି।", "ଲିପିବଦ୍ଧ ଖର୍ଚ୍ଚ", "ଲିପିବଦ୍ଧ ବିକ୍ରି", "ଅମଳ ରେକର୍ଡ", "ପ୍ରକୃତ ଫଳାଫଳ ଲେଖନ୍ତୁ", "ପ୍ରକୃତ ଖର୍ଚ୍ଚ (INR)", "ଅମଳ ପରିମାଣ", "ବିକ୍ରି ରାଶି (INR)", "ସଞ୍ଚୟ କରି ସମାପ୍ତ କରନ୍ତୁ", "ସଞ୍ଚୟ ହେଉଛି…", "ବାତିଲ କରନ୍ତୁ", "ଖର୍ଚ୍ଚ", "ବିକ୍ରି", "କାମ ସମାପ୍ତ ହେଲା ଏବଂ ଚାଷ ଖାତାରେ ଯୋଡ଼ାଗଲା।"],
+  as: ["পথাৰৰ অভিলেখ", "খেতিৰ খতিয়ান", "কাম সম্পূৰ্ণ কৰাৰ সময়ত আপুনি লিখা খৰচ আৰু শস্য বিক্ৰীৰ পৰিমাণ ইয়াত গণনা হয়।", "লিখা খৰচ", "লিখা বিক্ৰী", "চপোৱাৰ অভিলেখ", "প্ৰকৃত ফলাফল লিখক", "প্ৰকৃত খৰচ (INR)", "চপোৱাৰ পৰিমাণ", "বিক্ৰীৰ ধন (INR)", "সংৰক্ষণ কৰি সম্পূৰ্ণ কৰক", "সংৰক্ষণ হৈ আছে…", "বাতিল কৰক", "খৰচ", "বিক্ৰী", "কাম সম্পূৰ্ণ হ’ল আৰু খেতিৰ খতিয়ানত যোগ কৰা হ’ল।"],
+  es: ["Registros del campo", "Cuaderno de la granja", "Los totales incluyen los gastos y las ventas de cosecha que anotas al completar tareas.", "Gastos registrados", "Ventas registradas", "Registros de cosecha", "Registrar resultados reales", "Coste real (INR)", "Cantidad cosechada", "Importe de venta (INR)", "Guardar y completar", "Guardando…", "Cancelar", "Gastado", "Ventas", "Tarea completada y añadida al cuaderno de la granja."]
+};
+const FARM_LEDGER_COPY = Object.fromEntries(Object.entries(FARM_LEDGER_ROWS).map(([code, row]) => [
+  code,
+  Object.fromEntries(FARM_LEDGER_KEYS.map((key, index) => [key, row[index]]))
+]));
+
+function ledgerText(language, key) {
+  return FARM_LEDGER_COPY[language]?.[key] || FARM_LEDGER_COPY.en[key] || key;
+}
 
 function text(language, key) {
   if (key === "userManual") return MANUAL_LABELS[language] || MANUAL_LABELS.en;
@@ -1733,7 +1767,7 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
         {activeView === "analysis" && <SoilAnalysisForm key={activeFarmId} token={token} farmId={activeFarmId} activeFarm={activeFarm} language={language} onCreated={loadAnalyses} />}
         {activeView === "identify" && <SoilIdentifierUpload key={activeFarmId} token={token} farmId={activeFarmId} language={language} onCreated={loadAnalyses} />}
         {activeView === "history" && <AnalysisHistory analyses={analyses} loading={loading} />}
-        {activeView === "planner" && <CropTaskPlanner key={activeFarmId} token={token} farm={activeFarm} farmId={activeFarmId} tasks={tasks} onChanged={loadTasks} />}
+        {activeView === "planner" && <CropTaskPlanner key={activeFarmId} token={token} farm={activeFarm} farmId={activeFarmId} tasks={tasks} language={language} onChanged={loadTasks} />}
         {activeView === "disease" && <DiseaseDetectionPanel key={activeFarmId} token={token} farmId={activeFarmId} language={language} diseases={diseases} onChanged={loadDiseases} />}
         {activeView === "insights" && <FarmerInsightCenter insights={insights} analyses={analyses} />}
         {activeView === "tools" && (
@@ -1790,7 +1824,8 @@ function UserManualPanel({ language, onNavigate }) {
     {
       title: "Plan work and ask for guidance",
       steps: [
-        "Use Crop planner to record field tasks and due dates; check Farm tools for saved reports, weather, market information, and the assistant.",
+        "Use Crop planner to record field tasks and due dates. When finishing a task, mark it complete and optionally log actual costs; harvest tasks can also include quantity and sale proceeds. The farm logbook summarizes only the figures you enter.",
+        "Check Farm tools for saved reports, the seven-day weather outlook, farm-aware action prompts, market information, and the assistant.",
         "AI suggestions are general guidance. Check local conditions and product labels before irrigation, fertilizer, or pesticide decisions."
       ],
       action: "Open crop planner",
@@ -1858,7 +1893,7 @@ function Metric({ icon, label, value }) {
   );
 }
 
-function CropTaskPlanner({ token, farm, farmId, tasks, onChanged }) {
+function CropTaskPlanner({ token, farm, farmId, tasks, language, onChanged }) {
   const [form, setForm] = useState({
     title: "",
     crop: farm?.primaryCrop || "",
@@ -1869,9 +1904,15 @@ function CropTaskPlanner({ token, farm, farmId, tasks, onChanged }) {
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [completionTaskId, setCompletionTaskId] = useState("");
+  const [completionForm, setCompletionForm] = useState({ actualCost: "", harvestQuantity: "", harvestUnit: "quintal", saleProceeds: "" });
   const todayStart = new Date(new Date().toDateString());
   const pending = tasks.filter((task) => task.status === "planned");
   const overdueCount = pending.filter((task) => new Date(task.dueDate) < todayStart).length;
+  const completedTasks = tasks.filter((task) => task.status === "completed");
+  const loggedCosts = completedTasks.reduce((sum, task) => sum + Number(task.actualCost || 0), 0);
+  const recordedSales = completedTasks.reduce((sum, task) => sum + Number(task.saleProceeds || 0), 0);
+  const harvestRecords = completedTasks.filter((task) => task.category === "harvest" && Number(task.harvestQuantity || 0) > 0);
 
   useEffect(() => {
     setForm((current) => ({ ...current, crop: current.crop || farm?.primaryCrop || "" }));
@@ -1915,6 +1956,43 @@ function CropTaskPlanner({ token, farm, farmId, tasks, onChanged }) {
       await onChanged();
     } catch (err) {
       setError(err.message || "Could not update task.");
+    } finally {
+      setBusy("");
+    }
+  }
+
+  function openCompletionRecord(task) {
+    setCompletionTaskId(task.id);
+    setCompletionForm({
+      actualCost: task.actualCost ? String(task.actualCost) : "",
+      harvestQuantity: task.harvestQuantity ? String(task.harvestQuantity) : "",
+      harvestUnit: task.harvestUnit || "quintal",
+      saleProceeds: task.saleProceeds ? String(task.saleProceeds) : ""
+    });
+    setError("");
+  }
+
+  async function completeTask(event, task) {
+    event.preventDefault();
+    const parsed = farmTaskRecordClientSchema.safeParse(completionForm);
+    if (!parsed.success) {
+      setError(firstValidationMessage(parsed));
+      return;
+    }
+    setBusy(task.id);
+    setError("");
+    setMessage("");
+    try {
+      await apiRequest(`/api/tasks/${task.id}/status`, {
+        token,
+        method: "PATCH",
+        body: { status: "completed", ...parsed.data }
+      });
+      setCompletionTaskId("");
+      setMessage(ledgerText(language, "completedLogbookMessage"));
+      await onChanged();
+    } catch (err) {
+      setError(err.message || "Could not complete task.");
     } finally {
       setBusy("");
     }
@@ -1988,6 +2066,21 @@ function CropTaskPlanner({ token, farm, farmId, tasks, onChanged }) {
           </div>
           <span>{pending.length} open{overdueCount ? ` · ${overdueCount} overdue` : ""}</span>
         </div>
+        <section className="farm-logbook" aria-label="Farm logbook">
+          <div className="farm-logbook-heading">
+            <span className="farm-logbook-icon"><BookOpen size={18} /></span>
+            <div>
+              <span className="eyebrow">{ledgerText(language, "fieldRecords")}</span>
+              <h3>{ledgerText(language, "farmLogbook")}</h3>
+              <p>{ledgerText(language, "logbookNote")}</p>
+            </div>
+          </div>
+          <div className="farm-logbook-metrics">
+            <div><span>{ledgerText(language, "loggedCosts")}</span><strong>{formatMoney(loggedCosts)}</strong></div>
+            <div><span>{ledgerText(language, "recordedSales")}</span><strong>{formatMoney(recordedSales)}</strong></div>
+            <div><span>{ledgerText(language, "harvestLogs")}</span><strong>{harvestRecords.length}</strong></div>
+          </div>
+        </section>
         {!tasks.length ? (
           <div className="empty-state planner-empty">
             <CalendarDays size={32} />
@@ -2008,9 +2101,53 @@ function CropTaskPlanner({ token, farm, farmId, tasks, onChanged }) {
                     </div>
                     <p>{titleCase(task.category)}{task.crop ? ` · ${task.crop}` : ""} · {formatDay(task.dueDate)}</p>
                     {task.notes && <p className="task-notes">{task.notes}</p>}
+                    {task.status === "completed" && (Number(task.actualCost || 0) > 0 || Number(task.harvestQuantity || 0) > 0 || Number(task.saleProceeds || 0) > 0) && (
+                      <div className="task-ledger-chips">
+                        {Number(task.actualCost || 0) > 0 && <span><Wallet size={13} /> {ledgerText(language, "spent")} {formatMoney(task.actualCost)}</span>}
+                        {Number(task.harvestQuantity || 0) > 0 && <span><Wheat size={13} /> {task.harvestQuantity} {task.harvestUnit || "quintal"}</span>}
+                        {Number(task.saleProceeds || 0) > 0 && <span><Banknote size={13} /> {ledgerText(language, "sales")} {formatMoney(task.saleProceeds)}</span>}
+                      </div>
+                    )}
+                    {completionTaskId === task.id && (
+                      <form className="task-completion-form" onSubmit={(event) => completeTask(event, task)}>
+                        <strong>{ledgerText(language, "actualResults")}</strong>
+                        <div className="task-record-fields">
+                          <label>
+                            {ledgerText(language, "actualCost")}
+                            <input type="number" min="0" max="100000000" step="0.01" value={completionForm.actualCost} onChange={(event) => setCompletionForm({ ...completionForm, actualCost: event.target.value })} placeholder="0" />
+                          </label>
+                          {task.category === "harvest" && (
+                            <>
+                              <label>
+                                {ledgerText(language, "harvestQuantity")}
+                                <span className="task-quantity-input">
+                                  <input type="number" min="0" max="100000000" step="0.01" value={completionForm.harvestQuantity} onChange={(event) => setCompletionForm({ ...completionForm, harvestQuantity: event.target.value })} placeholder="0" />
+                                  <select value={completionForm.harvestUnit} onChange={(event) => setCompletionForm({ ...completionForm, harvestUnit: event.target.value })} aria-label="Harvest unit">
+                                    <option value="kg">kg</option>
+                                    <option value="quintal">quintal</option>
+                                    <option value="tonne">tonne</option>
+                                  </select>
+                                </span>
+                              </label>
+                              <label>
+                                {ledgerText(language, "saleProceeds")}
+                                <input type="number" min="0" max="1000000000" step="0.01" value={completionForm.saleProceeds} onChange={(event) => setCompletionForm({ ...completionForm, saleProceeds: event.target.value })} placeholder="0" />
+                              </label>
+                            </>
+                          )}
+                        </div>
+                        <div className="task-completion-actions">
+                          <button className="small-button" disabled={busy === task.id}>
+                            <CheckCircle2 size={15} />
+                            {busy === task.id ? ledgerText(language, "saving") : ledgerText(language, "saveComplete")}
+                          </button>
+                          <button className="secondary-button" type="button" onClick={() => setCompletionTaskId("")}>{ledgerText(language, "cancel")}</button>
+                        </div>
+                      </form>
+                    )}
                   </div>
                   <div className="task-actions">
-                    <button className="icon-button" type="button" disabled={busy === task.id} onClick={() => updateTask(task, task.status === "completed" ? "planned" : "completed")} title={task.status === "completed" ? "Reopen task" : "Mark complete"} aria-label={task.status === "completed" ? "Reopen task" : "Mark complete"}>
+                    <button className="icon-button" type="button" disabled={busy === task.id} onClick={() => task.status === "completed" ? updateTask(task, "planned") : openCompletionRecord(task)} title={task.status === "completed" ? "Reopen task" : "Complete and log results"} aria-label={task.status === "completed" ? "Reopen task" : "Complete and log results"}>
                       <CheckCircle2 size={17} />
                     </button>
                     <button className="icon-button" type="button" disabled={busy === task.id} onClick={() => removeTask(task)} title="Delete task" aria-label="Delete task">

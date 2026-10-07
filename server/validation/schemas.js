@@ -137,7 +137,11 @@ export const farmTaskSchema = z.object({
 });
 
 export const farmTaskStatusSchema = z.object({
-  status: z.enum(["planned", "completed"])
+  status: z.enum(["planned", "completed"]),
+  actualCost: z.coerce.number().min(0).max(100000000).optional().default(0),
+  harvestQuantity: z.coerce.number().min(0).max(100000000).optional().default(0),
+  harvestUnit: z.enum(["kg", "quintal", "tonne"]).optional().default("quintal"),
+  saleProceeds: z.coerce.number().min(0).max(1000000000).optional().default(0)
 });
 
 export const orderStatusSchema = z.object({

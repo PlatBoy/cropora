@@ -57,8 +57,17 @@ tasksRouter.patch("/:id/status", requireAuth, validateBody(farmTaskStatusSchema)
     const farm = getFarm(req);
     const task = await FarmTask.findOne({ _id: req.params.id, user: req.user._id, farmId: farm._id.toString() });
     if (!task) throw new HttpError(404, "Task not found");
+    if (task.category !== "harvest" && (req.body.harvestQuantity > 0 || req.body.saleProceeds > 0)) {
+      throw new HttpError(400, "Harvest records can only be added to harvest tasks");
+    }
     task.status = req.body.status;
     task.completedAt = req.body.status === "completed" ? new Date() : undefined;
+    if (req.body.status === "completed") {
+      task.actualCost = req.body.actualCost;
+      task.harvestQuantity = req.body.harvestQuantity;
+      task.harvestUnit = req.body.harvestUnit;
+      task.saleProceeds = req.body.saleProceeds;
+    }
     await task.save();
     res.json({ task });
   } catch (error) {

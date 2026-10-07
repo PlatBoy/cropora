@@ -1839,6 +1839,74 @@ html[dir="rtl"] .lang-switch-menu button {
   text-align: right;
 }
 
+.farm-logbook {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 13px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--score-bg);
+}
+
+.farm-logbook-heading {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+}
+
+.farm-logbook-icon {
+  display: grid;
+  width: 32px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--chip-bg);
+  color: var(--green-dark);
+}
+
+.farm-logbook-heading h3 {
+  margin: 2px 0 0;
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.farm-logbook-heading p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.farm-logbook-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.farm-logbook-metrics > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+}
+
+.farm-logbook-metrics span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 740;
+}
+
+.farm-logbook-metrics strong {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 0.96rem;
+}
+
 .planner-empty {
   padding: 34px 18px;
 }
@@ -1846,6 +1914,87 @@ html[dir="rtl"] .lang-switch-menu button {
 .task-list {
   display: grid;
   gap: 8px;
+}
+
+.task-ledger-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.task-ledger-chips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--chip-bg);
+  color: var(--copy-strong);
+  font-size: 0.74rem;
+  font-weight: 760;
+}
+
+.task-completion-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--score-bg);
+}
+
+.task-completion-form > strong {
+  color: var(--ink);
+  font-size: 0.87rem;
+}
+
+.task-record-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.task-record-fields label {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-width: 0;
+  color: var(--copy-strong);
+  font-size: 0.74rem;
+  font-weight: 760;
+}
+
+.task-record-fields input,
+.task-record-fields select {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--ink);
+}
+
+.task-quantity-input {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px;
+}
+
+.task-completion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-completion-actions .secondary-button {
+  min-height: 38px;
+  padding: 7px 12px;
 }
 
 .task-row {
@@ -3737,6 +3886,10 @@ td {
   }
 
   .field-action-list {
+    grid-template-columns: 1fr;
+  }
+
+  .task-record-fields {
     grid-template-columns: 1fr;
   }
 }

@@ -15,6 +15,10 @@ const farmTaskSchema = new mongoose.Schema(
     dueDate: { type: Date, required: true, index: true },
     notes: { type: String, trim: true, maxlength: 500, default: "" },
     status: { type: String, enum: ["planned", "completed"], default: "planned", index: true },
+    actualCost: { type: Number, min: 0, max: 100000000, default: 0 },
+    harvestQuantity: { type: Number, min: 0, max: 100000000, default: 0 },
+    harvestUnit: { type: String, enum: ["kg", "quintal", "tonne"], default: "quintal" },
+    saleProceeds: { type: Number, min: 0, max: 1000000000, default: 0 },
     completedAt: Date
   },
   { timestamps: true }
