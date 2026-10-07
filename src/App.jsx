@@ -17,6 +17,8 @@ import {
   ChevronRight,
   ChevronUp,
   Clock3,
+  Cloud,
+  CloudRain,
   Download,
   Droplets,
   FlaskConical,
@@ -51,6 +53,7 @@ import {
   UserPlus,
   Wallet,
   Users,
+  Wind,
   Wheat
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -2610,7 +2613,7 @@ function FarmerToolsPanel({ token, analyses, diseases, tasks, activeFarm, loans,
       </section>
 
       <div className="tools-grid">
-        <WeatherTool latest={latest} />
+        <WeatherTool key={activeFarm?.id || activeFarm?.name || "farm"} latest={latest} diseases={diseases} tasks={tasks} farm={activeFarm} language={language} />
         <MandiPricePanel />
         <FertilizerCalculator latest={latest} />
         <CropRecommendationPanel latest={latest} />
@@ -2622,11 +2625,19 @@ function FarmerToolsPanel({ token, analyses, diseases, tasks, activeFarm, loans,
   );
 }
 
-function WeatherTool({ latest }) {
-  const [location, setLocation] = useState(latest?.input?.location || "Delhi");
+function WeatherTool({ latest, diseases, tasks, farm, language }) {
+  const locationKey = `krishsense-weather-location:${farm?.id || farm?.name || "default"}`;
+  const [location, setLocation] = useState(() => {
+    try {
+      return localStorage.getItem(locationKey) || farm?.location || latest?.input?.location || "Delhi";
+    } catch {
+      return farm?.location || latest?.input?.location || "Delhi";
+    }
+  });
   const [weather, setWeather] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const locale = getIntlLocale();
 
   async function loadWeather(event) {
     event?.preventDefault();
@@ -2634,24 +2645,43 @@ function WeatherTool({ latest }) {
     setError("");
     try {
       const place = encodeURIComponent(location.trim() || "Delhi");
-      const geoResponse = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${place}&count=1&language=en&format=json`);
+      const geoResponse = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${place}&count=1&language=${encodeURIComponent(language || "en")}&format=json`);
+      if (!geoResponse.ok) throw new Error("Weather lookup failed.");
       const geoData = await geoResponse.json();
       const match = geoData.results?.[0];
-      if (!match) throw new Error("Location not found.");
+      if (!match) throw new Error(localize("Location not found."));
 
       const forecastResponse = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${match.latitude}&longitude=${match.longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&daily=precipitation_probability_max&forecast_days=1`
+        `https://api.open-meteo.com/v1/forecast?latitude=${match.latitude}&longitude=${match.longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max&forecast_days=7&timezone=auto`
       );
+      if (!forecastResponse.ok) throw new Error("Weather lookup failed.");
       const forecast = await forecastResponse.json();
+      const daily = forecast.daily || {};
+      const days = (daily.time || []).map((date, index) => ({
+        date,
+        code: Number(daily.weather_code?.[index] ?? 3),
+        high: Math.round(daily.temperature_2m_max?.[index] ?? 0),
+        low: Math.round(daily.temperature_2m_min?.[index] ?? 0),
+        rainChance: Math.round(daily.precipitation_probability_max?.[index] ?? 0),
+        rain: Math.round(daily.precipitation_sum?.[index] ?? 0),
+        wind: Math.round(daily.wind_speed_10m_max?.[index] ?? 0)
+      }));
       setWeather({
         name: `${match.name}${match.admin1 ? `, ${match.admin1}` : ""}`,
         temp: Math.round(forecast.current?.temperature_2m || 0),
         humidity: Math.round(forecast.current?.relative_humidity_2m || 0),
-        rain: Math.round(forecast.daily?.precipitation_probability_max?.[0] || forecast.current?.precipitation || 0),
-        wind: Math.round(forecast.current?.wind_speed_10m || 0)
+        rain: Math.round(daily.precipitation_probability_max?.[0] || forecast.current?.precipitation || 0),
+        wind: Math.round(forecast.current?.wind_speed_10m || 0),
+        days,
+        updatedAt: new Date().toISOString()
       });
+      try {
+        localStorage.setItem(locationKey, location.trim() || match.name);
+      } catch {
+        // Weather lookup still works when browser storage is unavailable.
+      }
     } catch (err) {
-      setError(err.message || "Weather lookup failed.");
+      setError(localize(err.message || "Weather lookup failed."));
     } finally {
       setBusy(false);
     }
@@ -2661,34 +2691,140 @@ function WeatherTool({ latest }) {
     loadWeather();
   }, []);
 
+  const pendingTasks = tasks.filter((task) => task.status === "planned");
+  const overdueTasks = pendingTasks.filter((task) => new Date(task.dueDate) < new Date(new Date().toDateString()));
+  const severeDisease = diseases.find((report) => String(report.result?.severity || "").toLowerCase() === "high");
+  const healthScore = Number(latest?.result?.healthScore);
+  const weatherActions = weather ? buildWeatherActions(weather.days || []) : [];
+  const farmActions = [];
+  const dueSoonTask = pendingTasks
+    .filter((task) => {
+      const dueTime = new Date(task.dueDate).getTime();
+      return dueTime >= Date.now() && dueTime <= Date.now() + 3 * 24 * 60 * 60 * 1000;
+    })
+    .sort((first, second) => new Date(first.dueDate) - new Date(second.dueDate))[0];
+  if (dueSoonTask) {
+    farmActions.push({ icon: <Clock3 size={16} />, title: localize("Upcoming farm task"), detail: `${dueSoonTask.title} · ${formatDay(dueSoonTask.dueDate)}`, tone: "watch" });
+  }
+  if (overdueTasks.length) {
+    farmActions.push({ icon: <CalendarDays size={16} />, title: localize("Farm plan needs attention"), detail: localize(`${overdueTasks.length} overdue task${overdueTasks.length === 1 ? "" : "s"} to review or reschedule.`), tone: "attention" });
+  }
+  if (severeDisease) {
+    farmActions.push({ icon: <AlertTriangle size={16} />, title: localize("Recent high-severity disease alert"), detail: localize("Inspect the affected crop and confirm the diagnosis with a local agriculture expert before treatment."), tone: "attention" });
+  }
+  if (latest && (latest.result?.riskLevel === "High" || (Number.isFinite(healthScore) && healthScore < 60))) {
+    farmActions.push({ icon: <FlaskConical size={16} />, title: localize("Review your latest soil report"), detail: localize("Check its nutrient and drainage notes; confirm important fertilizer decisions with a soil test."), tone: "watch" });
+  }
+  const actionItems = [...weatherActions, ...farmActions].slice(0, 4);
+
   return (
     <section className="tool-card weather-card">
       <div className="tool-heading">
         <CloudSun size={22} />
         <div>
-          <span className="eyebrow">Weather</span>
-          <h3>Field forecast</h3>
+          <span className="eyebrow">{localize("Weather")}</span>
+          <h3>{localize("Field forecast")}</h3>
         </div>
       </div>
       <form className="inline-tool-form" onSubmit={loadWeather}>
-        <input value={location} onChange={(event) => setLocation(event.target.value)} placeholder="Village or city" />
+        <input value={location} onChange={(event) => setLocation(event.target.value)} placeholder={localize("Village or city")} aria-label={localize("Village or city")} />
         <button className="small-button" disabled={busy}>
           <RefreshCw size={15} />
-          {busy ? "Checking" : "Check"}
+          {busy ? localize("Checking") : localize("Check forecast")}
         </button>
       </form>
-      {error && <p className="error-banner">{error}</p>}
+      {error && <p className="error-banner" role="alert">{error}</p>}
       {weather && (
-        <div className="weather-grid">
-          <strong>{weather.name}</strong>
-          <span>{weather.temp}°C</span>
-          <p>{weather.humidity}% humidity</p>
-          <p>{weather.rain}% rain chance</p>
-          <p>{weather.wind} km/h wind</p>
-        </div>
+        <>
+          <div className="weather-current-row">
+            <div>
+              <strong>{weather.name}</strong>
+              <p>{localize("Current conditions")} · {new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" }).format(new Date(weather.updatedAt))}</p>
+            </div>
+            <span className="weather-current-temp">{weather.temp}°C</span>
+            <span><Droplets size={15} /> {weather.humidity}% {localize("humidity")}</span>
+            <span><Wind size={15} /> {weather.wind} km/h</span>
+          </div>
+          <div className="weather-days" aria-label={localize("Seven-day forecast")}>
+            {weather.days.map((day, index) => {
+              const dayLabel = index === 0 ? localize("Today") : new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(`${day.date}T12:00:00`));
+              const WeatherIcon = weatherIconForCode(day.code);
+              return (
+                <article className={`weather-day ${day.rainChance >= 65 || day.wind >= 30 || day.high >= 36 ? "weather-day-watch" : ""}`} key={day.date}>
+                  <strong>{dayLabel}</strong>
+                  <small>{new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" }).format(new Date(`${day.date}T12:00:00`))}</small>
+                  <WeatherIcon size={22} aria-hidden="true" />
+                  <span className="weather-day-temp">{day.high}° <small>{day.low}°</small></span>
+                  <span><Droplets size={13} /> {day.rainChance}%</span>
+                  <span><Wind size={13} /> {day.wind} km/h</span>
+                </article>
+              );
+            })}
+          </div>
+          <div className="field-action-brief">
+            <div className="field-action-heading">
+              <div>
+                <span className="eyebrow">{localize("Personalized for this farm")}</span>
+                <h4>{localize("Field action brief")}</h4>
+              </div>
+              <span className="field-action-count">{actionItems.length} {localize("signals")}</span>
+            </div>
+            {actionItems.length ? (
+              <div className="field-action-list">
+                {actionItems.map((item, index) => (
+                  <article className={`field-action-item ${item.tone || "watch"}`} key={`${item.title}-${index}`}>
+                    <span className="field-action-icon">{item.icon}</span>
+                    <div><strong>{item.title}</strong><p>{item.detail}</p></div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="field-action-clear">{pendingTasks.length ? localize("No high-priority weather, soil, or disease signals. Keep following your planned farm tasks.") : localize("No high-priority weather, soil, or disease signals. Add routine scouting to your farm plan.")}</p>
+            )}
+          </div>
+          <p className="weather-source-note">
+            {localize("Forecast guidance is a planning prompt, not a substitute for field checks or local expert advice.")}
+            <span className="weather-attribution">Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a>.</span>
+          </p>
+        </>
       )}
     </section>
   );
+}
+
+function weatherIconForCode(code) {
+  if (code === 0 || code === 1) return Sun;
+  if (code === 2 || code === 3 || code === 45 || code === 48) return Cloud;
+  if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(code)) return CloudRain;
+  return CloudSun;
+}
+
+function buildWeatherActions(days) {
+  const actions = [];
+  const rainDay = days.slice(0, 3).find((day) => day.rainChance >= 65 || day.rain >= 15);
+  const windDay = days.slice(0, 3).find((day) => day.wind >= 30);
+  const heatDay = days.slice(0, 3).find((day) => day.high >= 36);
+  const dayName = (day) => new Intl.DateTimeFormat(getIntlLocale(), { weekday: "long" }).format(new Date(`${day.date}T12:00:00`));
+
+  if (rainDay) actions.push({
+    icon: <CloudRain size={16} />,
+    title: localize("Rain watch"),
+    detail: localize(`Rain is possible on ${dayName(rainDay)} (${rainDay.rainChance}% chance). Review irrigation plans and check field drainage.`),
+    tone: "watch"
+  });
+  if (windDay) actions.push({
+    icon: <Wind size={16} />,
+    title: localize("Wind watch"),
+    detail: localize(`Wind may reach ${windDay.wind} km/h on ${dayName(windDay)}. Check conditions and product-label directions before any spraying.`),
+    tone: "attention"
+  });
+  if (heatDay) actions.push({
+    icon: <Sun size={16} />,
+    title: localize("Heat watch"),
+    detail: localize(`Highs near ${heatDay.high}°C are forecast for ${dayName(heatDay)}. Scout for crop stress and use local irrigation guidance.`),
+    tone: "attention"
+  });
+  return actions;
 }
 
 function MandiPricePanel() {
