@@ -118,7 +118,10 @@ const fieldImage =
 const fieldVideos = [
   "https://videos.pexels.com/video-files/10848268/10848268-hd_1280_720_30fps.mp4",
   "https://videos.pexels.com/video-files/5636708/5636708-hd_1280_720_30fps.mp4",
-  "https://videos.pexels.com/video-files/4144211/4144211-hd_1280_720_25fps.mp4"
+  "https://videos.pexels.com/video-files/4144211/4144211-hd_1280_720_25fps.mp4",
+  "https://videos.pexels.com/video-files/9256240/9256240-hd_1280_720_30fps.mp4",
+  "https://videos.pexels.com/video-files/9487181/9487181-hd_1280_720_30fps.mp4",
+  "https://videos.pexels.com/video-files/13944886/13944886-hd_1280_720_30fps.mp4"
 ];
 
 const emptyAnalysisForm = {
@@ -1263,10 +1266,12 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             autoPlay
             muted
             playsInline
-            preload="none"
+            preload="metadata"
             poster={fieldImage}
             aria-hidden="true"
             tabIndex={-1}
+            onEnded={() => setHeroVideoIndex((index) => (index + 1) % fieldVideos.length)}
+            onError={() => setHeroVideoIndex((index) => (index + 1) % fieldVideos.length)}
             onTimeUpdate={(event) => {
               if (event.currentTarget.currentTime >= 18) {
                 event.currentTarget.pause();
