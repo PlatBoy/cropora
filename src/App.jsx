@@ -1198,7 +1198,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     if (reducedMotion) return undefined;
     const timer = window.setTimeout(() => {
       setHeroVideoIndex((index) => (index + 1) % fieldVideos.length);
-    }, 4000);
+    }, 10000);
     return () => window.clearTimeout(timer);
   }, [heroVideoIndex, reducedMotion]);
 
