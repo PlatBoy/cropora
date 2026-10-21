@@ -417,6 +417,23 @@ const ABOUT_COPY = {
   as: ["Krishisense বিষয়ে", "ভাল সিদ্ধান্ত মাটি বুজাৰ পৰাই আৰম্ভ হয়।", "Krishisense-এ মাটিৰ তথ্য, শস্যৰ স্বাস্থ্য পৰীক্ষা আৰু খেতিৰ পৰিকল্পনা একেলগে আনে, যাতে কৃষকে পৰৱৰ্তী পদক্ষেপটো স্পষ্টকৈ বাছি ল’ব পাৰে।"],
   es: ["Acerca de Krishisense", "Las mejores decisiones empiezan por conocer el suelo.", "Krishisense reúne información del suelo, revisiones de cultivos y planificación de la finca para ayudar a los agricultores a elegir el siguiente paso con claridad."]
 };
+const FIELD_BOOK_HEADLINES = {
+  en: "A season is made of small decisions.",
+  hi: "हर मौसम छोटे-छोटे फैसलों से बनता है।",
+  pa: "ਹਰ ਮੌਸਮ ਛੋਟੇ-ਛੋਟੇ ਫੈਸਲਿਆਂ ਨਾਲ ਬਣਦਾ ਹੈ।",
+  bn: "প্রতিটি মৌসুম ছোট ছোট সিদ্ধান্তে গড়ে ওঠে।",
+  ta: "ஒவ்வொரு பருவமும் சிறிய முடிவுகளால் உருவாகிறது.",
+  te: "ప్రతి సీజన్ చిన్న నిర్ణయాలతో రూపుదిద్దుకుంటుంది.",
+  mr: "प्रत्येक हंगाम लहान निर्णयांनी घडतो.",
+  gu: "દરેક મોસમ નાના નિર્ણયોથી ઘડાય છે.",
+  kn: "ಪ್ರತಿ ಋತುವೂ ಸಣ್ಣ ನಿರ್ಧಾರಗಳಿಂದ ರೂಪುಗೊಳ್ಳುತ್ತದೆ.",
+  ml: "ഓരോ സീസണും ചെറു തീരുമാനങ്ങളാൽ രൂപപ്പെടുന്നു.",
+  ur: "ہر موسم چھوٹے فیصلوں سے بنتا ہے۔",
+  ne: "प्रत्येक मौसम साना निर्णयहरूले बन्छ।",
+  or: "ପ୍ରତ୍ୟେକ ଋତୁ ଛୋଟ ନିଷ୍ପତ୍ତିରେ ଗଢ଼ିଉଠେ।",
+  as: "প্ৰতিটো ঋতু সৰু সৰু সিদ্ধান্তৰে গঢ় লয়।",
+  es: "Cada temporada se construye con pequeñas decisiones."
+};
 const LIVE_COPY_KEYS = ["farmData", "updated", "refreshData", "refreshingData", "syncWarning"];
 const LIVE_COPY_ROWS = {
   en: ["Farm data", "Updated", "Refresh data", "Refreshing…", "Some data may be out of date"],
@@ -1331,18 +1348,23 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   ) : null;
 
   return (
-    <main className="auth-shell" id="home">
+    <main className="auth-shell landing-shell" id="home">
       <nav className="auth-page-nav" aria-label={localize("Homepage navigation")}>
         <a className="auth-nav-brand" href="#home" aria-label="Krishisense home">
           <span className="brand-mark"><Sprout size={18} /></span>
           <strong>Krishisense</strong>
         </a>
-        <div className="auth-page-nav-links">
-          <a href="#login-panel">{text(language, "login")}</a>
-          <a href="#about-krishisense">{aboutCopy[0]}</a>
+        <div className="landing-nav-controls">
+          <div className="auth-page-nav-links">
+            <a href="#fieldbook">{text(language, "farmTools")}</a>
+            <a href="#public-tools">{text(language, "recommendedNextSteps")}</a>
+            <a href="#login-panel">{text(language, "login")}</a>
+            <a href="#about-krishisense">{aboutCopy[0]}</a>
+          </div>
+          <LanguageSwitcher language={language} onChange={onLanguageChange} />
         </div>
       </nav>
-      <section className="auth-visual" aria-label="Farm field">
+      <section className="auth-visual landing-hero" aria-label="Farm field">
         <img src={fieldImage} alt="Farm field at sunrise" />
         {!reducedMotion && (
           <video
@@ -1368,34 +1390,28 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
           </video>
         )}
         <div className="auth-visual-topline" aria-hidden="true">
-          <span className="auth-scene-label"><Sparkles size={15} />{localize("Farm tools")}</span>
+          <span className="auth-scene-label"><Sparkles size={15} />{text(language, "farmTools")}</span>
           {!reducedMotion && (
             <span className="auth-video-count">{String(heroVideoIndex + 1).padStart(2, "0")} <i /> {String(fieldVideos.length).padStart(2, "0")}</span>
           )}
         </div>
         <div className="auth-hero-copy">
           <div className="brand-lockup">
-            <span className="brand-mark">
-              <Sprout size={24} />
-            </span>
             <div>
-              <p>Krishisense</p>
-              <h1>{localize("Soil decisions for every field")}</h1>
+              <p>{text(language, "farmTools")}</p>
+              <h1>Krishisense</h1>
+              <p className="landing-hero-declaration">{aboutCopy[1]}</p>
             </div>
           </div>
-          <p className="auth-hero-description">{localize("Upload a soil photo and add your crop and field details to get farm-specific guidance.")}</p>
+          <p className="auth-hero-description">{aboutCopy[2]}</p>
           <div className="auth-hero-actions">
             <button className="primary-button" type="button" onClick={startRegistration}>
               <UserPlus size={18} />
               {text(language, "createFarmerAccount")}
               <ChevronRight size={17} />
             </button>
-            <a className="auth-explore-link" href="#public-tools">
-              {localize("Explore")}
-              <ChevronDown size={16} />
-            </a>
-            <a className="auth-explore-link" href="#about-krishisense">
-              {aboutCopy[0]}
+            <a className="auth-explore-link" href="#fieldbook">
+              {text(language, "farmTools")}
               <ChevronDown size={16} />
             </a>
           </div>
@@ -1414,122 +1430,176 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <span className="auth-metric-label">{localize("AI disease detection")}</span>
           </span>
         </div>
+        <a className="hero-scroll-cue" href="#fieldbook" aria-label={text(language, "farmTools")}>
+          <span>{text(language, "farmTools")}</span>
+          <ChevronDown size={16} />
+        </a>
       </section>
 
-      <section className="auth-panel" id="login-panel">
-        <div className="auth-panel-actions">
-          <LanguageSwitcher language={language} onChange={onLanguageChange} />
-          <ThemeSwitch theme={theme} onToggle={onThemeToggle} />
+      <section className="landing-manifesto" id="fieldbook" aria-labelledby="fieldbook-heading">
+        <div className="landing-manifesto-heading">
+          <span className="landing-section-kicker"><span>01</span>{text(language, "farmTools")}</span>
+          <h2 id="fieldbook-heading">{FIELD_BOOK_HEADLINES[language] || FIELD_BOOK_HEADLINES.en}</h2>
+          <p>{aboutCopy[2]}</p>
         </div>
+        <div className="landing-story-grid">
+          {aboutPanels.map((panel, index) => (
+            <article className={`landing-story landing-story-${index + 1}`} key={panel.title}>
+              <div className="landing-story-image">
+                <img src={panel.image} alt={panel.title} loading="lazy" />
+                <span className="landing-story-number">0{index + 1}</span>
+                <span className="landing-story-open" aria-hidden="true"><ChevronRight size={19} /></span>
+              </div>
+              <div className="landing-story-copy">
+                <h3>{index === 0 ? text(language, "soilAnalysis") : index === 1 ? text(language, "diseaseDetection") : text(language, "cropPlanner")}</h3>
+                <p>{panel.description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div className="landing-manifesto-foot">
+          <span>{text(language, "farmTools")}</span>
+          <a href="#login-panel">{text(language, "createFarmerAccount")} <ChevronRight size={16} /></a>
+        </div>
+      </section>
 
-        <div className="panel-heading auth-panel-heading">
-          <span className="auth-heading-icon" aria-hidden="true"><ShieldCheck size={21} /></span>
-          <div className="auth-panel-heading-copy">
-            <span className="eyebrow">{text(language, "secureAccess")}</span>
-            <h2>{text(language, mode === "login" ? "welcomeBack" : "createFarmerAccount")}</h2>
+      <div className="landing-marquee" aria-label={text(language, "farmTools")}>
+        <div className="landing-marquee-track" aria-hidden="true">
+          {[0, 1].map((copy) => (
+            <span className="landing-marquee-set" key={copy}>
+              {[text(language, "soilAnalysis"), text(language, "diseaseDetection"), text(language, "cropPlanner"), text(language, "market"), text(language, "loans"), text(language, "insurance")].map((item, index) => (
+                <span key={`${copy}-${index}`}>{item}<i /></span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <section className="auth-panel" id="login-panel">
+        <div className="landing-auth-story">
+          <span className="landing-section-kicker"><span>02</span>{text(language, "farmerDesk")}</span>
+          <h2>{aboutCopy[1]}</h2>
+          <p>{aboutCopy[2]}</p>
+          <div className="landing-auth-capabilities">
+            <span><FlaskConical size={17} />{text(language, "soilAnalysis")}</span>
+            <span><Leaf size={17} />{text(language, "diseaseDetection")}</span>
+            <span><CalendarDays size={17} />{text(language, "cropPlanner")}</span>
           </div>
         </div>
+        <div className="landing-auth-form">
+          <div className="auth-panel-actions">
+            <ThemeSwitch theme={theme} onToggle={onThemeToggle} />
+          </div>
 
-        <div className="segmented-control" role="tablist" aria-label="Authentication mode">
-          <button type="button" className={mode === "login" ? "active" : ""} onClick={() => changeMode("login")}>
-            <Lock size={16} />
-            {text(language, "login")}
-          </button>
-          <button type="button" className={mode === "register" ? "active" : ""} onClick={() => changeMode("register")}>
-            <UserPlus size={16} />
-            {text(language, "register")}
-          </button>
-        </div>
+          <div className="panel-heading auth-panel-heading">
+            <span className="auth-heading-icon" aria-hidden="true"><ShieldCheck size={21} /></span>
+            <div className="auth-panel-heading-copy">
+              <span className="eyebrow">{text(language, "secureAccess")}</span>
+              <h2>{text(language, mode === "login" ? "welcomeBack" : "createFarmerAccount")}</h2>
+            </div>
+          </div>
 
-        {error && <p className="error-banner">{error}</p>}
+          <div className="segmented-control" role="tablist" aria-label="Authentication mode">
+            <button type="button" className={mode === "login" ? "active" : ""} onClick={() => changeMode("login")}>
+              <Lock size={16} />
+              {text(language, "login")}
+            </button>
+            <button type="button" className={mode === "register" ? "active" : ""} onClick={() => changeMode("register")}>
+              <UserPlus size={16} />
+              {text(language, "register")}
+            </button>
+          </div>
 
-        {mode === "login" ? (
-          <form className="stack-form" onSubmit={submitLogin}>
-            <label>
-              {text(language, "email")}
-              <span className="input-shell">
-                <Mail size={17} />
+          {error && <p className="error-banner">{error}</p>}
+
+          {mode === "login" ? (
+            <form className="stack-form" onSubmit={submitLogin}>
+              <label>
+                {text(language, "email")}
+                <span className="input-shell">
+                  <Mail size={17} />
+                  <input
+                    type="email"
+                    value={loginForm.email}
+                    onChange={(event) => setLoginForm({ ...loginForm, email: event.target.value })}
+                    required
+                  />
+                </span>
+              </label>
+              <label>
+                {text(language, "password")}
+                <span className="input-shell">
+                  <Lock size={17} />
+                  <input
+                    type="password"
+                    value={loginForm.password}
+                    onChange={(event) => setLoginForm({ ...loginForm, password: event.target.value })}
+                    required
+                  />
+                </span>
+              </label>
+              {captchaControl}
+              <button className="primary-button" disabled={busy || !captchaReady}>
+                <ShieldCheck size={18} />
+                {busy ? text(language, "signingIn") : text(language, "signIn")}
+              </button>
+            </form>
+          ) : (
+            <form className="stack-form" onSubmit={submitRegister}>
+              <label>
+                {localize("Name")}
+                <input
+                  value={registerForm.name}
+                  onChange={(event) => setRegisterForm({ ...registerForm, name: event.target.value })}
+                  required
+                />
+              </label>
+              <label>
+                {text(language, "email")}
                 <input
                   type="email"
-                  value={loginForm.email}
-                  onChange={(event) => setLoginForm({ ...loginForm, email: event.target.value })}
+                  value={registerForm.email}
+                  onChange={(event) => setRegisterForm({ ...registerForm, email: event.target.value })}
                   required
                 />
-              </span>
-            </label>
-            <label>
-              {text(language, "password")}
-              <span className="input-shell">
-                <Lock size={17} />
+              </label>
+              <label>
+                {text(language, "password")}
                 <input
                   type="password"
-                  value={loginForm.password}
-                  onChange={(event) => setLoginForm({ ...loginForm, password: event.target.value })}
+                  minLength={8}
+                  value={registerForm.password}
+                  onChange={(event) => setRegisterForm({ ...registerForm, password: event.target.value })}
                   required
                 />
-              </span>
-            </label>
-            {captchaControl}
-            <button className="primary-button" disabled={busy || !captchaReady}>
-              <ShieldCheck size={18} />
-              {busy ? text(language, "signingIn") : text(language, "signIn")}
-            </button>
-          </form>
-        ) : (
-          <form className="stack-form" onSubmit={submitRegister}>
-            <label>
-              {localize("Name")}
-              <input
-                value={registerForm.name}
-                onChange={(event) => setRegisterForm({ ...registerForm, name: event.target.value })}
-                required
-              />
-            </label>
-            <label>
-              {text(language, "email")}
-              <input
-                type="email"
-                value={registerForm.email}
-                onChange={(event) => setRegisterForm({ ...registerForm, email: event.target.value })}
-                required
-              />
-            </label>
-            <label>
-              {text(language, "password")}
-              <input
-                type="password"
-                minLength={8}
-                value={registerForm.password}
-                onChange={(event) => setRegisterForm({ ...registerForm, password: event.target.value })}
-                required
-              />
-            </label>
-            <label>
-              {text(language, "farmName")}
-              <input
-                value={registerForm.farmName}
-                onChange={(event) => setRegisterForm({ ...registerForm, farmName: event.target.value })}
-              />
-            </label>
-            <label>
-              {text(language, "phone")}
-              <input
-                value={registerForm.phone}
-                onChange={(event) => setRegisterForm({ ...registerForm, phone: event.target.value })}
-              />
-            </label>
-            {captchaControl}
-            <button className="primary-button" disabled={busy || !captchaReady}>
-              <UserPlus size={18} />
-              {busy ? text(language, "creating") : text(language, "createAccount")}
-            </button>
-          </form>
-        )}
+              </label>
+              <label>
+                {text(language, "farmName")}
+                <input
+                  value={registerForm.farmName}
+                  onChange={(event) => setRegisterForm({ ...registerForm, farmName: event.target.value })}
+                />
+              </label>
+              <label>
+                {text(language, "phone")}
+                <input
+                  value={registerForm.phone}
+                  onChange={(event) => setRegisterForm({ ...registerForm, phone: event.target.value })}
+                />
+              </label>
+              {captchaControl}
+              <button className="primary-button" disabled={busy || !captchaReady}>
+                <UserPlus size={18} />
+                {busy ? text(language, "creating") : text(language, "createAccount")}
+              </button>
+            </form>
+          )}
+        </div>
       </section>
 
       <section className="public-toolkit" id="public-tools" aria-labelledby="public-tools-title">
         <div className="public-toolkit-heading">
-          <span className="eyebrow">{localize("Farm tools")}</span>
+          <span className="eyebrow">{text(language, "farmTools")}</span>
           <h2 id="public-tools-title">{localize("Get practical next steps")}</h2>
         </div>
         <div className="public-feature-grid">
@@ -1548,12 +1618,61 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <h3>{text(language, "cropPlanner")}</h3>
             <p>{localize("Use Crop planner to record field tasks and due dates; check Farm tools for saved reports, weather, market information, and the assistant.")}</p>
           </article>
+          <article className="public-feature">
+            <span className="public-feature-icon"><Bot size={21} /></span>
+            <h3>{localize("Ask assistant")}</h3>
+            <p>{localize("Ask about crop care, soil, irrigation, pests or planning. You can ask follow-up questions too.")}</p>
+          </article>
+          <article className="public-feature">
+            <span className="public-feature-icon"><ShoppingCart size={21} /></span>
+            <h3>{text(language, "market")}</h3>
+            <p>{localize("Market orders, loan requests, and insurance applications are submitted from their respective sections and may require admin review.")}</p>
+          </article>
+          <article className="public-feature">
+            <span className="public-feature-icon"><CloudSun size={21} /></span>
+            <h3>{localize("Weather")}</h3>
+            <p>{localize("Use the forecast with a field check before changing irrigation or spraying plans.")}</p>
+          </article>
         </div>
         <div className="public-toolkit-footer">
           <span><ShieldCheck size={17} />{localize("AI photo analysis is guidance only. Confirm fertilizer and pH decisions with a lab soil test.")}</span>
           <button className="secondary-button" type="button" onClick={startRegistration}>
             {text(language, "createFarmerAccount")}
             <ChevronRight size={16} />
+          </button>
+        </div>
+      </section>
+
+      <section className="landing-method" aria-labelledby="landing-method-title">
+        <div className="landing-method-intro">
+          <span className="landing-section-kicker"><span>03</span>{text(language, "recommendedNextSteps")}</span>
+          <h2 id="landing-method-title">{text(language, "cropPlanner")}</h2>
+          <p>{aboutCopy[2]}</p>
+        </div>
+        <ol className="landing-steps">
+          <li>
+            <span className="landing-step-number">01</span>
+            <span className="landing-step-icon"><Camera size={20} /></span>
+            <h3>{text(language, "soilAnalysis")}</h3>
+            <p>{aboutPanels[0].description}</p>
+          </li>
+          <li>
+            <span className="landing-step-number">02</span>
+            <span className="landing-step-icon"><Leaf size={20} /></span>
+            <h3>{text(language, "diseaseDetection")}</h3>
+            <p>{aboutPanels[1].description}</p>
+          </li>
+          <li>
+            <span className="landing-step-number">03</span>
+            <span className="landing-step-icon"><CalendarDays size={20} /></span>
+            <h3>{text(language, "cropPlanner")}</h3>
+            <p>{aboutPanels[2].description}</p>
+          </li>
+        </ol>
+        <div className="landing-method-footer">
+          <span><ShieldCheck size={17} />{localize("AI suggestions are general guidance. Check local conditions and product labels before irrigation, fertilizer, or pesticide decisions.")}</span>
+          <button className="primary-button" type="button" onClick={startRegistration}>
+            {text(language, "createFarmerAccount")} <ChevronRight size={17} />
           </button>
         </div>
       </section>
