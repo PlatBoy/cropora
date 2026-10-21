@@ -434,6 +434,23 @@ const FIELD_BOOK_HEADLINES = {
   as: "প্ৰতিটো ঋতু সৰু সৰু সিদ্ধান্তৰে গঢ় লয়।",
   es: "Cada temporada se construye con pequeñas decisiones."
 };
+const FILM_CONTROL_COPY = {
+  en: ["Previous farm film", "Next farm film"],
+  hi: ["पिछली खेती की फ़िल्म", "अगली खेती की फ़िल्म"],
+  pa: ["ਪਿਛਲੀ ਖੇਤੀ ਵੀਡੀਓ", "ਅਗਲੀ ਖੇਤੀ ਵੀਡੀਓ"],
+  bn: ["আগের কৃষি ভিডিও", "পরের কৃষি ভিডিও"],
+  ta: ["முந்தைய விவசாயக் காணொளி", "அடுத்த விவசாயக் காணொளி"],
+  te: ["మునుపటి వ్యవసాయ వీడియో", "తదుపరి వ్యవసాయ వీడియో"],
+  mr: ["मागील शेती व्हिडिओ", "पुढील शेती व्हिडिओ"],
+  gu: ["પહેલાંનો ખેતી વિડિયો", "આગળનો ખેતી વિડિયો"],
+  kn: ["ಹಿಂದಿನ ಕೃಷಿ ವಿಡಿಯೋ", "ಮುಂದಿನ ಕೃಷಿ ವಿಡಿಯೋ"],
+  ml: ["മുമ്പത്തെ കൃഷി വീഡിയോ", "അടുത്ത കൃഷി വീഡിയോ"],
+  ur: ["پچھلی زرعی ویڈیو", "اگلی زرعی ویڈیو"],
+  ne: ["अघिल्लो खेती भिडियो", "अर्को खेती भिडियो"],
+  or: ["ପୂର୍ବ କୃଷି ଭିଡିଓ", "ପରବର୍ତ୍ତୀ କୃଷି ଭିଡିଓ"],
+  as: ["আগৰ কৃষি ভিডিঅ’", "পৰৱৰ্তী কৃষি ভিডিঅ’"],
+  es: ["Vídeo agrícola anterior", "Siguiente vídeo agrícola"]
+};
 const LIVE_COPY_KEYS = ["farmData", "updated", "refreshData", "refreshingData", "syncWarning"];
 const LIVE_COPY_ROWS = {
   en: ["Farm data", "Updated", "Refresh data", "Refreshing…", "Some data may be out of date"],
@@ -1167,6 +1184,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const aboutSectionRef = useRef(null);
   const aboutTrackRef = useRef(null);
   const aboutProgressRef = useRef(null);
+  const landingRef = useRef(null);
 
   useEffect(() => {
     const query = window.matchMedia?.("(prefers-reduced-motion: reduce)");
@@ -1213,6 +1231,34 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   }, []);
 
   useEffect(() => {
+    const root = landingRef.current;
+    const targets = root?.querySelectorAll("[data-reveal]");
+    if (!root || !targets?.length) return undefined;
+
+    const revealAll = () => targets.forEach((target) => target.classList.add("is-revealed"));
+    if (!("IntersectionObserver" in window) || window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
+      revealAll();
+      return undefined;
+    }
+
+    root.classList.add("landing-reveal-ready");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    targets.forEach((target) => observer.observe(target));
+
+    return () => {
+      observer.disconnect();
+      root.classList.remove("landing-reveal-ready");
+    };
+  }, []);
+
+  useEffect(() => {
     let active = true;
     apiRequest("/api/auth/captcha-config")
       .then((config) => {
@@ -1229,6 +1275,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     && (!captchaConfig.required || Boolean(captchaConfig.siteKey && captchaToken));
 
   const aboutCopy = ABOUT_COPY[language] || ABOUT_COPY.en;
+  const filmControlCopy = FILM_CONTROL_COPY[language] || FILM_CONTROL_COPY.en;
   const aboutPanels = [
     {
       title: text(language, "soilAnalysis"),
@@ -1348,7 +1395,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   ) : null;
 
   return (
-    <main className="auth-shell landing-shell" id="home">
+    <main className="auth-shell landing-shell" id="home" ref={landingRef}>
       <nav className="auth-page-nav" aria-label={localize("Homepage navigation")}>
         <a className="auth-nav-brand" href="#home" aria-label="Krishisense home">
           <span className="brand-mark"><Sprout size={18} /></span>
@@ -1364,6 +1411,12 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
           <LanguageSwitcher language={language} onChange={onLanguageChange} />
         </div>
       </nav>
+      <div className="landing-edition-bar">
+        <span className="landing-edition-number">01 <i /></span>
+        <span className="landing-edition-label">{aboutCopy[0]}</span>
+        <span className="landing-edition-message">{aboutCopy[1]}</span>
+        <a href="#fieldbook" aria-label={text(language, "farmTools")}><ChevronRight size={17} /></a>
+      </div>
       <section className="auth-visual landing-hero" aria-label="Farm field">
         <img src={fieldImage} alt="Farm field at sunrise" />
         {!reducedMotion && (
@@ -1389,10 +1442,24 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <source src={fieldVideos[heroVideoIndex]} type="video/mp4" />
           </video>
         )}
-        <div className="auth-visual-topline" aria-hidden="true">
+        <div className="auth-visual-topline">
           <span className="auth-scene-label"><Sparkles size={15} />{text(language, "farmTools")}</span>
           {!reducedMotion && (
-            <span className="auth-video-count">{String(heroVideoIndex + 1).padStart(2, "0")} <i /> {String(fieldVideos.length).padStart(2, "0")}</span>
+            <div className="landing-film-controls">
+              <button
+                type="button"
+                onClick={() => setHeroVideoIndex((index) => (index - 1 + fieldVideos.length) % fieldVideos.length)}
+                aria-label={filmControlCopy[0]}
+                title={filmControlCopy[0]}
+              ><ChevronLeft size={16} /></button>
+              <span className="auth-video-count">{String(heroVideoIndex + 1).padStart(2, "0")} <i /> {String(fieldVideos.length).padStart(2, "0")}</span>
+              <button
+                type="button"
+                onClick={() => setHeroVideoIndex((index) => (index + 1) % fieldVideos.length)}
+                aria-label={filmControlCopy[1]}
+                title={filmControlCopy[1]}
+              ><ChevronRight size={16} /></button>
+            </div>
           )}
         </div>
         <div className="auth-hero-copy">
@@ -1430,13 +1497,16 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <span className="auth-metric-label">{localize("AI disease detection")}</span>
           </span>
         </div>
+        <div className="landing-hero-index" aria-hidden="true">
+          <span>01</span><i /><small>FIELD / SEASON</small>
+        </div>
         <a className="hero-scroll-cue" href="#fieldbook" aria-label={text(language, "farmTools")}>
           <span>{text(language, "farmTools")}</span>
           <ChevronDown size={16} />
         </a>
       </section>
 
-      <section className="landing-manifesto" id="fieldbook" aria-labelledby="fieldbook-heading">
+      <section className="landing-manifesto" id="fieldbook" aria-labelledby="fieldbook-heading" data-reveal>
         <div className="landing-manifesto-heading">
           <span className="landing-section-kicker"><span>01</span>{text(language, "farmTools")}</span>
           <h2 id="fieldbook-heading">{FIELD_BOOK_HEADLINES[language] || FIELD_BOOK_HEADLINES.en}</h2>
@@ -1444,7 +1514,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         </div>
         <div className="landing-story-grid">
           {aboutPanels.map((panel, index) => (
-            <article className={`landing-story landing-story-${index + 1}`} key={panel.title}>
+            <article className={`landing-story landing-story-${index + 1}`} key={panel.title} style={{ "--story-order": index }}>
               <div className="landing-story-image">
                 <img src={panel.image} alt={panel.title} loading="lazy" />
                 <span className="landing-story-number">0{index + 1}</span>
@@ -1475,7 +1545,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         </div>
       </div>
 
-      <section className="auth-panel" id="login-panel">
+      <section className="auth-panel" id="login-panel" data-reveal>
         <div className="landing-auth-story">
           <span className="landing-section-kicker"><span>02</span>{text(language, "farmerDesk")}</span>
           <h2>{aboutCopy[1]}</h2>
@@ -1597,7 +1667,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         </div>
       </section>
 
-      <section className="public-toolkit" id="public-tools" aria-labelledby="public-tools-title">
+      <section className="public-toolkit" id="public-tools" aria-labelledby="public-tools-title" data-reveal>
         <div className="public-toolkit-heading">
           <span className="eyebrow">{text(language, "farmTools")}</span>
           <h2 id="public-tools-title">{localize("Get practical next steps")}</h2>
@@ -1643,7 +1713,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         </div>
       </section>
 
-      <section className="landing-method" aria-labelledby="landing-method-title">
+      <section className="landing-method" aria-labelledby="landing-method-title" data-reveal>
         <div className="landing-method-intro">
           <span className="landing-section-kicker"><span>03</span>{text(language, "recommendedNextSteps")}</span>
           <h2 id="landing-method-title">{text(language, "cropPlanner")}</h2>
@@ -1682,6 +1752,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         className="about-scroll"
         id="about-krishisense"
         aria-labelledby="about-heading"
+        data-reveal
       >
         <div className="about-stage">
           <div className="about-track" ref={aboutTrackRef}>
