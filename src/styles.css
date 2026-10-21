@@ -6594,3 +6594,357 @@ td {
     transition: none;
   }
 }
+
+.landing-reviews {
+  padding: 92px clamp(24px, 7vw, 120px) 86px;
+  color: #f2f7f3;
+  background: #10221a;
+  border-block: 1px solid rgba(230, 184, 92, 0.44);
+}
+
+.landing-reviews-heading {
+  max-width: 1460px;
+  margin: 0 auto 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.48fr);
+  align-items: end;
+  gap: 26px 8%;
+}
+
+.landing-reviews-heading .landing-section-kicker {
+  margin-bottom: 20px;
+  color: #e6b85c;
+}
+
+.landing-reviews-heading .landing-section-kicker > span {
+  border-color: rgba(242, 247, 243, 0.3);
+  color: #f2f7f3;
+}
+
+.landing-reviews-heading h2,
+.landing-journal-heading h2 {
+  max-width: 800px;
+  margin: 0;
+  font-size: 4.2rem;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.landing-reviews-aside p {
+  margin: 0;
+  color: #c0ccc4;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.landing-reviews-aside a,
+.landing-journal-footer > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  color: #e6b85c;
+  font-size: 0.84rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.landing-reviews-aside a:hover,
+.landing-journal-footer > a:hover {
+  color: #8be0a5;
+}
+
+.landing-review-grid {
+  max-width: 1460px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 auto;
+  border-top: 1px solid rgba(242, 247, 243, 0.25);
+  border-bottom: 1px solid rgba(242, 247, 243, 0.25);
+}
+
+.landing-review {
+  position: relative;
+  min-width: 0;
+  min-height: 250px;
+  padding: 22px 28px 25px 0;
+  overflow: hidden;
+}
+
+.landing-review + .landing-review {
+  padding-left: 28px;
+  border-left: 1px solid rgba(242, 247, 243, 0.25);
+}
+
+.landing-review-index {
+  position: relative;
+  z-index: 1;
+  color: #e6b85c;
+  font-size: 0.76rem;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+.landing-review blockquote {
+  position: relative;
+  z-index: 1;
+  max-width: 430px;
+  margin: 48px 0 0;
+  color: #f2f7f3;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.landing-review-quote {
+  position: absolute;
+  top: 26px;
+  right: 20px;
+  color: rgba(139, 224, 165, 0.14);
+  font-family: Georgia, serif;
+  font-size: 8rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.landing-journal {
+  padding: 96px clamp(24px, 7vw, 120px) 44px;
+  color: #10221a;
+  background: #dce9df;
+}
+
+.landing-journal-heading {
+  max-width: 1460px;
+  margin: 0 auto 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.55fr);
+  align-items: end;
+  gap: 20px 9%;
+}
+
+.landing-journal-heading .landing-section-kicker {
+  color: #397652;
+}
+
+.landing-journal-heading h2 {
+  font-size: 4.4rem;
+}
+
+.landing-journal-heading p {
+  max-width: 440px;
+  margin: 0 0 5px auto;
+  color: #4d6254;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.landing-journal-grid {
+  max-width: 1460px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 18px;
+  margin: 0 auto;
+}
+
+.landing-journal-entry {
+  min-width: 0;
+  border-top: 1px solid rgba(16, 34, 26, 0.25);
+  border-bottom: 1px solid rgba(16, 34, 26, 0.25);
+}
+
+.landing-journal-entry summary {
+  display: block;
+  padding-bottom: 18px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.landing-journal-entry summary::-webkit-details-marker { display: none; }
+
+.landing-journal-entry summary:focus-visible {
+  outline: 2px solid #397652;
+  outline-offset: 3px;
+}
+
+.landing-journal-image {
+  position: relative;
+  aspect-ratio: 1.24 / 1;
+  display: block;
+  margin-top: 12px;
+  overflow: hidden;
+  background: #b7c8ba;
+}
+
+.landing-journal-image::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(180deg, transparent, rgba(8, 19, 15, 0.46));
+  pointer-events: none;
+}
+
+.landing-journal-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 600ms ease;
+}
+
+.landing-journal-entry summary:hover .landing-journal-image img {
+  transform: scale(1.04);
+}
+
+.landing-journal-number {
+  position: absolute;
+  z-index: 1;
+  left: 14px;
+  bottom: 13px;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 850;
+}
+
+.landing-journal-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 17px;
+  color: #397652;
+  font-size: 0.74rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.landing-journal-meta svg {
+  flex: 0 0 auto;
+  color: #10221a;
+  transition: transform 180ms ease;
+}
+
+.landing-journal-entry[open] .landing-journal-meta svg {
+  transform: rotate(180deg);
+}
+
+.landing-journal-title {
+  display: block;
+  max-width: 440px;
+  margin-top: 10px;
+  color: #10221a;
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.18;
+}
+
+.landing-journal-copy {
+  padding: 2px 0 20px;
+  animation: landing-note-open 220ms ease both;
+}
+
+.landing-journal-copy p {
+  margin: 0;
+  color: #4d6254;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.landing-journal-copy p + p { margin-top: 12px; }
+
+.landing-journal-footer {
+  max-width: 1460px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 30px auto 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(16, 34, 26, 0.25);
+}
+
+.landing-journal-footer > span {
+  max-width: 850px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #4d6254;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.landing-journal-footer > span svg {
+  flex: 0 0 auto;
+  color: #397652;
+}
+
+.landing-journal-footer > a { flex: 0 0 auto; margin-top: 0; color: #10221a; }
+
+@keyframes landing-note-open {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1000px) {
+  .landing-reviews-heading h2,
+  .landing-journal-heading h2 { font-size: 3.5rem; }
+
+  .landing-review-grid,
+  .landing-journal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .landing-review:last-child { grid-column: 1 / -1; border-top: 1px solid rgba(242, 247, 243, 0.25); }
+}
+
+@media (max-width: 700px) {
+  .landing-reviews,
+  .landing-journal { padding: 64px 22px 34px; }
+
+  .landing-reviews-heading,
+  .landing-journal-heading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+
+  .landing-reviews-heading h2,
+  .landing-journal-heading h2 { font-size: 3rem; }
+
+  .landing-journal-heading p { margin: 0; }
+
+  .landing-review-grid,
+  .landing-journal-grid { grid-template-columns: minmax(0, 1fr); }
+
+  .landing-review,
+  .landing-review + .landing-review {
+    min-height: 0;
+    padding: 18px 34px 22px 0;
+    border-left: 0;
+  }
+
+  .landing-review + .landing-review { border-top: 1px solid rgba(242, 247, 243, 0.25); }
+  .landing-review:last-child { grid-column: auto; }
+  .landing-review blockquote { margin-top: 27px; font-size: 1.14rem; }
+  .landing-review-quote { top: 4px; right: 8px; font-size: 6rem; }
+  .landing-journal-grid { gap: 22px; }
+
+  .landing-journal-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 420px) {
+  .landing-reviews,
+  .landing-journal { padding-inline: 18px; }
+
+  .landing-reviews-heading h2,
+  .landing-journal-heading h2 { font-size: 2.55rem; }
+
+  .landing-journal-title { font-size: 1.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-journal-copy,
+  .landing-journal-image img,
+  .landing-journal-meta svg { animation: none; transition: none; }
+}

@@ -417,6 +417,50 @@ const ABOUT_COPY = {
   as: ["Krishisense বিষয়ে", "ভাল সিদ্ধান্ত মাটি বুজাৰ পৰাই আৰম্ভ হয়।", "Krishisense-এ মাটিৰ তথ্য, শস্যৰ স্বাস্থ্য পৰীক্ষা আৰু খেতিৰ পৰিকল্পনা একেলগে আনে, যাতে কৃষকে পৰৱৰ্তী পদক্ষেপটো স্পষ্টকৈ বাছি ল’ব পাৰে।"],
   es: ["Acerca de Krishisense", "Las mejores decisiones empiezan por conocer el suelo.", "Krishisense reúne información del suelo, revisiones de cultivos y planificación de la finca para ayudar a los agricultores a elegir el siguiente paso con claridad."]
 };
+const LANDING_REVIEW_COPY = {
+  en: ["Farmer reviews", "Illustrative sample feedback only. These are not verified customer reviews.", "I can keep soil photos and field details together before planning my next step.", "Having crop health and field tasks in one place helps me organize the season.", "The guidance gives me a starting point; I still confirm decisions with local advice."],
+  hi: ["किसानों की समीक्षाएँ", "ये केवल उदाहरण हैं, सत्यापित ग्राहक समीक्षाएँ नहीं।", "अगला कदम तय करने से पहले मैं मिट्टी की तस्वीरें और खेत की जानकारी एक जगह रख सकता हूँ।", "फसल का स्वास्थ्य और खेत के काम एक जगह होने से मौसम की योजना बनाना आसान होता है।", "यह सलाह शुरुआत करने में मदद करती है; फैसलों की पुष्टि मैं स्थानीय सलाह से करता हूँ।"],
+  pa: ["ਕਿਸਾਨਾਂ ਦੀਆਂ ਸਮੀਖਿਆਵਾਂ", "ਇਹ ਸਿਰਫ਼ ਉਦਾਹਰਨਾਂ ਹਨ, ਪ੍ਰਮਾਣਿਤ ਗਾਹਕ ਸਮੀਖਿਆਵਾਂ ਨਹੀਂ।", "ਅਗਲਾ ਕਦਮ ਸੋਚਣ ਤੋਂ ਪਹਿਲਾਂ ਮੈਂ ਮਿੱਟੀ ਦੀਆਂ ਤਸਵੀਰਾਂ ਅਤੇ ਖੇਤ ਦੀ ਜਾਣਕਾਰੀ ਇਕੱਠੀ ਰੱਖ ਸਕਦਾ ਹਾਂ।", "ਫ਼ਸਲ ਦੀ ਸਿਹਤ ਅਤੇ ਖੇਤ ਦੇ ਕੰਮ ਇੱਕ ਥਾਂ ਹੋਣ ਨਾਲ ਮੌਸਮ ਦੀ ਯੋਜਨਾ ਬਣਾਉਣੀ ਸੌਖੀ ਹੁੰਦੀ ਹੈ।", "ਇਹ ਸਲਾਹ ਸ਼ੁਰੂਆਤ ਦਿੰਦੀ ਹੈ; ਫ਼ੈਸਲਿਆਂ ਦੀ ਪੁਸ਼ਟੀ ਮੈਂ ਸਥਾਨਕ ਸਲਾਹ ਨਾਲ ਕਰਦਾ ਹਾਂ।"],
+  bn: ["কৃষকদের পর্যালোচনা", "এগুলো কেবল উদাহরণ, যাচাইকৃত গ্রাহক পর্যালোচনা নয়।", "পরের পদক্ষেপ ঠিক করার আগে আমি মাটির ছবি ও জমির তথ্য একসঙ্গে রাখতে পারি।", "ফসলের স্বাস্থ্য ও জমির কাজ এক জায়গায় থাকলে মরসুমের পরিকল্পনা সহজ হয়।", "এই পরামর্শ শুরু করার দিশা দেয়; সিদ্ধান্ত স্থানীয় পরামর্শে যাচাই করি।"],
+  ta: ["விவசாயிகளின் மதிப்புரைகள்", "இவை எடுத்துக்காட்டுகள் மட்டுமே; சரிபார்க்கப்பட்ட வாடிக்கையாளர் மதிப்புரைகள் அல்ல.", "அடுத்த படியைத் திட்டமிடும் முன் மண் படங்களையும் வயல் விவரங்களையும் ஒன்றாக வைத்துக்கொள்ளலாம்.", "பயிர் ஆரோக்கியமும் வயல் பணிகளும் ஒரே இடத்தில் இருப்பது பருவத்தைத் திட்டமிட உதவுகிறது.", "இந்த வழிகாட்டுதல் தொடங்க உதவும்; முடிவுகளை உள்ளூர் ஆலோசனையுடன் உறுதிப்படுத்துவேன்."],
+  te: ["రైతుల సమీక్షలు", "ఇవి నమూనా ఉదాహరణలు మాత్రమే; ధృవీకరించిన కస్టమర్ సమీక్షలు కావు.", "తదుపరి అడుగు నిర్ణయించే ముందు నేల ఫోటోలు, పొలం వివరాలను ఒకచోట ఉంచగలను.", "పంట ఆరోగ్యం, పొలం పనులు ఒకచోట ఉండటం వల్ల సీజన్‌ను సులభంగా ప్రణాళిక చేయగలను.", "ఈ సూచనలు ప్రారంభానికి ఉపయోగపడతాయి; నిర్ణయాలను స్థానిక సలహాతో నిర్ధారిస్తాను."],
+  mr: ["शेतकऱ्यांची मते", "ही केवळ उदाहरणे आहेत; सत्यापित ग्राहक अभिप्राय नाहीत.", "पुढचे पाऊल ठरवण्याआधी मातीचे फोटो आणि शेताची माहिती एकत्र ठेवता येते.", "पीक आरोग्य आणि शेतातील कामे एकाच ठिकाणी असल्याने हंगामाचे नियोजन सोपे होते.", "हे मार्गदर्शन सुरुवात करून देते; निर्णयांची खात्री मी स्थानिक सल्ल्याने करतो."],
+  gu: ["ખેડૂતોના અભિપ્રાયો", "આ માત્ર ઉદાહરણો છે; ચકાસેલા ગ્રાહક અભિપ્રાયો નથી.", "આગળનું પગલું નક્કી કરતાં પહેલાં માટીના ફોટા અને ખેતરની માહિતી એકસાથે રાખી શકું છું.", "પાકનું આરોગ્ય અને ખેતરનાં કામ એક જગ્યાએ હોવાથી ઋતુનું આયોજન સરળ બને છે.", "આ માર્ગદર્શન શરૂઆત કરવામાં મદદ કરે છે; નિર્ણયની ખાતરી હું સ્થાનિક સલાહથી કરું છું."],
+  kn: ["ರೈತರ ವಿಮರ್ಶೆಗಳು", "ಇವು ಮಾದರಿ ಉದಾಹರಣೆಗಳು ಮಾತ್ರ; ಪರಿಶೀಲಿತ ಗ್ರಾಹಕ ವಿಮರ್ಶೆಗಳಲ್ಲ.", "ಮುಂದಿನ ಹೆಜ್ಜೆ ಯೋಜಿಸುವ ಮೊದಲು ಮಣ್ಣಿನ ಫೋಟೋ ಮತ್ತು ಜಮೀನಿನ ವಿವರಗಳನ್ನು ಒಟ್ಟಿಗೆ ಇರಿಸಬಹುದು.", "ಬೆಳೆ ಆರೋಗ್ಯ ಮತ್ತು ಜಮೀನಿನ ಕೆಲಸಗಳು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿದ್ದರೆ ಋತುವನ್ನು ಯೋಜಿಸುವುದು ಸುಲಭ.", "ಈ ಮಾರ್ಗದರ್ಶನ ಆರಂಭಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ; ನಿರ್ಧಾರಗಳನ್ನು ಸ್ಥಳೀಯ ಸಲಹೆಯಿಂದ ದೃಢಪಡಿಸುತ್ತೇನೆ."],
+  ml: ["കർഷകരുടെ അവലോകനങ്ങൾ", "ഇവ ഉദാഹരണങ്ങൾ മാത്രമാണ്; സ്ഥിരീകരിച്ച ഉപഭോക്തൃ അവലോകനങ്ങളല്ല.", "അടുത്ത നടപടി ആസൂത്രണം ചെയ്യുന്നതിന് മുമ്പ് മണ്ണിന്റെ ചിത്രങ്ങളും കൃഷിയിട വിവരങ്ങളും ഒരുമിച്ച് സൂക്ഷിക്കാം.", "വിളയുടെ ആരോഗ്യവും കൃഷിയിട ജോലികളും ഒരിടത്ത് ഉണ്ടെങ്കിൽ സീസൺ ആസൂത്രണം എളുപ്പമാകും.", "ഈ നിർദേശം തുടക്കത്തിന് സഹായിക്കും; തീരുമാനങ്ങൾ പ്രാദേശിക ഉപദേശത്തോടെ ഉറപ്പാക്കും."],
+  ur: ["کسانوں کے تاثرات", "یہ صرف نمونے ہیں، تصدیق شدہ صارفین کے جائزے نہیں۔", "اگلا قدم طے کرنے سے پہلے میں مٹی کی تصاویر اور کھیت کی تفصیل ایک جگہ رکھ سکتا ہوں۔", "فصل کی صحت اور کھیت کے کام ایک جگہ ہوں تو موسم کی منصوبہ بندی آسان ہوتی ہے۔", "یہ رہنمائی آغاز میں مدد دیتی ہے؛ فیصلوں کی تصدیق مقامی مشورے سے کرتا ہوں۔"],
+  ne: ["किसानका समीक्षा", "यी नमुना उदाहरण मात्र हुन्, प्रमाणित ग्राहक समीक्षा होइनन्।", "अर्को कदम योजना गर्नु अघि म माटोका तस्बिर र खेतका विवरण सँगै राख्न सक्छु।", "बालीको स्वास्थ्य र खेतका काम एकै ठाउँमा हुँदा मौसमको योजना बनाउन सजिलो हुन्छ।", "यो सुझावले सुरुवात गर्न मद्दत गर्छ; निर्णय स्थानीय सल्लाहबाट पुष्टि गर्छु।"],
+  or: ["ଚାଷୀଙ୍କ ମତାମତ", "ଏଗୁଡ଼ିକ କେବଳ ନମୁନା, ଯାଞ୍ଚ ହୋଇଥିବା ଗ୍ରାହକ ସମୀକ୍ଷା ନୁହେଁ।", "ପରବର୍ତ୍ତୀ ପଦକ୍ଷେପ ଯୋଜନା କରିବା ପୂର୍ବରୁ ମାଟିର ଫଟୋ ଓ ଜମିର ବିବରଣୀ ଏକାଠି ରଖିପାରିବି।", "ଫସଲର ସ୍ୱାସ୍ଥ୍ୟ ଓ ଜମିର କାମ ଗୋଟିଏ ସ୍ଥାନରେ ରହିଲେ ଋତୁ ଯୋଜନା ସହଜ ହୁଏ।", "ଏହି ପରାମର୍ଶ ଆରମ୍ଭ କରିବାରେ ସାହାଯ୍ୟ କରେ; ନିଷ୍ପତ୍ତି ସ୍ଥାନୀୟ ପରାମର୍ଶରେ ଯାଞ୍ଚ କରେ।"],
+  as: ["কৃষকৰ মতামত", "এইবোৰ কেৱল উদাহৰণ, যাচাইকৃত গ্ৰাহকৰ পৰ্যালোচনা নহয়।", "পৰৱৰ্তী পদক্ষেপ ঠিক কৰাৰ আগতে মাটিৰ ফটো আৰু পথাৰৰ তথ্য একেলগে ৰাখিব পাৰোঁ।", "শস্যৰ স্বাস্থ্য আৰু পথাৰৰ কাম একে ঠাইত থাকিলে ঋতুৰ পৰিকল্পনা সহজ হয়।", "এই পৰামৰ্শই আৰম্ভণিত সহায় কৰে; সিদ্ধান্ত স্থানীয় পৰামৰ্শৰে নিশ্চিত কৰোঁ।"],
+  es: ["Opiniones de agricultores", "Son ejemplos ilustrativos, no opiniones verificadas de clientes.", "Puedo reunir fotos del suelo y datos del terreno antes de planificar el siguiente paso.", "Tener la salud del cultivo y las tareas del campo en un solo lugar facilita organizar la temporada.", "La orientación me da un punto de partida; confirmo las decisiones con asesoramiento local."]
+};
+const JOURNAL_INTRO = {
+  en: "Practical notes for soil, water and crop care.", hi: "मिट्टी, पानी और फसल की देखभाल के लिए व्यावहारिक सुझाव।",
+  pa: "ਮਿੱਟੀ, ਪਾਣੀ ਅਤੇ ਫ਼ਸਲ ਦੀ ਦੇਖਭਾਲ ਲਈ ਵਰਤੋਂਯੋਗ ਨੋਟਸ।", bn: "মাটি, জল ও ফসলের যত্নের ব্যবহারিক পরামর্শ।",
+  ta: "மண், நீர் மற்றும் பயிர் பராமரிப்புக்கான நடைமுறை குறிப்புகள்.", te: "నేల, నీరు, పంట సంరక్షణకు ఉపయోగకరమైన సూచనలు.",
+  mr: "माती, पाणी आणि पीक काळजीसाठी उपयुक्त टिपा.", gu: "માટી, પાણી અને પાકની સંભાળ માટે ઉપયોગી નોંધો.",
+  kn: "ಮಣ್ಣು, ನೀರು ಮತ್ತು ಬೆಳೆ ಆರೈಕೆಗೆ ಪ್ರಾಯೋಗಿಕ ಟಿಪ್ಪಣಿಗಳು.", ml: "മണ്ണ്, വെള്ളം, വിള പരിപാലനം എന്നിവയ്ക്കുള്ള പ്രായോഗിക കുറിപ്പുകൾ.",
+  ur: "مٹی، پانی اور فصل کی دیکھ بھال کے لیے عملی نکات۔", ne: "माटो, पानी र बाली हेरचाहका व्यावहारिक टिपोटहरू।",
+  or: "ମାଟି, ଜଳ ଓ ଫସଲ ଯତ୍ନ ପାଇଁ ବ୍ୟବହାରିକ ଟିପ୍ପଣୀ।", as: "মাটি, পানী আৰু শস্যৰ যত্নৰ ব্যৱহাৰিক টোকা।",
+  es: "Consejos prácticos sobre suelo, agua y cuidado de cultivos."
+};
+const JOURNAL_TITLES = {
+  en: ["Read the soil before the next crop", "Give water to the roots, not the calendar", "Scout first. Treat with care."],
+  hi: ["अगली फसल से पहले मिट्टी को समझें", "तारीख नहीं, जड़ों की ज़रूरत देखकर पानी दें", "पहले निरीक्षण करें, फिर सावधानी से उपचार करें"],
+  pa: ["ਅਗਲੀ ਫ਼ਸਲ ਤੋਂ ਪਹਿਲਾਂ ਮਿੱਟੀ ਨੂੰ ਸਮਝੋ", "ਤਾਰੀਖ ਨਹੀਂ, ਜੜ੍ਹਾਂ ਦੀ ਲੋੜ ਦੇਖ ਕੇ ਪਾਣੀ ਦਿਓ", "ਪਹਿਲਾਂ ਜਾਂਚੋ, ਫਿਰ ਸੋਚ-ਸਮਝ ਕੇ ਇਲਾਜ ਕਰੋ"],
+  bn: ["পরের ফসলের আগে মাটি বুঝুন", "ক্যালেন্ডার নয়, শিকড়ের প্রয়োজন বুঝে জল দিন", "আগে খতিয়ে দেখুন, তারপর সাবধানে ব্যবস্থা নিন"],
+  ta: ["அடுத்த பயிருக்கு முன் மண்ணைப் புரிந்துகொள்ளுங்கள்", "நாள்காட்டியை அல்ல, வேர்களின் தேவையைப் பார்த்து நீர் பாய்ச்சுங்கள்", "முதலில் ஆய்வு செய்யுங்கள்; பிறகு கவனமாகச் செயல்படுங்கள்"],
+  te: ["తదుపరి పంటకు ముందు నేలను అర్థం చేసుకోండి", "తేదీని కాదు, వేర్ల అవసరాన్ని బట్టి నీరు పెట్టండి", "ముందుగా పరిశీలించండి; తర్వాత జాగ్రత్తగా చర్య తీసుకోండి"],
+  mr: ["पुढील पिकाआधी माती समजून घ्या", "तारखेपेक्षा मुळांची गरज पाहून पाणी द्या", "आधी निरीक्षण करा; मग काळजीपूर्वक उपाय करा"],
+  gu: ["આગળના પાક પહેલાં માટીને સમજો", "તારીખ નહીં, મૂળની જરૂરિયાત જોઈને પાણી આપો", "પહેલાં નિરીક્ષણ કરો, પછી કાળજીથી પગલું લો"],
+  kn: ["ಮುಂದಿನ ಬೆಳೆಗೆ ಮೊದಲು ಮಣ್ಣನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ", "ದಿನಾಂಕವಲ್ಲ, ಬೇರುಗಳ ಅಗತ್ಯಕ್ಕೆ ತಕ್ಕಂತೆ ನೀರುಣಿಸಿ", "ಮೊದಲು ಪರಿಶೀಲಿಸಿ; ನಂತರ ಎಚ್ಚರಿಕೆಯಿಂದ ಕ್ರಮ ಕೈಗೊಳ್ಳಿ"],
+  ml: ["അടുത്ത വിളയ്ക്ക് മുമ്പ് മണ്ണിനെ മനസ്സിലാക്കൂ", "തീയതിയല്ല, വേരുകളുടെ ആവശ്യം നോക്കി നനയ്ക്കൂ", "ആദ്യം നിരീക്ഷിക്കൂ; പിന്നെ ശ്രദ്ധയോടെ നടപടി എടുക്കൂ"],
+  ur: ["اگلی فصل سے پہلے مٹی کو سمجھیں", "تاریخ نہیں، جڑوں کی ضرورت دیکھ کر پانی دیں", "پہلے معائنہ کریں، پھر احتیاط سے قدم اٹھائیں"],
+  ne: ["अर्को बालीअघि माटो बुझ्नुहोस्", "मिति होइन, जराको आवश्यकताअनुसार पानी दिनुहोस्", "पहिले निरीक्षण गर्नुहोस्, त्यसपछि सावधानीपूर्वक कदम चाल्नुहोस्"],
+  or: ["ପରବର୍ତ୍ତୀ ଫସଲ ପୂର୍ବରୁ ମାଟିକୁ ବୁଝନ୍ତୁ", "ତାରିଖ ନୁହେଁ, ମୂଳର ଆବଶ୍ୟକତା ଦେଖି ପାଣି ଦିଅନ୍ତୁ", "ପ୍ରଥମେ ଯାଞ୍ଚ କରନ୍ତୁ, ପରେ ସାବଧାନତାର ସହ ପଦକ୍ଷେପ ନିଅନ୍ତୁ"],
+  as: ["পৰৱৰ্তী শস্যৰ আগতে মাটি বুজি লওক", "তাৰিখ নহয়, শিপাৰ প্ৰয়োজন চাই পানী দিয়ক", "আগতে পৰীক্ষা কৰক, তাৰ পিছত সাৱধানে ব্যৱস্থা লওক"],
+  es: ["Conoce el suelo antes del próximo cultivo", "Riega según las raíces, no según el calendario", "Observa primero. Actúa con cuidado."]
+};
 const FIELD_BOOK_HEADLINES = {
   en: "A season is made of small decisions.",
   hi: "हर मौसम छोटे-छोटे फैसलों से बनता है।",
@@ -1284,6 +1328,8 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
 
   const aboutCopy = ABOUT_COPY[language] || ABOUT_COPY.en;
   const filmControlCopy = FILM_CONTROL_COPY[language] || FILM_CONTROL_COPY.en;
+  const reviewCopy = LANDING_REVIEW_COPY[language] || LANDING_REVIEW_COPY.en;
+  const journalTitles = JOURNAL_TITLES[language] || JOURNAL_TITLES.en;
   const aboutPanels = [
     {
       title: text(language, "soilAnalysis"),
@@ -1299,6 +1345,35 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
       title: text(language, "cropPlanner"),
       description: localize("Use Crop planner to record field tasks and due dates; check Farm tools for saved reports, weather, market information, and the assistant."),
       image: "https://images.unsplash.com/photo-1577109559107-8f94d2c68b7d?auto=format&fit=crop&w=1600&q=82"
+    }
+  ];
+  const journalArticles = [
+    {
+      title: journalTitles[0],
+      category: localize("Soil"),
+      image: aboutPanels[0].image,
+      paragraphs: [
+        localize("Upload a soil photo and add your crop and field details to get farm-specific guidance."),
+        localize("Use a soil test and local agricultural advice for exact nutrient or pH corrections.")
+      ]
+    },
+    {
+      title: journalTitles[1],
+      category: localize("Irrigation"),
+      image: aboutPanels[2].image,
+      paragraphs: [
+        localize("Keep water moderate for loamy soil, give shorter gaps for sandy soil, and avoid standing water in clay soil."),
+        localize("Use the forecast with a field check before changing irrigation or spraying plans.")
+      ]
+    },
+    {
+      title: journalTitles[2],
+      category: text(language, "cropPlanner"),
+      image: aboutPanels[1].image,
+      paragraphs: [
+        localize("Control weeds early, apply fertilizer in split doses, and watch for pest or leaf colour changes."),
+        localize("Use mandi prices and water availability before deciding how much area to plant.")
+      ]
     }
   ];
 
@@ -1745,6 +1820,60 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
           <button className="primary-button" type="button" onClick={startRegistration}>
             {text(language, "createFarmerAccount")} <ChevronRight size={17} />
           </button>
+        </div>
+      </section>
+
+      <section className="landing-reviews" id="farmer-reviews" aria-labelledby="landing-reviews-title" data-reveal>
+        <div className="landing-reviews-heading">
+          <div>
+            <span className="landing-section-kicker"><span>04</span>{text(language, "farmerDesk")}</span>
+            <h2 id="landing-reviews-title">{reviewCopy[0]}</h2>
+          </div>
+          <div className="landing-reviews-aside">
+            <p>{reviewCopy[1]}</p>
+            <a href="#field-journal">{localize("Field notes")} <ChevronRight size={16} /></a>
+          </div>
+        </div>
+        <div className="landing-review-grid">
+          {reviewCopy.slice(2).map((quote, index) => (
+            <article className="landing-review" key={`${language}-${index}`} style={{ "--story-order": index }}>
+              <span className="landing-review-index">0{index + 1}</span>
+              <blockquote>{quote}</blockquote>
+              <span className="landing-review-quote" aria-hidden="true">“</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="landing-journal" id="field-journal" aria-labelledby="landing-journal-title" data-reveal>
+        <div className="landing-journal-heading">
+          <span className="landing-section-kicker"><span>05</span>{localize("Krishisense quick guide")}</span>
+          <h2 id="landing-journal-title">{localize("Field notes")}</h2>
+          <p>{JOURNAL_INTRO[language] || JOURNAL_INTRO.en}</p>
+        </div>
+        <div className="landing-journal-grid">
+          {journalArticles.map((article, index) => (
+            <details className="landing-journal-entry" key={`${language}-${article.title}`} style={{ "--story-order": index }}>
+              <summary>
+                <span className="landing-journal-image">
+                  <img src={article.image} alt="" loading="lazy" />
+                  <span className="landing-journal-number">0{index + 1}</span>
+                </span>
+                <span className="landing-journal-meta">
+                  <span>{article.category}</span>
+                  <ChevronDown size={18} aria-hidden="true" />
+                </span>
+                <span className="landing-journal-title">{article.title}</span>
+              </summary>
+              <div className="landing-journal-copy">
+                {article.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              </div>
+            </details>
+          ))}
+        </div>
+        <div className="landing-journal-footer">
+          <span><ShieldCheck size={17} />{localize("AI suggestions are general guidance. Check local conditions and product labels before irrigation, fertilizer, or pesticide decisions.")}</span>
+          <a href="#farmer-reviews">{reviewCopy[0]} <ChevronRight size={16} /></a>
         </div>
       </section>
 
