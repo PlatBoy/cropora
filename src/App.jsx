@@ -115,6 +115,11 @@ const MANUAL_LABELS = {
 };
 const fieldImage =
   "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80";
+const fieldVideos = [
+  "https://videos.pexels.com/video-files/10848268/10848268-hd_1280_720_30fps.mp4",
+  "https://videos.pexels.com/video-files/5636708/5636708-hd_1280_720_30fps.mp4",
+  "https://videos.pexels.com/video-files/4144211/4144211-hd_1280_720_25fps.mp4"
+];
 
 const emptyAnalysisForm = {
   landArea: "",
@@ -1107,6 +1112,8 @@ function TurnstileWidget({ siteKey, action, theme, onToken, onError }) {
 function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }) {
   const [mode, setMode] = useState("login");
   const [busy, setBusy] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
+  const [heroVideoIndex, setHeroVideoIndex] = useState(0);
   const [error, setError] = useState("");
   const [captchaConfig, setCaptchaConfig] = useState({ loading: true, required: true, siteKey: "", error: "" });
   const [captchaToken, setCaptchaToken] = useState("");
@@ -1120,6 +1127,14 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     farmName: "",
     phone: ""
   });
+
+  useEffect(() => {
+    const query = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (!query) return undefined;
+    const updatePreference = () => setReducedMotion(query.matches);
+    query.addEventListener?.("change", updatePreference);
+    return () => query.removeEventListener?.("change", updatePreference);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -1143,6 +1158,11 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     setCaptchaToken("");
     setCaptchaWidgetError("");
     setCaptchaCycle((cycle) => cycle + 1);
+  }
+
+  function startRegistration() {
+    changeMode("register");
+    document.querySelector(".auth-panel")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   async function submitLogin(event, quickCredentials) {
@@ -1236,27 +1256,62 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     <main className="auth-shell">
       <section className="auth-visual" aria-label="Farm field">
         <img src={fieldImage} alt="Farm field at sunrise" />
-        <div className="brand-lockup">
-          <span className="brand-mark">
-            <Sprout size={24} />
-          </span>
-          <div>
-            <p>Krishisense</p>
-            <h1>Soil decisions for every field</h1>
+        {!reducedMotion && (
+          <video
+            key={heroVideoIndex}
+            className="auth-hero-video"
+            autoPlay
+            muted
+            playsInline
+            preload="none"
+            poster={fieldImage}
+            aria-hidden="true"
+            tabIndex={-1}
+            onTimeUpdate={(event) => {
+              if (event.currentTarget.currentTime >= 18) {
+                event.currentTarget.pause();
+                setHeroVideoIndex((index) => (index + 1) % fieldVideos.length);
+              }
+            }}
+          >
+            <source src={fieldVideos[heroVideoIndex]} type="video/mp4" />
+          </video>
+        )}
+        <div className="auth-hero-copy">
+          <div className="brand-lockup">
+            <span className="brand-mark">
+              <Sprout size={24} />
+            </span>
+            <div>
+              <p>Krishisense</p>
+              <h1>{localize("Soil decisions for every field")}</h1>
+            </div>
+          </div>
+          <p className="auth-hero-description">{localize("Upload a soil photo and add your crop and field details to get farm-specific guidance.")}</p>
+          <div className="auth-hero-actions">
+            <button className="primary-button" type="button" onClick={startRegistration}>
+              <UserPlus size={18} />
+              {text(language, "createFarmerAccount")}
+              <ChevronRight size={17} />
+            </button>
+            <a className="auth-explore-link" href="#public-tools">
+              {localize("Explore")}
+              <ChevronDown size={16} />
+            </a>
           </div>
         </div>
         <div className="auth-metrics">
           <span>
             <FlaskConical size={18} />
-            Photo analysis
-          </span>
-          <span>
-            <ShieldCheck size={18} />
-            Admin review
+            {localize("Photo analysis")}
           </span>
           <span>
             <Leaf size={18} />
-            Crop guidance
+            {localize("Crop guidance")}
+          </span>
+          <span>
+            <Camera size={18} />
+            {localize("AI disease detection")}
           </span>
         </div>
       </section>
@@ -1320,7 +1375,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         ) : (
           <form className="stack-form" onSubmit={submitRegister}>
             <label>
-              {text(language, "name")}
+              {localize("Name")}
               <input
                 value={registerForm.name}
                 onChange={(event) => setRegisterForm({ ...registerForm, name: event.target.value })}
@@ -1367,6 +1422,37 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             </button>
           </form>
         )}
+      </section>
+
+      <section className="public-toolkit" id="public-tools" aria-labelledby="public-tools-title">
+        <div className="public-toolkit-heading">
+          <span className="eyebrow">{localize("Farm tools")}</span>
+          <h2 id="public-tools-title">{localize("Get practical next steps")}</h2>
+        </div>
+        <div className="public-feature-grid">
+          <article className="public-feature">
+            <span className="public-feature-icon"><FlaskConical size={21} /></span>
+            <h3>{text(language, "soilAnalysis")}</h3>
+            <p>{localize("Upload a soil photo and add your crop and field details to get farm-specific guidance.")}</p>
+          </article>
+          <article className="public-feature">
+            <span className="public-feature-icon"><Leaf size={21} /></span>
+            <h3>{text(language, "diseaseDetection")}</h3>
+            <p>{localize("Open Disease detection, select the crop, describe the symptoms, and upload a sharp photo of the affected plant.")}</p>
+          </article>
+          <article className="public-feature">
+            <span className="public-feature-icon"><CalendarDays size={21} /></span>
+            <h3>{text(language, "cropPlanner")}</h3>
+            <p>{localize("Use Crop planner to record field tasks and due dates; check Farm tools for saved reports, weather, market information, and the assistant.")}</p>
+          </article>
+        </div>
+        <div className="public-toolkit-footer">
+          <span><ShieldCheck size={17} />{localize("AI photo analysis is guidance only. Confirm fertilizer and pH decisions with a lab soil test.")}</span>
+          <button className="secondary-button" type="button" onClick={startRegistration}>
+            {text(language, "createFarmerAccount")}
+            <ChevronRight size={16} />
+          </button>
+        </div>
       </section>
     </main>
   );

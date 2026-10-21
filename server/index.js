@@ -34,6 +34,7 @@ app.use(
         connectSrc: ["'self'", "https://api.open-meteo.com", "https://geocoding-api.open-meteo.com", ...clientOrigins],
         frameSrc: ["'self'", "https://challenges.cloudflare.com"],
         imgSrc: ["'self'", "data:", "https:"],
+        mediaSrc: ["'self'", "https://videos.pexels.com"],
         scriptSrc: ["'self'", "https://challenges.cloudflare.com"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         fontSrc: ["'self'", "data:"]
