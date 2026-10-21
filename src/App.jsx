@@ -1195,6 +1195,14 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   }, []);
 
   useEffect(() => {
+    if (reducedMotion) return undefined;
+    const timer = window.setTimeout(() => {
+      setHeroVideoIndex((index) => (index + 1) % fieldVideos.length);
+    }, 4000);
+    return () => window.clearTimeout(timer);
+  }, [heroVideoIndex, reducedMotion]);
+
+  useEffect(() => {
     const section = aboutSectionRef.current;
     const track = aboutTrackRef.current;
     if (!section || !track) return undefined;
@@ -1430,14 +1438,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             poster={fieldImage}
             aria-hidden="true"
             tabIndex={-1}
-            onEnded={() => setHeroVideoIndex((index) => (index + 1) % fieldVideos.length)}
-            onError={() => setHeroVideoIndex((index) => (index + 1) % fieldVideos.length)}
-            onTimeUpdate={(event) => {
-              if (event.currentTarget.currentTime >= 18) {
-                event.currentTarget.pause();
-                setHeroVideoIndex((index) => (index + 1) % fieldVideos.length);
-              }
-            }}
+            onError={(event) => { event.currentTarget.style.opacity = "0"; }}
           >
             <source src={fieldVideos[heroVideoIndex]} type="video/mp4" />
           </video>
