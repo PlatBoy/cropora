@@ -1540,7 +1540,8 @@ html[dir="rtl"] .lang-switch-menu button {
   .news-control-button,
   .news-library-card,
   .news-library-title > span,
-  .farm-buddy-trigger {
+  .farm-buddy-trigger,
+  .farmer-editorial-actions button {
     transition: none;
   }
 
@@ -1653,6 +1654,161 @@ html[dir="rtl"] .lang-switch-menu button {
   min-width: 0;
   display: grid;
   gap: 18px;
+}
+
+.farmer-editorial-hero {
+  position: relative;
+  min-height: 352px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 0.32fr);
+  align-items: end;
+  gap: 28px;
+  overflow: hidden;
+  padding: 32px 36px;
+  color: #f2f7f3;
+  background-color: #10221a;
+  background-position: center 54%;
+  background-size: cover;
+  border: 1px solid color-mix(in srgb, var(--green) 35%, transparent);
+  border-radius: 8px;
+  isolation: isolate;
+}
+
+#soil-report-form {
+  scroll-margin-top: 190px;
+}
+
+.farmer-editorial-hero::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(4, 17, 11, 0.24), transparent 46%);
+  content: "";
+}
+
+.farmer-editorial-copy {
+  min-width: 0;
+  max-width: 760px;
+}
+
+.farmer-editorial-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #e6b85c;
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.farmer-editorial-kicker i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ccb78;
+  box-shadow: 0 0 0 4px rgba(76, 203, 120, 0.16);
+}
+
+.farmer-editorial-copy h1 {
+  max-width: 17ch;
+  margin: 14px 0 4px;
+  color: #f2f7f3;
+  font-size: 4.6rem;
+  font-weight: 950;
+  line-height: 0.94;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+
+.farmer-editorial-copy > p {
+  margin: 12px 0 20px;
+  color: #bfe9ca;
+  font-size: 1.04rem;
+  font-weight: 700;
+}
+
+.farmer-editorial-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.farmer-editorial-actions button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 1px solid rgba(242, 247, 243, 0.64);
+  border-radius: 4px;
+  font-size: 0.83rem;
+  font-weight: 850;
+  transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.farmer-editorial-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.editorial-primary {
+  color: #08130f;
+  background: #f2f7f3;
+}
+
+.editorial-primary:hover {
+  border-color: #8be0a5 !important;
+  background: #8be0a5;
+}
+
+.editorial-secondary {
+  color: #f2f7f3;
+  background: rgba(8, 19, 15, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.editorial-secondary:hover {
+  border-color: #e6b85c !important;
+  background: rgba(8, 19, 15, 0.7);
+}
+
+.farmer-editorial-reading {
+  display: grid;
+  align-content: end;
+  gap: 6px;
+  min-height: 96px;
+  padding: 8px 0 8px 16px;
+  border-left: 1px solid rgba(242, 247, 243, 0.62);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+}
+
+.farmer-editorial-reading > span {
+  color: #e6b85c;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.farmer-editorial-reading strong {
+  font-size: 1.5rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.farmer-editorial-reading small {
+  color: #d0e0d5;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.farmer-editorial-index {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  color: rgba(242, 247, 243, 0.78);
+  font-size: 0.64rem;
+  font-weight: 850;
+  letter-spacing: 0;
 }
 
 .data-refresh-status {
@@ -3712,6 +3868,43 @@ td {
   .admin-layout {
     width: min(100% - 20px, 1320px);
     margin-top: 12px;
+  }
+
+  .farmer-editorial-hero {
+    min-height: 330px;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: end;
+    gap: 18px;
+    padding: 24px 20px;
+    background-position: 58% center;
+  }
+
+  #soil-report-form {
+    scroll-margin-top: 250px;
+  }
+
+  .farmer-editorial-copy h1 {
+    margin-top: 12px;
+    font-size: 3rem;
+  }
+
+  .farmer-editorial-copy > p {
+    margin: 10px 0 16px;
+  }
+
+  .farmer-editorial-reading {
+    width: fit-content;
+    min-height: 0;
+    padding-left: 11px;
+  }
+
+  .farmer-editorial-reading strong {
+    font-size: 1.2rem;
+  }
+
+  .farmer-editorial-index {
+    top: 15px;
+    right: 16px;
   }
 
   .data-refresh-status {

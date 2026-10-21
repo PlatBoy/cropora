@@ -171,6 +171,8 @@ export const assistantChatSchema = z.object({
       farmName: z.string().trim().max(120).optional().default(""),
       farmArea: z.string().trim().max(80).optional().default(""),
       latestDisease: z.string().trim().max(120).optional().default(""),
+      latestDiseaseSeverity: z.string().trim().max(40).optional().default(""),
+      soilRisk: z.string().trim().max(40).optional().default(""),
       upcomingTasks: z.array(z.string().trim().max(180)).max(3).optional().default([]),
       healthScore: z.union([z.string(), z.number()]).optional().default(""),
       language: z.string().trim().max(12).optional().default("en"),

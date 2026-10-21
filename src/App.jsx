@@ -437,23 +437,23 @@ const FARM_BUDDY_COPY = Object.fromEntries(FARM_BUDDY_KEYS.map((key, index) => [
   Object.fromEntries(Object.entries(FARM_BUDDY_ROWS).map(([code, row]) => [code, row[index]]))
 ]));
 
-const FARM_LEDGER_KEYS = ["fieldRecords", "farmLogbook", "logbookNote", "loggedCosts", "recordedSales", "harvestLogs", "actualResults", "actualCost", "harvestQuantity", "saleProceeds", "saveComplete", "saving", "cancel", "spent", "sales", "completedLogbookMessage"];
+const FARM_LEDGER_KEYS = ["fieldRecords", "farmLogbook", "logbookNote", "loggedCosts", "recordedSales", "harvestLogs", "actualResults", "actualCost", "harvestQuantity", "saleProceeds", "saveComplete", "saving", "cancel", "spent", "sales", "completedLogbookMessage", "manualCompleteTask"];
 const FARM_LEDGER_ROWS = {
-  en: ["Field records", "Farm logbook", "Totals use the costs and harvest sales you record when completing tasks.", "Logged costs", "Recorded sales", "Harvest logs", "Record actual results", "Actual cost (INR)", "Harvest quantity", "Sale proceeds (INR)", "Save and complete", "Saving…", "Cancel", "Spent", "Sales", "Task completed and added to this farm's logbook."],
-  hi: ["खेत के रिकॉर्ड", "खेत की डायरी", "कुल में काम पूरा करते समय आपके दर्ज किए गए खर्च और फसल की बिक्री शामिल हैं।", "दर्ज लागत", "दर्ज बिक्री", "कटाई के रिकॉर्ड", "वास्तविक परिणाम दर्ज करें", "वास्तविक लागत (INR)", "कटाई की मात्रा", "बिक्री की राशि (INR)", "सहेजें और पूरा करें", "सहेजा जा रहा है…", "रद्द करें", "खर्च", "बिक्री", "काम पूरा हुआ और खेत की डायरी में जोड़ दिया गया।"],
-  pa: ["ਖੇਤ ਦੇ ਰਿਕਾਰਡ", "ਖੇਤ ਦੀ ਡਾਇਰੀ", "ਕੁੱਲ ਵਿੱਚ ਕੰਮ ਪੂਰਾ ਕਰਦੇ ਸਮੇਂ ਦਰਜ ਕੀਤੇ ਖਰਚੇ ਅਤੇ ਫ਼ਸਲ ਦੀ ਵਿਕਰੀ ਸ਼ਾਮਲ ਹੈ।", "ਦਰਜ ਖਰਚੇ", "ਦਰਜ ਵਿਕਰੀ", "ਵਾਢੀ ਦੇ ਰਿਕਾਰਡ", "ਅਸਲ ਨਤੀਜੇ ਦਰਜ ਕਰੋ", "ਅਸਲ ਖਰਚਾ (INR)", "ਵਾਢੀ ਦੀ ਮਾਤਰਾ", "ਵਿਕਰੀ ਦੀ ਰਕਮ (INR)", "ਸੰਭਾਲੋ ਅਤੇ ਪੂਰਾ ਕਰੋ", "ਸੰਭਾਲਿਆ ਜਾ ਰਿਹਾ ਹੈ…", "ਰੱਦ ਕਰੋ", "ਖਰਚਿਆ", "ਵਿਕਰੀ", "ਕੰਮ ਪੂਰਾ ਹੋਇਆ ਅਤੇ ਖੇਤ ਦੀ ਡਾਇਰੀ ਵਿੱਚ ਜੋੜਿਆ ਗਿਆ।"],
-  bn: ["খেতের রেকর্ড", "খামারের খাতা", "কাজ শেষ করার সময় আপনার নথিভুক্ত খরচ ও ফসল বিক্রির হিসাব এখানে যোগ হয়।", "নথিভুক্ত খরচ", "নথিভুক্ত বিক্রি", "ফসল কাটার রেকর্ড", "প্রকৃত ফলাফল লিখুন", "প্রকৃত খরচ (INR)", "ফসলের পরিমাণ", "বিক্রির অর্থ (INR)", "সংরক্ষণ করে সম্পন্ন করুন", "সংরক্ষণ হচ্ছে…", "বাতিল", "খরচ", "বিক্রি", "কাজ সম্পন্ন হয়েছে এবং খামারের খাতায় যোগ হয়েছে।"],
-  ta: ["வயல் பதிவுகள்", "பண்ணைப் பதிவேடு", "பணியை முடிக்கும்போது நீங்கள் பதிவு செய்யும் செலவுகளும் அறுவடை விற்பனையும் இங்கே கணக்கிடப்படும்.", "பதிவு செய்த செலவுகள்", "பதிவு செய்த விற்பனை", "அறுவடை பதிவுகள்", "உண்மையான முடிவுகளைப் பதிவு செய்", "உண்மையான செலவு (INR)", "அறுவடை அளவு", "விற்பனைத் தொகை (INR)", "சேமித்து முடி", "சேமிக்கப்படுகிறது…", "ரத்து செய்", "செலவு", "விற்பனை", "பணி முடிக்கப்பட்டு பண்ணைப் பதிவேட்டில் சேர்க்கப்பட்டது."],
-  te: ["పొలం రికార్డులు", "వ్యవసాయ లాగ్‌బుక్", "పని పూర్తిచేసేటప్పుడు మీరు నమోదు చేసే ఖర్చులు, పంట అమ్మకాలే ఈ మొత్తాల్లో ఉంటాయి.", "నమోదు చేసిన ఖర్చులు", "నమోదు చేసిన అమ్మకాలు", "పంట కోత రికార్డులు", "వాస్తవ ఫలితాలను నమోదు చేయండి", "వాస్తవ ఖర్చు (INR)", "పంట పరిమాణం", "అమ్మకాల మొత్తం (INR)", "సేవ్ చేసి పూర్తి చేయండి", "సేవ్ అవుతోంది…", "రద్దు చేయండి", "ఖర్చు", "అమ్మకాలు", "పని పూర్తయి వ్యవసాయ లాగ్‌బుక్‌లో చేర్చబడింది."],
-  mr: ["शेतातील नोंदी", "शेताची नोंदवही", "काम पूर्ण करताना तुम्ही नोंदवलेले खर्च आणि पीक विक्री या एकूण रकमेत समाविष्ट आहेत.", "नोंदवलेला खर्च", "नोंदवलेली विक्री", "कापणीच्या नोंदी", "प्रत्यक्ष निकाल नोंदवा", "प्रत्यक्ष खर्च (INR)", "कापणीचे प्रमाण", "विक्रीची रक्कम (INR)", "जतन करा आणि पूर्ण करा", "जतन होत आहे…", "रद्द करा", "खर्च", "विक्री", "काम पूर्ण झाले आणि शेताच्या नोंदवहीत जोडले."],
-  gu: ["ખેતરના રેકોર્ડ", "ખેતરની નોંધપોથી", "કામ પૂરું કરતી વખતે તમે નોંધેલા ખર્ચ અને પાકના વેચાણનો જ કુલમાં સમાવેશ થાય છે.", "નોંધાયેલ ખર્ચ", "નોંધાયેલ વેચાણ", "લણણીના રેકોર્ડ", "વાસ્તવિક પરિણામ નોંધો", "વાસ્તવિક ખર્ચ (INR)", "લણણીનું પ્રમાણ", "વેચાણની રકમ (INR)", "સાચવો અને પૂર્ણ કરો", "સાચવાઈ રહ્યું છે…", "રદ કરો", "ખર્ચ", "વેચાણ", "કામ પૂર્ણ થયું અને ખેતરની નોંધપોથીમાં ઉમેરાયું."],
-  kn: ["ಹೊಲದ ದಾಖಲೆಗಳು", "ಕೃಷಿ ದಾಖಲಾತಿ ಪುಸ್ತಕ", "ಕೆಲಸ ಪೂರ್ಣಗೊಳಿಸುವಾಗ ನೀವು ದಾಖಲಿಸುವ ವೆಚ್ಚ ಮತ್ತು ಬೆಳೆ ಮಾರಾಟವನ್ನು ಮಾತ್ರ ಇಲ್ಲಿ ಲೆಕ್ಕಿಸಲಾಗುತ್ತದೆ.", "ದಾಖಲಿಸಿದ ವೆಚ್ಚ", "ದಾಖಲಿಸಿದ ಮಾರಾಟ", "ಸುಗ್ಗಿಯ ದಾಖಲೆಗಳು", "ನಿಜವಾದ ಫಲಿತಾಂಶಗಳನ್ನು ದಾಖಲಿಸಿ", "ನಿಜವಾದ ವೆಚ್ಚ (INR)", "ಸುಗ್ಗಿಯ ಪ್ರಮಾಣ", "ಮಾರಾಟದ ಮೊತ್ತ (INR)", "ಉಳಿಸಿ ಪೂರ್ಣಗೊಳಿಸಿ", "ಉಳಿಸಲಾಗುತ್ತಿದೆ…", "ರದ್ದುಮಾಡಿ", "ವೆಚ್ಚ", "ಮಾರಾಟ", "ಕೆಲಸ ಪೂರ್ಣಗೊಂಡು ಕೃಷಿ ದಾಖಲಾತಿ ಪುಸ್ತಕಕ್ಕೆ ಸೇರಿಸಲಾಗಿದೆ."],
-  ml: ["കൃഷിയിട രേഖകൾ", "ഫാം രേഖാപുസ്തകം", "ജോലി പൂർത്തിയാക്കുമ്പോൾ നിങ്ങൾ രേഖപ്പെടുത്തുന്ന ചെലവും വിളവിന്റെ വിൽപ്പനയും മാത്രമാണ് ആകെ തുകയിൽ ഉൾപ്പെടുന്നത്.", "രേഖപ്പെടുത്തിയ ചെലവ്", "രേഖപ്പെടുത്തിയ വിൽപ്പന", "വിളവെടുപ്പ് രേഖകൾ", "യഥാർത്ഥ ഫലം രേഖപ്പെടുത്തുക", "യഥാർത്ഥ ചെലവ് (INR)", "വിളവിന്റെ അളവ്", "വിൽപ്പന തുക (INR)", "സൂക്ഷിച്ച് പൂർത്തിയാക്കുക", "സൂക്ഷിക്കുന്നു…", "റദ്ദാക്കുക", "ചെലവഴിച്ചത്", "വിൽപ്പന", "ജോലി പൂർത്തിയാക്കി ഫാം രേഖാപുസ്തകത്തിൽ ചേർത്തു."],
-  ur: ["کھیت کے ریکارڈ", "فارم کی ڈائری", "کل رقم میں کام مکمل کرتے وقت آپ کے درج کردہ اخراجات اور فصل کی فروخت شامل ہیں۔", "درج اخراجات", "درج فروخت", "کٹائی کے ریکارڈ", "اصل نتائج درج کریں", "اصل لاگت (INR)", "کٹائی کی مقدار", "فروخت کی رقم (INR)", "محفوظ کریں اور مکمل کریں", "محفوظ ہو رہا ہے…", "منسوخ کریں", "خرچ", "فروخت", "کام مکمل ہوا اور فارم کی ڈائری میں شامل کر دیا گیا۔"],
-  ne: ["खेतका अभिलेख", "खेतको लगबुक", "काम पूरा गर्दा तपाईंले लेख्नुभएको खर्च र बाली बिक्री मात्र जम्मा रकममा समावेश हुन्छ।", "लेखिएको खर्च", "लेखिएको बिक्री", "कटानी अभिलेख", "वास्तविक नतिजा लेख्नुहोस्", "वास्तविक लागत (INR)", "कटानीको मात्रा", "बिक्री रकम (INR)", "सुरक्षित गरी पूरा गर्नुहोस्", "सुरक्षित हुँदैछ…", "रद्द गर्नुहोस्", "खर्च", "बिक्री", "काम पूरा भयो र खेतको लगबुकमा थपियो।"],
-  or: ["କ୍ଷେତ ରେକର୍ଡ", "ଚାଷ ଖାତା", "କାମ ସମାପ୍ତ କଲାବେଳେ ଆପଣ ଲେଖିଥିବା ଖର୍ଚ୍ଚ ଏବଂ ଫସଲ ବିକ୍ରି ଏହି ମୋଟରେ ରହିଛି।", "ଲିପିବଦ୍ଧ ଖର୍ଚ୍ଚ", "ଲିପିବଦ୍ଧ ବିକ୍ରି", "ଅମଳ ରେକର୍ଡ", "ପ୍ରକୃତ ଫଳାଫଳ ଲେଖନ୍ତୁ", "ପ୍ରକୃତ ଖର୍ଚ୍ଚ (INR)", "ଅମଳ ପରିମାଣ", "ବିକ୍ରି ରାଶି (INR)", "ସଞ୍ଚୟ କରି ସମାପ୍ତ କରନ୍ତୁ", "ସଞ୍ଚୟ ହେଉଛି…", "ବାତିଲ କରନ୍ତୁ", "ଖର୍ଚ୍ଚ", "ବିକ୍ରି", "କାମ ସମାପ୍ତ ହେଲା ଏବଂ ଚାଷ ଖାତାରେ ଯୋଡ଼ାଗଲା।"],
-  as: ["পথাৰৰ অভিলেখ", "খেতিৰ খতিয়ান", "কাম সম্পূৰ্ণ কৰাৰ সময়ত আপুনি লিখা খৰচ আৰু শস্য বিক্ৰীৰ পৰিমাণ ইয়াত গণনা হয়।", "লিখা খৰচ", "লিখা বিক্ৰী", "চপোৱাৰ অভিলেখ", "প্ৰকৃত ফলাফল লিখক", "প্ৰকৃত খৰচ (INR)", "চপোৱাৰ পৰিমাণ", "বিক্ৰীৰ ধন (INR)", "সংৰক্ষণ কৰি সম্পূৰ্ণ কৰক", "সংৰক্ষণ হৈ আছে…", "বাতিল কৰক", "খৰচ", "বিক্ৰী", "কাম সম্পূৰ্ণ হ’ল আৰু খেতিৰ খতিয়ানত যোগ কৰা হ’ল।"],
-  es: ["Registros del campo", "Cuaderno de la granja", "Los totales incluyen los gastos y las ventas de cosecha que anotas al completar tareas.", "Gastos registrados", "Ventas registradas", "Registros de cosecha", "Registrar resultados reales", "Coste real (INR)", "Cantidad cosechada", "Importe de venta (INR)", "Guardar y completar", "Guardando…", "Cancelar", "Gastado", "Ventas", "Tarea completada y añadida al cuaderno de la granja."]
+  en: ["Field records", "Farm logbook", "Totals use the costs and harvest sales you record when completing tasks.", "Logged costs", "Recorded sales", "Harvest logs", "Record actual results", "Actual cost (INR)", "Harvest quantity", "Sale proceeds (INR)", "Save and complete", "Saving…", "Cancel", "Spent", "Sales", "Task completed and added to this farm's logbook.", "To record results, complete a planner task and enter its actual cost. For harvests, also add the quantity and sale proceeds."],
+  hi: ["खेत के रिकॉर्ड", "खेत की डायरी", "कुल में काम पूरा करते समय आपके दर्ज किए गए खर्च और फसल की बिक्री शामिल हैं।", "दर्ज लागत", "दर्ज बिक्री", "कटाई के रिकॉर्ड", "वास्तविक परिणाम दर्ज करें", "वास्तविक लागत (INR)", "कटाई की मात्रा", "बिक्री की राशि (INR)", "सहेजें और पूरा करें", "सहेजा जा रहा है…", "रद्द करें", "खर्च", "बिक्री", "काम पूरा हुआ और खेत की डायरी में जोड़ दिया गया।", "नतीजे दर्ज करने के लिए, फसल योजना का काम पूरा करें और वास्तविक लागत लिखें। कटाई के लिए मात्रा और बिक्री की राशि भी जोड़ें।"],
+  pa: ["ਖੇਤ ਦੇ ਰਿਕਾਰਡ", "ਖੇਤ ਦੀ ਡਾਇਰੀ", "ਕੁੱਲ ਵਿੱਚ ਕੰਮ ਪੂਰਾ ਕਰਦੇ ਸਮੇਂ ਦਰਜ ਕੀਤੇ ਖਰਚੇ ਅਤੇ ਫ਼ਸਲ ਦੀ ਵਿਕਰੀ ਸ਼ਾਮਲ ਹੈ।", "ਦਰਜ ਖਰਚੇ", "ਦਰਜ ਵਿਕਰੀ", "ਵਾਢੀ ਦੇ ਰਿਕਾਰਡ", "ਅਸਲ ਨਤੀਜੇ ਦਰਜ ਕਰੋ", "ਅਸਲ ਖਰਚਾ (INR)", "ਵਾਢੀ ਦੀ ਮਾਤਰਾ", "ਵਿਕਰੀ ਦੀ ਰਕਮ (INR)", "ਸੰਭਾਲੋ ਅਤੇ ਪੂਰਾ ਕਰੋ", "ਸੰਭਾਲਿਆ ਜਾ ਰਿਹਾ ਹੈ…", "ਰੱਦ ਕਰੋ", "ਖਰਚਿਆ", "ਵਿਕਰੀ", "ਕੰਮ ਪੂਰਾ ਹੋਇਆ ਅਤੇ ਖੇਤ ਦੀ ਡਾਇਰੀ ਵਿੱਚ ਜੋੜਿਆ ਗਿਆ।", "ਨਤੀਜੇ ਦਰਜ ਕਰਨ ਲਈ, ਫਸਲ ਯੋਜਨਾ ਦਾ ਕੰਮ ਪੂਰਾ ਕਰੋ ਅਤੇ ਅਸਲ ਖਰਚਾ ਲਿਖੋ। ਵਾਢੀ ਲਈ ਮਾਤਰਾ ਅਤੇ ਵਿਕਰੀ ਦੀ ਰਕਮ ਵੀ ਜੋੜੋ।"],
+  bn: ["খেতের রেকর্ড", "খামারের খাতা", "কাজ শেষ করার সময় আপনার নথিভুক্ত খরচ ও ফসল বিক্রির হিসাব এখানে যোগ হয়।", "নথিভুক্ত খরচ", "নথিভুক্ত বিক্রি", "ফসল কাটার রেকর্ড", "প্রকৃত ফলাফল লিখুন", "প্রকৃত খরচ (INR)", "ফসলের পরিমাণ", "বিক্রির অর্থ (INR)", "সংরক্ষণ করে সম্পন্ন করুন", "সংরক্ষণ হচ্ছে…", "বাতিল", "খরচ", "বিক্রি", "কাজ সম্পন্ন হয়েছে এবং খামারের খাতায় যোগ হয়েছে।", "ফলাফল লিখতে, ফসল পরিকল্পনার একটি কাজ সম্পন্ন করে প্রকৃত খরচ লিখুন। ফসল কাটার ক্ষেত্রে পরিমাণ ও বিক্রির অর্থও যোগ করুন।"],
+  ta: ["வயல் பதிவுகள்", "பண்ணைப் பதிவேடு", "பணியை முடிக்கும்போது நீங்கள் பதிவு செய்யும் செலவுகளும் அறுவடை விற்பனையும் இங்கே கணக்கிடப்படும்.", "பதிவு செய்த செலவுகள்", "பதிவு செய்த விற்பனை", "அறுவடை பதிவுகள்", "உண்மையான முடிவுகளைப் பதிவு செய்", "உண்மையான செலவு (INR)", "அறுவடை அளவு", "விற்பனைத் தொகை (INR)", "சேமித்து முடி", "சேமிக்கப்படுகிறது…", "ரத்து செய்", "செலவு", "விற்பனை", "பணி முடிக்கப்பட்டு பண்ணைப் பதிவேட்டில் சேர்க்கப்பட்டது.", "முடிவுகளைப் பதிவு செய்ய, பயிர் திட்டப் பணியை முடித்து உண்மையான செலவை உள்ளிடவும். அறுவடைக்கு அளவு மற்றும் விற்பனைத் தொகையையும் சேர்க்கவும்."],
+  te: ["పొలం రికార్డులు", "వ్యవసాయ లాగ్‌బుక్", "పని పూర్తిచేసేటప్పుడు మీరు నమోదు చేసే ఖర్చులు, పంట అమ్మకాలే ఈ మొత్తాల్లో ఉంటాయి.", "నమోదు చేసిన ఖర్చులు", "నమోదు చేసిన అమ్మకాలు", "పంట కోత రికార్డులు", "వాస్తవ ఫలితాలను నమోదు చేయండి", "వాస్తవ ఖర్చు (INR)", "పంట పరిమాణం", "అమ్మకాల మొత్తం (INR)", "సేవ్ చేసి పూర్తి చేయండి", "సేవ్ అవుతోంది…", "రద్దు చేయండి", "ఖర్చు", "అమ్మకాలు", "పని పూర్తయి వ్యవసాయ లాగ్‌బుక్‌లో చేర్చబడింది.", "ఫలితాలను నమోదు చేయడానికి, పంట ప్రణాళికలోని పనిని పూర్తి చేసి వాస్తవ ఖర్చును నమోదు చేయండి. పంట కోతకు పరిమాణం, అమ్మకాల మొత్తాన్ని కూడా జోడించండి."],
+  mr: ["शेतातील नोंदी", "शेताची नोंदवही", "काम पूर्ण करताना तुम्ही नोंदवलेले खर्च आणि पीक विक्री या एकूण रकमेत समाविष्ट आहेत.", "नोंदवलेला खर्च", "नोंदवलेली विक्री", "कापणीच्या नोंदी", "प्रत्यक्ष निकाल नोंदवा", "प्रत्यक्ष खर्च (INR)", "कापणीचे प्रमाण", "विक्रीची रक्कम (INR)", "जतन करा आणि पूर्ण करा", "जतन होत आहे…", "रद्द करा", "खर्च", "विक्री", "काम पूर्ण झाले आणि शेताच्या नोंदवहीत जोडले.", "निकाल नोंदवण्यासाठी, पीक नियोजनातील काम पूर्ण करा आणि प्रत्यक्ष खर्च लिहा. कापणीसाठी प्रमाण आणि विक्रीची रक्कमही जोडा."],
+  gu: ["ખેતરના રેકોર્ડ", "ખેતરની નોંધપોથી", "કામ પૂરું કરતી વખતે તમે નોંધેલા ખર્ચ અને પાકના વેચાણનો જ કુલમાં સમાવેશ થાય છે.", "નોંધાયેલ ખર્ચ", "નોંધાયેલ વેચાણ", "લણણીના રેકોર્ડ", "વાસ્તવિક પરિણામ નોંધો", "વાસ્તવિક ખર્ચ (INR)", "લણણીનું પ્રમાણ", "વેચાણની રકમ (INR)", "સાચવો અને પૂર્ણ કરો", "સાચવાઈ રહ્યું છે…", "રદ કરો", "ખર્ચ", "વેચાણ", "કામ પૂર્ણ થયું અને ખેતરની નોંધપોથીમાં ઉમેરાયું.", "પરિણામ નોંધવા માટે, પાક યોજનાનું કામ પૂર્ણ કરો અને વાસ્તવિક ખર્ચ લખો. લણણી માટે જથ્થો અને વેચાણની રકમ પણ ઉમેરો."],
+  kn: ["ಹೊಲದ ದಾಖಲೆಗಳು", "ಕೃಷಿ ದಾಖಲಾತಿ ಪುಸ್ತಕ", "ಕೆಲಸ ಪೂರ್ಣಗೊಳಿಸುವಾಗ ನೀವು ದಾಖಲಿಸುವ ವೆಚ್ಚ ಮತ್ತು ಬೆಳೆ ಮಾರಾಟವನ್ನು ಮಾತ್ರ ಇಲ್ಲಿ ಲೆಕ್ಕಿಸಲಾಗುತ್ತದೆ.", "ದಾಖಲಿಸಿದ ವೆಚ್ಚ", "ದಾಖಲಿಸಿದ ಮಾರಾಟ", "ಸುಗ್ಗಿಯ ದಾಖಲೆಗಳು", "ನಿಜವಾದ ಫಲಿತಾಂಶಗಳನ್ನು ದಾಖಲಿಸಿ", "ನಿಜವಾದ ವೆಚ್ಚ (INR)", "ಸುಗ್ಗಿಯ ಪ್ರಮಾಣ", "ಮಾರಾಟದ ಮೊತ್ತ (INR)", "ಉಳಿಸಿ ಪೂರ್ಣಗೊಳಿಸಿ", "ಉಳಿಸಲಾಗುತ್ತಿದೆ…", "ರದ್ದುಮಾಡಿ", "ವೆಚ್ಚ", "ಮಾರಾಟ", "ಕೆಲಸ ಪೂರ್ಣಗೊಂಡು ಕೃಷಿ ದಾಖಲಾತಿ ಪುಸ್ತಕಕ್ಕೆ ಸೇರಿಸಲಾಗಿದೆ.", "ಫಲಿತಾಂಶಗಳನ್ನು ದಾಖಲಿಸಲು, ಬೆಳೆ ಯೋಜನೆಯ ಕೆಲಸವನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ ನಿಜವಾದ ವೆಚ್ಚವನ್ನು ನಮೂದಿಸಿ. ಕೊಯ್ಲಿಗೆ ಪ್ರಮಾಣ ಮತ್ತು ಮಾರಾಟದ ಮೊತ್ತವನ್ನೂ ಸೇರಿಸಿ."],
+  ml: ["കൃഷിയിട രേഖകൾ", "ഫാം രേഖാപുസ്തകം", "ജോലി പൂർത്തിയാക്കുമ്പോൾ നിങ്ങൾ രേഖപ്പെടുത്തുന്ന ചെലവും വിളവിന്റെ വിൽപ്പനയും മാത്രമാണ് ആകെ തുകയിൽ ഉൾപ്പെടുന്നത്.", "രേഖപ്പെടുത്തിയ ചെലവ്", "രേഖപ്പെടുത്തിയ വിൽപ്പന", "വിളവെടുപ്പ് രേഖകൾ", "യഥാർത്ഥ ഫലം രേഖപ്പെടുത്തുക", "യഥാർത്ഥ ചെലവ് (INR)", "വിളവിന്റെ അളവ്", "വിൽപ്പന തുക (INR)", "സൂക്ഷിച്ച് പൂർത്തിയാക്കുക", "സൂക്ഷിക്കുന്നു…", "റദ്ദാക്കുക", "ചെലവഴിച്ചത്", "വിൽപ്പന", "ജോലി പൂർത്തിയാക്കി ഫാം രേഖാപുസ്തകത്തിൽ ചേർത്തു.", "ഫലം രേഖപ്പെടുത്താൻ, വിള പദ്ധതി ടാസ്‌ക് പൂർത്തിയാക്കി യഥാർത്ഥ ചെലവ് നൽകുക. വിളവെടുപ്പിന് അളവും വിൽപ്പനത്തുകയും ചേർക്കുക."],
+  ur: ["کھیت کے ریکارڈ", "فارم کی ڈائری", "کل رقم میں کام مکمل کرتے وقت آپ کے درج کردہ اخراجات اور فصل کی فروخت شامل ہیں۔", "درج اخراجات", "درج فروخت", "کٹائی کے ریکارڈ", "اصل نتائج درج کریں", "اصل لاگت (INR)", "کٹائی کی مقدار", "فروخت کی رقم (INR)", "محفوظ کریں اور مکمل کریں", "محفوظ ہو رہا ہے…", "منسوخ کریں", "خرچ", "فروخت", "کام مکمل ہوا اور فارم کی ڈائری میں شامل کر دیا گیا۔", "نتائج درج کرنے کے لیے فصل کے منصوبے کا کام مکمل کریں اور اصل لاگت لکھیں۔ کٹائی کے لیے مقدار اور فروخت کی رقم بھی شامل کریں۔"],
+  ne: ["खेतका अभिलेख", "खेतको लगबुक", "काम पूरा गर्दा तपाईंले लेख्नुभएको खर्च र बाली बिक्री मात्र जम्मा रकममा समावेश हुन्छ।", "लेखिएको खर्च", "लेखिएको बिक्री", "कटानी अभिलेख", "वास्तविक नतिजा लेख्नुहोस्", "वास्तविक लागत (INR)", "कटानीको मात्रा", "बिक्री रकम (INR)", "सुरक्षित गरी पूरा गर्नुहोस्", "सुरक्षित हुँदैछ…", "रद्द गर्नुहोस्", "खर्च", "बिक्री", "काम पूरा भयो र खेतको लगबुकमा थपियो।", "नतिजा लेख्न, बाली योजनाको काम पूरा गरी वास्तविक लागत लेख्नुहोस्। कटानीको मात्रा र बिक्री रकम पनि थप्नुहोस्।"],
+  or: ["କ୍ଷେତ ରେକର୍ଡ", "ଚାଷ ଖାତା", "କାମ ସମାପ୍ତ କଲାବେଳେ ଆପଣ ଲେଖିଥିବା ଖର୍ଚ୍ଚ ଏବଂ ଫସଲ ବିକ୍ରି ଏହି ମୋଟରେ ରହିଛି।", "ଲିପିବଦ୍ଧ ଖର୍ଚ୍ଚ", "ଲିପିବଦ୍ଧ ବିକ୍ରି", "ଅମଳ ରେକର୍ଡ", "ପ୍ରକୃତ ଫଳାଫଳ ଲେଖନ୍ତୁ", "ପ୍ରକୃତ ଖର୍ଚ୍ଚ (INR)", "ଅମଳ ପରିମାଣ", "ବିକ୍ରି ରାଶି (INR)", "ସଞ୍ଚୟ କରି ସମାପ୍ତ କରନ୍ତୁ", "ସଞ୍ଚୟ ହେଉଛି…", "ବାତିଲ କରନ୍ତୁ", "ଖର୍ଚ୍ଚ", "ବିକ୍ରି", "କାମ ସମାପ୍ତ ହେଲା ଏବଂ ଚାଷ ଖାତାରେ ଯୋଡ଼ାଗଲା।", "ଫଳାଫଳ ଲେଖିବାକୁ, ଫସଲ ଯୋଜନାର କାମ ସମାପ୍ତ କରି ପ୍ରକୃତ ଖର୍ଚ୍ଚ ଲେଖନ୍ତୁ। ଅମଳ ପାଇଁ ପରିମାଣ ଓ ବିକ୍ରି ରାଶି ମଧ୍ୟ ଯୋଡ଼ନ୍ତୁ।"],
+  as: ["পথাৰৰ অভিলেখ", "খেতিৰ খতিয়ান", "কাম সম্পূৰ্ণ কৰাৰ সময়ত আপুনি লিখা খৰচ আৰু শস্য বিক্ৰীৰ পৰিমাণ ইয়াত গণনা হয়।", "লিখা খৰচ", "লিখা বিক্ৰী", "চপোৱাৰ অভিলেখ", "প্ৰকৃত ফলাফল লিখক", "প্ৰকৃত খৰচ (INR)", "চপোৱাৰ পৰিমাণ", "বিক্ৰীৰ ধন (INR)", "সংৰক্ষণ কৰি সম্পূৰ্ণ কৰক", "সংৰক্ষণ হৈ আছে…", "বাতিল কৰক", "খৰচ", "বিক্ৰী", "কাম সম্পূৰ্ণ হ’ল আৰু খেতিৰ খতিয়ানত যোগ কৰা হ’ল।", "ফলাফল লিখিবলৈ শস্য পৰিকল্পনাৰ কাম সম্পূৰ্ণ কৰি প্ৰকৃত খৰচ লিখক। চপোৱাৰ পৰিমাণ আৰু বিক্ৰীৰ ধনো যোগ কৰক।"],
+  es: ["Registros del campo", "Cuaderno de la granja", "Los totales incluyen los gastos y las ventas de cosecha que anotas al completar tareas.", "Gastos registrados", "Ventas registradas", "Registros de cosecha", "Registrar resultados reales", "Coste real (INR)", "Cantidad cosechada", "Importe de venta (INR)", "Guardar y completar", "Guardando…", "Cancelar", "Gastado", "Ventas", "Tarea completada y añadida al cuaderno de la granja.", "Para registrar resultados, completa una tarea del plan y anota su coste real. En las tareas de cosecha, añade también la cantidad y el importe de venta."]
 };
 const FARM_LEDGER_COPY = Object.fromEntries(Object.entries(FARM_LEDGER_ROWS).map(([code, row]) => [
   code,
@@ -463,6 +463,41 @@ const FARM_LEDGER_COPY = Object.fromEntries(Object.entries(FARM_LEDGER_ROWS).map
 function ledgerText(language, key) {
   return FARM_LEDGER_COPY[language]?.[key] || FARM_LEDGER_COPY.en[key] || key;
 }
+
+const MANUAL_LANGUAGE_STEP = {
+  en: "Choose a language from the header menu. This guide changes with it, and the assistant is asked to reply in that language.",
+  hi: "ऊपर के भाषा मेनू से भाषा चुनें। यह मार्गदर्शिका उसी भाषा में दिखेगी और सहायक से भी उसी भाषा में जवाब देने को कहा जाएगा।",
+  pa: "ਉੱਪਰਲੇ ਭਾਸ਼ਾ ਮੀਨੂ ਵਿੱਚੋਂ ਭਾਸ਼ਾ ਚੁਣੋ। ਇਹ ਮੈਨੂਅਲ ਉਸ ਭਾਸ਼ਾ ਵਿੱਚ ਦਿਖੇਗਾ ਅਤੇ ਸਹਾਇਕ ਨੂੰ ਵੀ ਉਸੇ ਭਾਸ਼ਾ ਵਿੱਚ ਜਵਾਬ ਦੇਣ ਲਈ ਕਿਹਾ ਜਾਵੇਗਾ।",
+  bn: "উপরের ভাষা মেনু থেকে ভাষা বেছে নিন। এই নির্দেশিকা সেই ভাষায় দেখাবে এবং সহকারীকেও সেই ভাষায় উত্তর দিতে বলা হবে।",
+  ta: "மேலே உள்ள மொழி மெனுவில் இருந்து மொழியைத் தேர்ந்தெடுக்கவும். இந்த வழிகாட்டி அந்த மொழியில் மாறும்; உதவியாளரும் அதில் பதிலளிக்கக் கோரப்படும்.",
+  te: "పై భాషా మెనూలో భాషను ఎంచుకోండి. ఈ మార్గదర్శి ఆ భాషలోకి మారుతుంది; సహాయకుడిని కూడా అదే భాషలో సమాధానం చెప్పమని అడుగుతాం.",
+  mr: "वरील भाषा मेनूमधून भाषा निवडा. ही मार्गदर्शिका त्या भाषेत दिसेल आणि सहाय्यकाला देखील त्याच भाषेत उत्तर देण्यास सांगितले जाईल.",
+  gu: "ઉપરના ભાષા મેનૂમાંથી ભાષા પસંદ કરો. આ માર્ગદર્શિકા એ ભાષામાં દેખાશે અને સહાયકને પણ એ જ ભાષામાં જવાબ આપવા કહેવામાં આવશે.",
+  kn: "ಮೇಲಿನ ಭಾಷಾ ಮೆನುವಿನಿಂದ ಭಾಷೆಯನ್ನು ಆರಿಸಿ. ಈ ಮಾರ್ಗದರ್ಶಿ ಆ ಭಾಷೆಗೆ ಬದಲಾಗುತ್ತದೆ ಮತ್ತು ಸಹಾಯಕನಿಗೂ ಅದೇ ಭಾಷೆಯಲ್ಲಿ ಉತ್ತರಿಸಲು ಸೂಚಿಸಲಾಗುತ್ತದೆ.",
+  ml: "മുകളിലെ ഭാഷാ മെനുവിൽ നിന്ന് ഭാഷ തിരഞ്ഞെടുക്കുക. ഈ മാർഗ്ഗരേഖ ആ ഭാഷയിലേക്ക് മാറും; സഹായിയോടും അതേ ഭാഷയിൽ മറുപടി നൽകാൻ ആവശ്യപ്പെടും.",
+  ur: "اوپر کے زبان مینو سے زبان منتخب کریں۔ یہ رہنما اسی زبان میں دکھائی دے گا اور معاون سے بھی اسی زبان میں جواب دینے کو کہا جائے گا۔",
+  ne: "माथिको भाषा मेनुबाट भाषा छान्नुहोस्। यो मार्गदर्शिका त्यही भाषामा देखिन्छ र सहायकलाई पनि त्यही भाषामा जवाफ दिन भनिन्छ।",
+  or: "ଉପର ଭାଷା ମେନୁରୁ ଭାଷା ବାଛନ୍ତୁ। ଏହି ମାର୍ଗଦର୍ଶିକା ସେହି ଭାଷାରେ ଦେଖାଯିବ ଏବଂ ସହାୟକଙ୍କୁ ମଧ୍ୟ ସେହି ଭାଷାରେ ଉତ୍ତର ଦେବାକୁ କୁହାଯିବ।",
+  as: "ওপৰৰ ভাষা মেনুৰ পৰা ভাষা বাছনি কৰক। এই নিৰ্দেশিকাখন সেই ভাষাত দেখা যাব আৰু সহায়ককো সেই ভাষাতে উত্তৰ দিবলৈ কোৱা হ’ব।",
+  es: "Elige un idioma en el menú superior. Esta guía cambiará y se pedirá al asistente que responda en ese idioma."
+};
+const MANUAL_ASSISTANT_STEP = {
+  en: "In Farm tools, choose a suggested question or type your own, then select Ask assistant. Use Clear chat to start a fresh conversation.",
+  hi: "खेती के टूल में सुझाया गया सवाल चुनें या अपना सवाल लिखें, फिर सहायक से पूछें चुनें। नई बातचीत शुरू करने के लिए चैट साफ़ करें चुनें।",
+  pa: "ਖੇਤੀ ਸੰਦਾਂ ਵਿੱਚ ਸੁਝਾਇਆ ਸਵਾਲ ਚੁਣੋ ਜਾਂ ਆਪਣਾ ਸਵਾਲ ਲਿਖੋ, ਫਿਰ ਸਹਾਇਕ ਨੂੰ ਪੁੱਛੋ ਚੁਣੋ। ਨਵੀਂ ਗੱਲਬਾਤ ਲਈ ਚੈਟ ਸਾਫ਼ ਕਰੋ ਚੁਣੋ।",
+  bn: "খামারের টুলে একটি প্রস্তাবিত প্রশ্ন বেছে নিন বা নিজের প্রশ্ন লিখুন, তারপর সহকারীকে জিজ্ঞাসা করুন চাপুন। নতুন কথোপকথনের জন্য চ্যাট মুছুন চাপুন।",
+  ta: "பண்ணைக் கருவிகளில் பரிந்துரைக்கப்பட்ட கேள்வியைத் தேர்ந்தெடுக்கவும் அல்லது உங்கள் கேள்வியை எழுதிப் உதவியாளரிடம் கேள் என்பதைத் தேர்ந்தெடுக்கவும். புதிய உரையாடலைத் தொடங்க அரட்டையை அழி என்பதைத் தேர்ந்தெடுக்கவும்.",
+  te: "వ్యవసాయ సాధనాల్లో సూచించిన ప్రశ్నను ఎంచుకోండి లేదా మీ ప్రశ్నను టైప్ చేసి సహాయకుడిని అడగండి ఎంచుకోండి. కొత్త సంభాషణ కోసం చాట్‌ను క్లియర్ చేయండి ఎంచుకోండి.",
+  mr: "शेतीच्या साधनांमध्ये सुचवलेला प्रश्न निवडा किंवा स्वतःचा प्रश्न लिहून सहाय्यकाला विचारा निवडा. नवीन संभाषणासाठी चॅट साफ करा निवडा.",
+  gu: "ખેતીના સાધનોમાં સૂચવેલો પ્રશ્ન પસંદ કરો અથવા તમારો પ્રશ્ન લખો, પછી સહાયકને પૂછો પસંદ કરો. નવી વાતચીત માટે ચેટ સાફ કરો પસંદ કરો.",
+  kn: "ಕೃಷಿ ಸಾಧನಗಳಲ್ಲಿ ಸೂಚಿಸಿದ ಪ್ರಶ್ನೆಯನ್ನು ಆರಿಸಿ ಅಥವಾ ನಿಮ್ಮದೇ ಪ್ರಶ್ನೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ, ನಂತರ ಸಹಾಯಕರನ್ನು ಕೇಳಿ ಆಯ್ಕೆಮಾಡಿ. ಹೊಸ ಸಂಭಾಷಣೆಗಾಗಿ ಚಾಟ್ ತೆರವುಗೊಳಿಸಿ ಆಯ್ಕೆಮಾಡಿ.",
+  ml: "കൃഷി ഉപകരണങ്ങളിൽ നിർദ്ദേശിച്ച ചോദ്യം തിരഞ്ഞെടുക്കുക അല്ലെങ്കിൽ സ്വന്തം ചോദ്യം ടൈപ്പ് ചെയ്ത് സഹായിയോട് ചോദിക്കുക തിരഞ്ഞെടുക്കുക. പുതിയ സംഭാഷണത്തിന് ചാറ്റ് മായ്ക്കുക തിരഞ്ഞെടുക്കുക.",
+  ur: "فارم ٹولز میں تجویز کردہ سوال منتخب کریں یا اپنا سوال لکھیں، پھر معاون سے پوچھیں منتخب کریں۔ نئی گفتگو شروع کرنے کے لیے چیٹ صاف کریں منتخب کریں۔",
+  ne: "कृषि उपकरणमा सुझाइएको प्रश्न छान्नुहोस् वा आफ्नै प्रश्न लेखेर सहायकलाई सोध्नुहोस् छान्नुहोस्। नयाँ कुराकानीका लागि च्याट खाली गर्नुहोस् छान्नुहोस्।",
+  or: "ଚାଷ ଉପକରଣରେ ଏକ ପ୍ରସ୍ତାବିତ ପ୍ରଶ୍ନ ବାଛନ୍ତୁ କିମ୍ବା ନିଜ ପ୍ରଶ୍ନ ଲେଖି ସହାୟକଙ୍କୁ ପଚାରନ୍ତୁ ବାଛନ୍ତୁ। ନୂଆ କଥାବାର୍ତ୍ତା ପାଇଁ ଚାଟ୍ ସଫା କରନ୍ତୁ ବାଛନ୍ତୁ।",
+  as: "কৃষি সঁজুলিত এটা পৰামৰ্শ দিয়া প্ৰশ্ন বাছনি কৰক বা নিজৰ প্ৰশ্ন লিখি সহায়কক সোধক বাছনি কৰক। নতুন কথোপকথনৰ বাবে চেট পৰিষ্কাৰ কৰক বাছনি কৰক।",
+  es: "En Herramientas agrícolas, elige una pregunta sugerida o escribe la tuya y pulsa Preguntar al asistente. Usa Borrar chat para iniciar otra conversación."
+};
 
 function text(language, key) {
   if (key === "userManual") return MANUAL_LABELS[language] || MANUAL_LABELS.en;
@@ -1736,6 +1771,33 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
 
       <section className="content-area">
         <DataRefreshStatus language={language} {...sync} />
+        {activeView === "analysis" && (
+          <section
+            className="farmer-editorial-hero"
+            style={{ backgroundImage: `linear-gradient(90deg, rgba(4, 17, 11, 0.92) 0%, rgba(4, 17, 11, 0.66) 52%, rgba(4, 17, 11, 0.18) 100%), url("${fieldImage}")` }}
+            aria-labelledby="farmer-editorial-title"
+          >
+            <div className="farmer-editorial-copy">
+              <span className="farmer-editorial-kicker"><i />{localize("Field health snapshot")}</span>
+              <h1 id="farmer-editorial-title">{activeFarm?.name || text(language, "mainFarm")}</h1>
+              <p>{localize("Soil decisions for every field")}</p>
+              <div className="farmer-editorial-actions">
+                <button className="editorial-primary" type="button" onClick={() => document.getElementById("soil-report-form")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" })}>
+                  <FlaskConical size={16} />{text(language, "soilAnalysis")}
+                </button>
+                <button className="editorial-secondary" type="button" onClick={() => setActiveView("tools")}>
+                  <CloudSun size={16} />{text(language, "farmTools")}
+                </button>
+              </div>
+            </div>
+            <div className="farmer-editorial-reading">
+              <span>{text(language, "latestSoil")}</span>
+              <strong>{latest?.result?.soilType ? localize(latest.result.soilType) : localize("No soil report yet")}</strong>
+              {latest?.result?.healthScore != null && <small>{localize("Health score")} · {latest.result.healthScore}</small>}
+            </div>
+            <span className="farmer-editorial-index" aria-hidden="true">{new Intl.NumberFormat(getIntlLocale(), { minimumIntegerDigits: 2 }).format(1)}</span>
+          </section>
+        )}
         <div className="metric-row">
           <Metric icon={<Sprout size={19} />} label={text(language, "activeFarm")} value={activeFarm?.name || text(language, "mainFarm")} />
           <Metric icon={<FlaskConical size={19} />} label={text(language, "analyses")} value={analyses.length} />
@@ -1786,6 +1848,13 @@ function FarmerDashboard({ token, user, language, onFarmChange }) {
 function UserManualPanel({ language, onNavigate }) {
   const manualSections = [
     {
+      title: text(language, "changeLanguage"),
+      titleIsLocalized: true,
+      steps: [MANUAL_LANGUAGE_STEP[language] || MANUAL_LANGUAGE_STEP.en],
+      action: "",
+      view: ""
+    },
+    {
       title: "Set up your farms",
       steps: [
         "Use the farm selector in the left sidebar to switch farms or add another one.",
@@ -1824,8 +1893,10 @@ function UserManualPanel({ language, onNavigate }) {
     {
       title: "Plan work and ask for guidance",
       steps: [
-        "Use Crop planner to record field tasks and due dates. When finishing a task, mark it complete and optionally log actual costs; harvest tasks can also include quantity and sale proceeds. The farm logbook summarizes only the figures you enter.",
-        "Check Farm tools for saved reports, the seven-day weather outlook, farm-aware action prompts, market information, and the assistant.",
+        "Use Crop planner to record field tasks and due dates; check Farm tools for saved reports, weather, market information, and the assistant.",
+        MANUAL_ASSISTANT_STEP[language] || MANUAL_ASSISTANT_STEP.en,
+        ledgerText(language, "manualCompleteTask"),
+        ledgerText(language, "logbookNote"),
         "AI suggestions are general guidance. Check local conditions and product labels before irrigation, fertilizer, or pesticide decisions."
       ],
       action: "Open crop planner",
@@ -1857,21 +1928,21 @@ function UserManualPanel({ language, onNavigate }) {
         <BookOpen size={22} />
         <div>
           <span className="eyebrow">{text(language, "userManual")}</span>
-          <h2 id="user-manual-title">Krishisense quick guide</h2>
+          <h2 id="user-manual-title">{localize("Krishisense quick guide")}</h2>
         </div>
       </div>
-      <p className="user-manual-intro">Follow these steps to set up a farm, understand your reports, and use the main tools.</p>
+      <p className="user-manual-intro">{localize("Follow these steps to set up a farm, understand your reports, and use the main tools.")}</p>
       <div className="user-manual-topics">
         {manualSections.map((section, index) => (
           <article className="user-manual-topic" key={section.title}>
             <span className="eyebrow">{new Intl.NumberFormat(getIntlLocale(), { minimumIntegerDigits: 2 }).format(index + 1)}</span>
-            <h3>{section.title}</h3>
+            <h3>{section.titleIsLocalized ? section.title : localize(section.title)}</h3>
             <ol>
-              {section.steps.map((step) => <li key={step}>{step}</li>)}
+              {section.steps.map((step) => <li key={step}>{localize(step)}</li>)}
             </ol>
             {section.action && (
               <button className="small-button" type="button" onClick={() => onNavigate(section.view)}>
-                {section.action}<ChevronRight size={15} />
+                {localize(section.action)}<ChevronRight size={15} />
               </button>
             )}
           </article>
@@ -2326,7 +2397,7 @@ function SoilAnalysisForm({ token, farmId, activeFarm, language, onCreated }) {
 
   return (
     <div className="work-surface">
-      <section className="form-card">
+      <section className="form-card" id="soil-report-form">
         <div className="section-heading">
           <span className="eyebrow">New field report</span>
           <h2>{activeFarm?.name ? `${activeFarm.name}: soil report` : "Upload soil photo and crop details"}</h2>
@@ -3112,19 +3183,25 @@ function AiAssistantPanel({ token, latest, latestDisease, tasks, farm, language 
   const [messages, setMessages] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const threadRef = useRef(null);
   const crop = farm?.primaryCrop || latest?.input?.crop;
   const quickQuestions = [
     "What should I do next this week?",
-    crop ? `How should I care for ${crop} at this stage?` : "How should I care for my crop this week?",
+    "How should I care for my crop this week?",
     "How can I check whether my crop has a disease?",
     "How do I use a battery sprayer safely?"
   ];
+
+  useEffect(() => {
+    const thread = threadRef.current;
+    if (thread) thread.scrollTo({ top: thread.scrollHeight, behavior: "smooth" });
+  }, [messages, busy]);
 
   async function askAssistant(event) {
     event.preventDefault();
     const trimmedQuestion = question.trim();
     if (trimmedQuestion.length < 3) {
-      setError("Ask a farming question with at least 3 characters.");
+      setError(localize("Ask a farming question with at least 3 characters."));
       return;
     }
 
@@ -3140,12 +3217,14 @@ function AiAssistantPanel({ token, latest, latestDisease, tasks, farm, language 
           history,
           context: {
             soilType: latest?.result?.soilType || "",
+            soilRisk: latest?.result?.riskLevel || "",
             crop: crop || "",
             location: farm?.location || latest?.input?.location || "",
             healthScore: latest?.result?.healthScore || "",
             farmName: farm?.name || "",
             farmArea: farm?.landArea ? `${farm.landArea} ${farm.landUnit || ""}`.trim() : "",
-            latestDisease: latestDisease?.diseaseName || "",
+            latestDisease: latestDisease?.result?.diseaseName || latestDisease?.diseaseName || "",
+            latestDiseaseSeverity: latestDisease?.result?.severity || latestDisease?.severity || "",
             upcomingTasks: tasks
               .filter((task) => task.status === "planned")
               .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
@@ -3156,14 +3235,17 @@ function AiAssistantPanel({ token, latest, latestDisease, tasks, farm, language 
           }
         }
       });
+      if (typeof data.answer !== "string" || !data.answer.trim()) {
+        throw new Error("The assistant returned an empty answer. Please try again.");
+      }
       setMessages((current) => [
         ...current,
         { role: "user", content: trimmedQuestion },
         { role: "assistant", content: data.answer, source: data.source || "unknown" }
-      ]);
+      ].slice(-20));
       setQuestion("");
-    } catch (err) {
-      setError(err.message || "Assistant failed.");
+    } catch {
+      setError(localize("Assistant failed."));
     } finally {
       setBusy(false);
     }
@@ -3174,45 +3256,45 @@ function AiAssistantPanel({ token, latest, latestDisease, tasks, farm, language 
       <div className="tool-heading">
         <Bot size={22} />
         <div>
-          <span className="eyebrow">AI farming assistant{farm?.name ? ` · ${farm.name}` : ""}</span>
-          <h3>Get practical next steps</h3>
+          <span className="eyebrow">{localize("AI farming assistant")}{farm?.name ? ` · ${farm.name}` : ""}</span>
+          <h3>{localize("Get practical next steps")}</h3>
         </div>
       </div>
       <p className="assistant-context-note">
-        Answers use this farm’s crop, saved reports and upcoming tasks. Check local weather, product labels and soil-test results before acting.
+        {localize("Answers use this farm’s crop, saved reports and upcoming tasks. Check local weather, product labels and soil-test results before acting.")}
       </p>
-      <div className="assistant-thread" aria-live="polite" aria-label="Assistant conversation">
+      <div className="assistant-thread" ref={threadRef} aria-live="polite" aria-label={localize("Assistant conversation")}>
         {messages.length === 0 ? (
-          <p className="assistant-welcome">Ask about crop care, soil, irrigation, pests or planning. You can ask follow-up questions too.</p>
+          <p className="assistant-welcome">{localize("Ask about crop care, soil, irrigation, pests or planning. You can ask follow-up questions too.")}</p>
         ) : messages.map((message, index) => (
           <article className={`assistant-message ${message.role}`} key={`${message.role}-${index}`}>
-            <span>{message.role === "assistant" ? (message.source === "fallback" ? "General guidance · AI unavailable" : "Krishisense") : "You"}</span>
+            <span>{message.role === "assistant" ? (message.source === "fallback" ? localize("General guidance · AI unavailable") : "Krishisense") : localize("You")}</span>
             <div>{assistantAnswerLines(message.content).map((line, lineIndex) => <p key={`${line}-${lineIndex}`}>{message.role === "assistant" ? localize(line) : line}</p>)}</div>
           </article>
         ))}
-        {busy && <p className="assistant-thinking"><span className="loading-dot" /> Preparing farm-specific guidance…</p>}
+        {busy && <p className="assistant-thinking"><span className="loading-dot" /> {localize("Preparing farm-specific guidance…")}</p>}
       </div>
       <form className="assistant-form" onSubmit={askAssistant}>
         <textarea
           rows={3}
           value={question}
           onChange={(event) => setQuestion(event.target.value)}
-          placeholder={crop ? `Ask a follow-up about ${crop} or this farm…` : "Ask a farming question or a follow-up…"}
+          placeholder={localize("Ask a farming question or a follow-up…")}
           required
         />
         <div className="assistant-quick-row">
           {quickQuestions.map((item) => (
             <button className="chip-button" type="button" key={item} disabled={busy} onClick={() => setQuestion(item)}>
-              {item}
+              {localize(item)}
             </button>
           ))}
         </div>
         <div className="assistant-actions">
           <button className="primary-button" disabled={busy || question.trim().length < 3}>
             <Bot size={17} />
-            {busy ? "Thinking" : "Ask assistant"}
+            {busy ? localize("Thinking") : localize("Ask assistant")}
           </button>
-          {messages.length > 0 && <button className="small-button" type="button" disabled={busy} onClick={() => setMessages([])}>Clear chat</button>}
+          {messages.length > 0 && <button className="small-button" type="button" disabled={busy} onClick={() => setMessages([])}>{localize("Clear chat")}</button>}
         </div>
       </form>
       {error && <p className="error-banner">{error}</p>}
