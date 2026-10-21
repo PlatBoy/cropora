@@ -400,6 +400,23 @@ const UI_COPY = Object.fromEntries(UI_COPY_KEYS.map((key, index) => [
   key,
   Object.fromEntries(Object.entries(UI_COPY_ROWS).map(([code, row]) => [code, row[index]]))
 ]));
+const ABOUT_COPY = {
+  en: ["About Krishisense", "Better decisions begin with the soil.", "Krishisense brings soil insights, crop health checks, and farm planning together, helping farmers choose a clearer next step."],
+  hi: ["कृषिसेंस के बारे में", "बेहतर फैसले मिट्टी को समझने से शुरू होते हैं।", "Krishisense मिट्टी की जानकारी, फसल स्वास्थ्य जाँच और खेत की योजना को एक जगह लाता है, ताकि किसान अगला कदम सोच-समझकर चुन सकें।"],
+  pa: ["Krishisense ਬਾਰੇ", "ਚੰਗੇ ਫੈਸਲੇ ਮਿੱਟੀ ਨੂੰ ਸਮਝਣ ਨਾਲ ਸ਼ੁਰੂ ਹੁੰਦੇ ਹਨ।", "Krishisense ਮਿੱਟੀ ਦੀ ਜਾਣਕਾਰੀ, ਫ਼ਸਲ ਦੀ ਸਿਹਤ ਜਾਂਚ ਅਤੇ ਖੇਤ ਦੀ ਯੋਜਨਾ ਇਕੱਠੇ ਕਰਦਾ ਹੈ, ਤਾਂ ਜੋ ਕਿਸਾਨ ਅਗਲਾ ਕਦਮ ਸੋਚ-ਸਮਝ ਕੇ ਚੁਣ ਸਕਣ।"],
+  bn: ["Krishisense সম্পর্কে", "ভালো সিদ্ধান্ত মাটি বোঝা থেকেই শুরু হয়।", "Krishisense মাটির তথ্য, ফসলের স্বাস্থ্য পরীক্ষা এবং খামারের পরিকল্পনাকে একসঙ্গে আনে, যাতে কৃষকেরা পরের পদক্ষেপটি বুঝে নিতে পারেন।"],
+  ta: ["Krishisense பற்றி", "சிறந்த முடிவுகள் மண்ணைப் புரிந்துகொள்வதில் தொடங்குகின்றன.", "Krishisense மண் தகவல், பயிர் ஆரோக்கியச் சோதனை, பண்ணைத் திட்டமிடல் ஆகியவற்றை ஒன்றிணைத்து, அடுத்த படியைத் தெளிவாகத் தேர்ந்தெடுக்க உதவுகிறது."],
+  te: ["Krishisense గురించి", "మంచి నిర్ణయాలు నేలను అర్థం చేసుకోవడంతో ప్రారంభమవుతాయి.", "Krishisense నేల సమాచారం, పంట ఆరోగ్య తనిఖీలు, పొలం ప్రణాళికను ఒకచోట చేర్చి, రైతులు తదుపరి అడుగును స్పష్టంగా ఎంచుకోవడంలో సహాయపడుతుంది."],
+  mr: ["Krishisense बद्दल", "चांगले निर्णय माती समजून घेण्यापासून सुरू होतात.", "Krishisense मातीची माहिती, पिकांच्या आरोग्याची तपासणी आणि शेताचे नियोजन एकत्र आणते, ज्यामुळे शेतकऱ्यांना पुढचे पाऊल स्पष्टपणे ठरवता येते."],
+  gu: ["Krishisense વિશે", "સારા નિર્ણયો માટીને સમજવાથી શરૂ થાય છે.", "Krishisense માટીની માહિતી, પાકના આરોગ્યની તપાસ અને ખેતરનું આયોજન એકસાથે આપે છે, જેથી ખેડૂતો આગળનું પગલું વધુ સ્પષ્ટ રીતે પસંદ કરી શકે."],
+  kn: ["Krishisense ಬಗ್ಗೆ", "ಉತ್ತಮ ನಿರ್ಧಾರಗಳು ಮಣ್ಣನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳುವುದರಿಂದ ಆರಂಭವಾಗುತ್ತವೆ.", "Krishisense ಮಣ್ಣಿನ ಮಾಹಿತಿ, ಬೆಳೆ ಆರೋಗ್ಯ ಪರಿಶೀಲನೆ ಮತ್ತು ಕೃಷಿ ಯೋಜನೆಯನ್ನು ಒಟ್ಟುಗೂಡಿಸಿ, ರೈತರಿಗೆ ಮುಂದಿನ ಹೆಜ್ಜೆಯನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಆಯ್ಕೆ ಮಾಡಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."],
+  ml: ["Krishisense-നെക്കുറിച്ച്", "നല്ല തീരുമാനങ്ങൾ മണ്ണിനെ മനസ്സിലാക്കുന്നതിൽ തുടങ്ങുന്നു.", "Krishisense മണ്ണിന്റെ വിവരങ്ങൾ, വിളയുടെ ആരോഗ്യ പരിശോധന, കൃഷിയിട ആസൂത്രണം എന്നിവ ഒരുമിച്ച് നൽകുന്നു; അടുത്ത നടപടി വ്യക്തമായി തിരഞ്ഞെടുക്കാൻ ഇത് കർഷകരെ സഹായിക്കുന്നു."],
+  ur: ["Krishisense کے بارے میں", "بہتر فیصلے مٹی کو سمجھنے سے شروع ہوتے ہیں۔", "Krishisense مٹی کی معلومات، فصل کی صحت کی جانچ اور کھیت کی منصوبہ بندی کو یکجا کرتا ہے، تاکہ کسان اگلا قدم زیادہ وضاحت سے چن سکیں۔"],
+  ne: ["Krishisense बारेमा", "राम्रो निर्णय माटो बुझ्नबाट सुरु हुन्छ।", "Krishisense ले माटोको जानकारी, बालीको स्वास्थ्य जाँच र खेतको योजना एउटै ठाउँमा ल्याउँछ, जसले किसानलाई अर्को कदम स्पष्ट रूपमा छान्न मद्दत गर्छ।"],
+  or: ["Krishisense ବିଷୟରେ", "ଭଲ ନିଷ୍ପତ୍ତି ମାଟିକୁ ବୁଝିବାରୁ ଆରମ୍ଭ ହୁଏ।", "Krishisense ମାଟିର ସୂଚନା, ଫସଲର ସ୍ୱାସ୍ଥ୍ୟ ଯାଞ୍ଚ ଏବଂ ଚାଷ ଯୋଜନାକୁ ଏକାଠି କରେ, ଯାହାଦ୍ୱାରା ଚାଷୀମାନେ ପରବର୍ତ୍ତୀ ପଦକ୍ଷେପ ସ୍ପଷ୍ଟ ଭାବେ ବାଛିପାରନ୍ତି।"],
+  as: ["Krishisense বিষয়ে", "ভাল সিদ্ধান্ত মাটি বুজাৰ পৰাই আৰম্ভ হয়।", "Krishisense-এ মাটিৰ তথ্য, শস্যৰ স্বাস্থ্য পৰীক্ষা আৰু খেতিৰ পৰিকল্পনা একেলগে আনে, যাতে কৃষকে পৰৱৰ্তী পদক্ষেপটো স্পষ্টকৈ বাছি ল’ব পাৰে।"],
+  es: ["Acerca de Krishisense", "Las mejores decisiones empiezan por conocer el suelo.", "Krishisense reúne información del suelo, revisiones de cultivos y planificación de la finca para ayudar a los agricultores a elegir el siguiente paso con claridad."]
+};
 const LIVE_COPY_KEYS = ["farmData", "updated", "refreshData", "refreshingData", "syncWarning"];
 const LIVE_COPY_ROWS = {
   en: ["Farm data", "Updated", "Refresh data", "Refreshing…", "Some data may be out of date"],
@@ -1130,6 +1147,9 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     farmName: "",
     phone: ""
   });
+  const aboutSectionRef = useRef(null);
+  const aboutTrackRef = useRef(null);
+  const aboutProgressRef = useRef(null);
 
   useEffect(() => {
     const query = window.matchMedia?.("(prefers-reduced-motion: reduce)");
@@ -1137,6 +1157,42 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     const updatePreference = () => setReducedMotion(query.matches);
     query.addEventListener?.("change", updatePreference);
     return () => query.removeEventListener?.("change", updatePreference);
+  }, []);
+
+  useEffect(() => {
+    const section = aboutSectionRef.current;
+    const track = aboutTrackRef.current;
+    if (!section || !track) return undefined;
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+      if (reduceMotion) {
+        track.style.transform = "none";
+        if (aboutProgressRef.current) aboutProgressRef.current.style.transform = "scaleX(0)";
+        return;
+      }
+
+      const navHeight = document.querySelector(".auth-page-nav")?.offsetHeight || 0;
+      const scrollDistance = Math.max(section.offsetHeight - (window.innerHeight - navHeight), 1);
+      const progress = Math.min(Math.max(-section.getBoundingClientRect().top / scrollDistance, 0), 1);
+      const travel = Math.max(track.scrollWidth - section.clientWidth, 0);
+      track.style.transform = `translate3d(${-travel * progress}px, 0, 0)`;
+      if (aboutProgressRef.current) aboutProgressRef.current.style.transform = `scaleX(${progress})`;
+    };
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    update();
+    return () => {
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   useEffect(() => {
@@ -1154,6 +1210,25 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const captchaReady = !captchaConfig.loading
     && !captchaConfig.error
     && (!captchaConfig.required || Boolean(captchaConfig.siteKey && captchaToken));
+
+  const aboutCopy = ABOUT_COPY[language] || ABOUT_COPY.en;
+  const aboutPanels = [
+    {
+      title: text(language, "soilAnalysis"),
+      description: localize("Upload a soil photo and add your crop and field details to get farm-specific guidance."),
+      image: "https://images.unsplash.com/photo-1727620338160-489b7c3dc4c7?auto=format&fit=crop&w=1600&q=82"
+    },
+    {
+      title: text(language, "diseaseDetection"),
+      description: localize("Open Disease detection, select the crop, describe the symptoms, and upload a sharp photo of the affected plant."),
+      image: "https://images.unsplash.com/photo-1638503206597-cc8703cfe3c2?auto=format&fit=crop&w=1600&q=82"
+    },
+    {
+      title: text(language, "cropPlanner"),
+      description: localize("Use Crop planner to record field tasks and due dates; check Farm tools for saved reports, weather, market information, and the assistant."),
+      image: "https://images.unsplash.com/photo-1577109559107-8f94d2c68b7d?auto=format&fit=crop&w=1600&q=82"
+    }
+  ];
 
   function changeMode(nextMode) {
     setMode(nextMode);
@@ -1256,7 +1331,17 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   ) : null;
 
   return (
-    <main className="auth-shell">
+    <main className="auth-shell" id="home">
+      <nav className="auth-page-nav" aria-label={localize("Homepage navigation")}>
+        <a className="auth-nav-brand" href="#home" aria-label="Krishisense home">
+          <span className="brand-mark"><Sprout size={18} /></span>
+          <strong>Krishisense</strong>
+        </a>
+        <div className="auth-page-nav-links">
+          <a href="#login-panel">{text(language, "login")}</a>
+          <a href="#about-krishisense">{aboutCopy[0]}</a>
+        </div>
+      </nav>
       <section className="auth-visual" aria-label="Farm field">
         <img src={fieldImage} alt="Farm field at sunrise" />
         {!reducedMotion && (
@@ -1309,6 +1394,10 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
               {localize("Explore")}
               <ChevronDown size={16} />
             </a>
+            <a className="auth-explore-link" href="#about-krishisense">
+              {aboutCopy[0]}
+              <ChevronDown size={16} />
+            </a>
           </div>
         </div>
         <div className="auth-metrics">
@@ -1327,7 +1416,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         </div>
       </section>
 
-      <section className="auth-panel">
+      <section className="auth-panel" id="login-panel">
         <div className="auth-panel-actions">
           <LanguageSwitcher language={language} onChange={onLanguageChange} />
           <ThemeSwitch theme={theme} onToggle={onThemeToggle} />
@@ -1466,6 +1555,59 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             {text(language, "createFarmerAccount")}
             <ChevronRight size={16} />
           </button>
+        </div>
+      </section>
+
+      <section
+        ref={aboutSectionRef}
+        className="about-scroll"
+        id="about-krishisense"
+        aria-labelledby="about-heading"
+      >
+        <div className="about-stage">
+          <div className="about-track" ref={aboutTrackRef}>
+            <article className="about-panel about-panel-intro" aria-labelledby="about-heading">
+              <div className="about-copy">
+                <span className="about-eyebrow">{aboutCopy[0]}</span>
+                <h2 id="about-heading">{aboutCopy[1]}</h2>
+                <p>{aboutCopy[2]}</p>
+                <span className="about-index">01 <i /> 04</span>
+              </div>
+              <div className="about-image-wrap">
+                <img src={fieldImage} alt={localize("Farm field at sunrise")} loading="lazy" />
+                <span className="about-image-caption">Krishisense <Sprout size={16} /></span>
+              </div>
+            </article>
+
+            {aboutPanels.map((panel, index) => (
+              <article
+                className={`about-panel${index % 2 === 0 ? " about-panel-reverse" : ""}`}
+                key={panel.title}
+                aria-labelledby={`about-panel-${index + 2}-heading`}
+              >
+                <div className="about-copy">
+                  <span className="about-eyebrow">{aboutCopy[0]}</span>
+                  <h2 id={`about-panel-${index + 2}-heading`}>{panel.title}</h2>
+                  <p>{panel.description}</p>
+                  <span className="about-index">{String(index + 2).padStart(2, "0")} <i /> 04</span>
+                  {index === aboutPanels.length - 1 && (
+                    <button className="primary-button about-cta" type="button" onClick={startRegistration}>
+                      <UserPlus size={17} />
+                      {text(language, "createFarmerAccount")}
+                      <ChevronRight size={16} />
+                    </button>
+                  )}
+                </div>
+                <div className="about-image-wrap">
+                  <img src={panel.image} alt={panel.title} loading="lazy" />
+                  <span className="about-image-caption">{panel.title}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="about-progress" aria-hidden="true">
+            <span ref={aboutProgressRef} />
+          </div>
         </div>
       </section>
     </main>
