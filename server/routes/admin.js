@@ -9,7 +9,8 @@ import { LoanApplication } from "../models/LoanApplication.js";
 import { MarketOrder } from "../models/MarketOrder.js";
 import { User } from "../models/User.js";
 import { FarmTask } from "../models/FarmTask.js";
-import { adminPasswordResetSchema, loanStatusSchema, orderStatusSchema, statusSchema, userStatusSchema } from "../validation/schemas.js";
+import { CommunityPost } from "../models/CommunityPost.js";
+import { adminPasswordResetSchema, communityStatusSchema, loanStatusSchema, orderStatusSchema, statusSchema, userStatusSchema } from "../validation/schemas.js";
 import { HttpError, notFound } from "../utils/httpError.js";
 
 export const adminRouter = Router();
@@ -133,6 +134,28 @@ adminRouter.get("/orders", async (_req, res, next) => {
       .limit(150);
 
     res.json({ orders: orders.map(serializeOrder) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminRouter.get("/community", async (_req, res, next) => {
+  try {
+    const posts = await CommunityPost.find().sort({ createdAt: -1 }).limit(200);
+    res.json({ posts });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminRouter.patch("/community/:id/status", validateBody(communityStatusSchema), async (req, res, next) => {
+  try {
+    const post = await CommunityPost.findById(req.params.id);
+    if (!post) throw notFound("Community submission not found");
+    post.status = req.body.status;
+    post.reviewedAt = new Date();
+    await post.save();
+    res.json({ post });
   } catch (error) {
     next(error);
   }

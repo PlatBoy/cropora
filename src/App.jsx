@@ -284,6 +284,53 @@ const diseaseClientSchema = z.object({
   photo: z.instanceof(File, { message: "Upload a crop photo." })
 });
 
+const communityClientSchema = z.object({
+  authorName: z.string().trim().min(2, "Enter your name.").max(80),
+  title: z.string().trim().max(140),
+  body: z.string().trim().min(20, "Write at least 20 characters.").max(1800),
+  rating: z.coerce.number().int().min(1).max(5),
+  website: z.string().max(200)
+});
+
+const BLOG_LABELS = {
+  en: "Blogs", hi: "ब्लॉग", pa: "ਬਲੌਗ", bn: "ব্লগ", ta: "வலைப்பதிவுகள்", te: "బ్లాగులు",
+  mr: "ब्लॉग", gu: "બ્લોગ્સ", kn: "ಬ್ಲಾಗ್‌ಗಳು", ml: "ബ്ലോഗുകൾ", ur: "بلاگز", ne: "ब्लगहरू",
+  or: "ବ୍ଲଗ୍", as: "ব্লগ", es: "Blogs"
+};
+
+const COMMUNITY_COPY = {
+  en: ["Write a review", "Write a blog", "Community stories", "Your name", "Rating", "Blog title", "Your review", "Your story", "Share your experience", "Write from the field", "Submit for review", "An admin checks submissions before they appear on the homepage.", "Loading reviews…", "No reviews yet. Be the first to share your experience.", "No blogs yet. Share a lesson from your farm."],
+  hi: ["समीक्षा लिखें", "ब्लॉग लिखें", "समुदाय की कहानियाँ", "आपका नाम", "रेटिंग", "ब्लॉग का शीर्षक", "आपकी समीक्षा", "आपकी कहानी", "अपना अनुभव साझा करें", "खेत से लिखें", "समीक्षा के लिए भेजें", "होमपेज पर दिखने से पहले व्यवस्थापक सामग्री की जाँच करता है।", "समीक्षाएँ लोड हो रही हैं…", "अभी कोई समीक्षा नहीं है। अपना अनुभव साझा करने वाले पहले व्यक्ति बनें।", "अभी कोई ब्लॉग नहीं है। अपने खेत का अनुभव साझा करें।"],
+  pa: ["ਸਮੀਖਿਆ ਲਿਖੋ", "ਬਲੌਗ ਲਿਖੋ", "ਭਾਈਚਾਰੇ ਦੀਆਂ ਕਹਾਣੀਆਂ", "ਤੁਹਾਡਾ ਨਾਮ", "ਰੇਟਿੰਗ", "ਬਲੌਗ ਦਾ ਸਿਰਲੇਖ", "ਤੁਹਾਡੀ ਸਮੀਖਿਆ", "ਤੁਹਾਡੀ ਕਹਾਣੀ", "ਆਪਣਾ ਤਜਰਬਾ ਸਾਂਝਾ ਕਰੋ", "ਖੇਤ ਤੋਂ ਲਿਖੋ", "ਸਮੀਖਿਆ ਲਈ ਭੇਜੋ", "ਹੋਮਪੇਜ 'ਤੇ ਦਿਖਾਉਣ ਤੋਂ ਪਹਿਲਾਂ ਐਡਮਿਨ ਸਮੱਗਰੀ ਦੀ ਜਾਂਚ ਕਰਦਾ ਹੈ।", "ਸਮੀਖਿਆਵਾਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ…", "ਹਾਲੇ ਕੋਈ ਸਮੀਖਿਆ ਨਹੀਂ। ਆਪਣਾ ਤਜਰਬਾ ਸਾਂਝਾ ਕਰਨ ਵਾਲੇ ਪਹਿਲੇ ਬਣੋ।", "ਹਾਲੇ ਕੋਈ ਬਲੌਗ ਨਹੀਂ। ਆਪਣੇ ਖੇਤ ਦਾ ਤਜਰਬਾ ਸਾਂਝਾ ਕਰੋ।"],
+  bn: ["রিভিউ লিখুন", "ব্লগ লিখুন", "কমিউনিটির গল্প", "আপনার নাম", "রেটিং", "ব্লগের শিরোনাম", "আপনার রিভিউ", "আপনার গল্প", "আপনার অভিজ্ঞতা জানান", "খেত থেকে লিখুন", "পর্যালোচনার জন্য জমা দিন", "হোমপেজে দেখানোর আগে অ্যাডমিন জমা যাচাই করবেন।", "রিভিউ লোড হচ্ছে…", "এখনও কোনো রিভিউ নেই। আপনার অভিজ্ঞতা প্রথমে জানান।", "এখনও কোনো ব্লগ নেই। খামারের অভিজ্ঞতা লিখুন।"],
+  ta: ["மதிப்பாய்வு எழுதுங்கள்", "வலைப்பதிவு எழுதுங்கள்", "சமூகக் கதைகள்", "உங்கள் பெயர்", "மதிப்பீடு", "வலைப்பதிவின் தலைப்பு", "உங்கள் மதிப்பாய்வு", "உங்கள் கதை", "உங்கள் அனுபவத்தைப் பகிருங்கள்", "வயலிலிருந்து எழுதுங்கள்", "மதிப்பாய்வுக்கு சமர்ப்பிக்கவும்", "முகப்புப் பக்கத்தில் காட்டுவதற்கு முன் நிர்வாகி சமர்ப்பிப்பைச் சரிபார்ப்பார்.", "மதிப்பாய்வுகள் ஏற்றப்படுகின்றன…", "மதிப்பாய்வுகள் இன்னும் இல்லை. உங்கள் அனுபவத்தை முதலில் பகிருங்கள்.", "வலைப்பதிவுகள் இன்னும் இல்லை. உங்கள் பண்ணை அனுபவத்தைப் பகிருங்கள்."],
+  te: ["సమీక్ష రాయండి", "బ్లాగ్ రాయండి", "సమాజ కథలు", "మీ పేరు", "రేటింగ్", "బ్లాగ్ శీర్షిక", "మీ సమీక్ష", "మీ కథ", "మీ అనుభవాన్ని పంచుకోండి", "పొలం నుంచి రాయండి", "సమీక్ష కోసం పంపండి", "హోమ్‌పేజీలో చూపే ముందు నిర్వాహకుడు సమర్పణలను పరిశీలిస్తారు.", "సమీక్షలు లోడ్ అవుతున్నాయి…", "ఇంకా సమీక్షలు లేవు. మీ అనుభవాన్ని ముందుగా పంచుకోండి.", "ఇంకా బ్లాగులు లేవు. మీ పొలం అనుభవాన్ని పంచుకోండి."],
+  mr: ["अभिप्राय लिहा", "ब्लॉग लिहा", "समुदायाच्या गोष्टी", "तुमचे नाव", "रेटिंग", "ब्लॉगचे शीर्षक", "तुमचा अभिप्राय", "तुमची गोष्ट", "तुमचा अनुभव शेअर करा", "शेतातून लिहा", "पुनरावलोकनासाठी पाठवा", "मुख्यपृष्ठावर दिसण्यापूर्वी प्रशासक सबमिशन तपासतो.", "अभिप्राय लोड होत आहेत…", "अजून अभिप्राय नाहीत. तुमचा अनुभव आधी शेअर करा.", "अजून ब्लॉग नाहीत. शेतातील अनुभव सांगा."],
+  gu: ["સમીક્ષા લખો", "બ્લોગ લખો", "સમુદાયની વાતો", "તમારું નામ", "રેટિંગ", "બ્લોગનું શીર્ષક", "તમારી સમીક્ષા", "તમારી વાત", "તમારો અનુભવ શેર કરો", "ખેતરમાંથી લખો", "સમીક્ષા માટે મોકલો", "હોમપેજ પર દેખાય તે પહેલાં સંચાલક સબમિશન તપાસે છે.", "સમીક્ષાઓ લોડ થઈ રહી છે…", "હજી કોઈ સમીક્ષા નથી. તમારો અનુભવ પહેલા શેર કરો.", "હજી કોઈ બ્લોગ નથી. તમારા ખેતરની વાત શેર કરો."],
+  kn: ["ವಿಮರ್ಶೆ ಬರೆಯಿರಿ", "ಬ್ಲಾಗ್ ಬರೆಯಿರಿ", "ಸಮುದಾಯದ ಕಥೆಗಳು", "ನಿಮ್ಮ ಹೆಸರು", "ರೇಟಿಂಗ್", "ಬ್ಲಾಗ್ ಶೀರ್ಷಿಕೆ", "ನಿಮ್ಮ ವಿಮರ್ಶೆ", "ನಿಮ್ಮ ಕಥೆ", "ನಿಮ್ಮ ಅನುಭವ ಹಂಚಿಕೊಳ್ಳಿ", "ಹೊಲದಿಂದ ಬರೆಯಿರಿ", "ಪರಿಶೀಲನೆಗೆ ಸಲ್ಲಿಸಿ", "ಮುಖಪುಟದಲ್ಲಿ ಕಾಣಿಸುವ ಮೊದಲು ನಿರ್ವಾಹಕರು ಸಲ್ಲಿಕೆಯನ್ನು ಪರಿಶೀಲಿಸುತ್ತಾರೆ.", "ವಿಮರ್ಶೆಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ…", "ಇನ್ನೂ ವಿಮರ್ಶೆಗಳಿಲ್ಲ. ನಿಮ್ಮ ಅನುಭವವನ್ನು ಮೊದಲು ಹಂಚಿಕೊಳ್ಳಿ.", "ಇನ್ನೂ ಬ್ಲಾಗ್‌ಗಳಿಲ್ಲ. ನಿಮ್ಮ ಹೊಲದ ಅನುಭವ ಹಂಚಿಕೊಳ್ಳಿ."],
+  ml: ["അവലോകനം എഴുതുക", "ബ്ലോഗ് എഴുതുക", "കമ്മ്യൂണിറ്റി കഥകൾ", "നിങ്ങളുടെ പേര്", "റേറ്റിംഗ്", "ബ്ലോഗ് തലക്കെട്ട്", "നിങ്ങളുടെ അവലോകനം", "നിങ്ങളുടെ കഥ", "നിങ്ങളുടെ അനുഭവം പങ്കിടുക", "കൃഷിയിടത്തിൽ നിന്ന് എഴുതുക", "പരിശോധനയ്ക്ക് സമർപ്പിക്കുക", "ഹോംപേജിൽ പ്രസിദ്ധീകരിക്കുന്നതിന് മുമ്പ് അഡ്മിൻ സമർപ്പണം പരിശോധിക്കും.", "അവലോകനങ്ങൾ ലോഡ് ചെയ്യുന്നു…", "അവലോകനങ്ങളൊന്നുമില്ല. നിങ്ങളുടെ അനുഭവം ആദ്യം പങ്കിടൂ.", "ബ്ലോഗുകളൊന്നുമില്ല. നിങ്ങളുടെ കൃഷിയിടത്തിലെ അനുഭവം പങ്കിടൂ."],
+  ur: ["جائزہ لکھیں", "بلاگ لکھیں", "کمیونٹی کی کہانیاں", "آپ کا نام", "درجہ بندی", "بلاگ کا عنوان", "آپ کا جائزہ", "آپ کی کہانی", "اپنا تجربہ شیئر کریں", "کھیت سے لکھیں", "جائزے کے لیے جمع کریں", "ہوم پیج پر دکھانے سے پہلے منتظم مواد کی جانچ کرے گا۔", "جائزے لوڈ ہو رہے ہیں…", "ابھی کوئی جائزہ نہیں۔ اپنا تجربہ پہلے شیئر کریں۔", "ابھی کوئی بلاگ نہیں۔ اپنے کھیت کا تجربہ لکھیں۔"],
+  ne: ["समीक्षा लेख्नुहोस्", "ब्लग लेख्नुहोस्", "समुदायका कथाहरू", "तपाईंको नाम", "रेटिङ", "ब्लग शीर्षक", "तपाईंको समीक्षा", "तपाईंको कथा", "आफ्नो अनुभव साझा गर्नुहोस्", "खेतबाट लेख्नुहोस्", "समीक्षाका लागि पठाउनुहोस्", "गृहपृष्ठमा देखाउनुअघि प्रशासकले सामग्री जाँच गर्छन्।", "समीक्षाहरू लोड हुँदैछन्…", "अहिलेसम्म समीक्षा छैन। आफ्नो अनुभव पहिले साझा गर्नुहोस्।", "अहिलेसम्म ब्लग छैन। खेतको अनुभव लेख्नुहोस्।"],
+  or: ["ସମୀକ୍ଷା ଲେଖନ୍ତୁ", "ବ୍ଲଗ୍ ଲେଖନ୍ତୁ", "ସମ୍ପ୍ରଦାୟର କାହାଣୀ", "ଆପଣଙ୍କ ନାମ", "ରେଟିଂ", "ବ୍ଲଗ୍ ଶୀର୍ଷକ", "ଆପଣଙ୍କ ସମୀକ୍ଷା", "ଆପଣଙ୍କ କାହାଣୀ", "ଆପଣଙ୍କ ଅନୁଭୂତି ବାଣ୍ଟନ୍ତୁ", "କ୍ଷେତରୁ ଲେଖନ୍ତୁ", "ସମୀକ୍ଷା ପାଇଁ ଦାଖଲ କରନ୍ତୁ", "ମୁଖ୍ୟ ପୃଷ୍ଠାରେ ଦେଖାଇବା ପୂର୍ବରୁ ପ୍ରଶାସକ ଯାଞ୍ଚ କରିବେ।", "ସମୀକ୍ଷା ଲୋଡ୍ ହେଉଛି…", "ଏପର୍ଯ୍ୟନ୍ତ ସମୀକ୍ଷା ନାହିଁ। ଆପଣଙ୍କ ଅନୁଭୂତି ପ୍ରଥମେ ବାଣ୍ଟନ୍ତୁ।", "ଏପର୍ଯ୍ୟନ୍ତ ବ୍ଲଗ୍ ନାହିଁ। ଆପଣଙ୍କ ଚାଷ ଅନୁଭୂତି ବାଣ୍ଟନ୍ତୁ।"],
+  as: ["পৰ্যালোচনা লিখক", "ব্লগ লিখক", "সমাজৰ কাহিনী", "আপোনাৰ নাম", "ৰেটিং", "ব্লগৰ শিৰোনাম", "আপোনাৰ পৰ্যালোচনা", "আপোনাৰ কাহিনী", "আপোনাৰ অভিজ্ঞতা ভাগ-বতৰা কৰক", "খেতিৰ পৰা লিখক", "পৰ্যালোচনাৰ বাবে জমা দিয়ক", "হোমপেজত দেখুওৱাৰ আগতে প্ৰশাসকে জমা পৰীক্ষা কৰিব।", "পৰ্যালোচনা লোড হৈছে…", "এতিয়াও কোনো পৰ্যালোচনা নাই। আপোনাৰ অভিজ্ঞতা প্ৰথমে ভাগ-বতৰা কৰক।", "এতিয়াও কোনো ব্লগ নাই। খেতিৰ অভিজ্ঞতা লিখক।"],
+  es: ["Escribir una reseña", "Escribir un blog", "Historias de la comunidad", "Tu nombre", "Valoración", "Título del blog", "Tu reseña", "Tu historia", "Comparte tu experiencia", "Escribe desde el campo", "Enviar para revisión", "Un administrador revisa los envíos antes de publicarlos en la página de inicio.", "Cargando reseñas…", "Aún no hay reseñas. Comparte tu experiencia primero.", "Aún no hay blogs. Comparte una experiencia de tu finca."]
+};
+
+function communityText(language, index) {
+  return (COMMUNITY_COPY[language] || COMMUNITY_COPY.en)[index];
+}
+
+const COMMUNITY_SUCCESS = {
+  en: "Thanks. Your submission is awaiting admin review.", hi: "धन्यवाद। आपकी सामग्री व्यवस्थापक की समीक्षा की प्रतीक्षा में है।",
+  pa: "ਧੰਨਵਾਦ। ਤੁਹਾਡੀ ਸਮੱਗਰੀ ਐਡਮਿਨ ਦੀ ਸਮੀਖਿਆ ਦੀ ਉਡੀਕ ਕਰ ਰਹੀ ਹੈ।", bn: "ধন্যবাদ। আপনার লেখা অ্যাডমিনের পর্যালোচনার অপেক্ষায় আছে।",
+  ta: "நன்றி. உங்கள் பதிவு நிர்வாகியின் மதிப்பாய்வுக்காக காத்திருக்கிறது.", te: "ధన్యవాదాలు. మీ సమర్పణ నిర్వాహకుడి సమీక్ష కోసం వేచి ఉంది.",
+  mr: "धन्यवाद. तुमची नोंद प्रशासकाच्या तपासणीच्या प्रतीक्षेत आहे.", gu: "આભાર. તમારી રજૂઆત સંચાલકની સમીક્ષા માટે રાહ જોઈ રહી છે.",
+  kn: "ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ಸಲ್ಲಿಕೆ ನಿರ್ವಾಹಕರ ಪರಿಶೀಲನೆಗಾಗಿ ಕಾಯುತ್ತಿದೆ.", ml: "നന്ദി. നിങ്ങളുടെ സമർപ്പണം അഡ്മിൻ പരിശോധനയ്ക്കായി കാത്തിരിക്കുന്നു.",
+  ur: "شکریہ۔ آپ کی تحریر منتظم کے جائزے کی منتظر ہے۔", ne: "धन्यवाद। तपाईंको सामग्री प्रशासकको समीक्षाको प्रतीक्षामा छ।",
+  or: "ଧନ୍ୟବାଦ। ଆପଣଙ୍କ ଲେଖା ପ୍ରଶାସକଙ୍କ ସମୀକ୍ଷାକୁ ଅପେକ୍ଷା କରୁଛି।", as: "ধন্যবাদ। আপোনাৰ লেখা প্ৰশাসকৰ পৰ্যালোচনাৰ বাবে অপেক্ষা কৰি আছে।",
+  es: "Gracias. Tu envío está pendiente de revisión por parte del administrador."
+};
+
 const insuranceClientSchema = z.object({
   crop: z.string().trim().min(1, "Crop is required."),
   coverageAmount: z.coerce.number().min(1000, "Enter at least 1000."),
@@ -1217,6 +1264,9 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaCycle, setCaptchaCycle] = useState(0);
   const [captchaWidgetError, setCaptchaWidgetError] = useState("");
+  const [communityPosts, setCommunityPosts] = useState([]);
+  const [communityLoading, setCommunityLoading] = useState(true);
+  const [communityKind, setCommunityKind] = useState("");
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [registerForm, setRegisterForm] = useState({
     name: "",
@@ -1322,6 +1372,15 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     return () => { active = false; };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    apiRequest("/api/community")
+      .then(({ posts }) => { if (active) setCommunityPosts(Array.isArray(posts) ? posts : []); })
+      .catch(() => { if (active) setCommunityPosts([]); })
+      .finally(() => { if (active) setCommunityLoading(false); });
+    return () => { active = false; };
+  }, []);
+
   const captchaReady = !captchaConfig.loading
     && !captchaConfig.error
     && (!captchaConfig.required || Boolean(captchaConfig.siteKey && captchaToken));
@@ -1329,6 +1388,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const aboutCopy = ABOUT_COPY[language] || ABOUT_COPY.en;
   const filmControlCopy = FILM_CONTROL_COPY[language] || FILM_CONTROL_COPY.en;
   const reviewCopy = LANDING_REVIEW_COPY[language] || LANDING_REVIEW_COPY.en;
+  const blogLabel = BLOG_LABELS[language] || BLOG_LABELS.en;
   const journalTitles = JOURNAL_TITLES[language] || JOURNAL_TITLES.en;
   const aboutPanels = [
     {
@@ -1388,6 +1448,11 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   function startRegistration() {
     changeMode("register");
     document.querySelector(".auth-panel")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function openCommunityForm(kind) {
+    setCommunityKind(kind);
+    window.setTimeout(() => document.getElementById("community-compose")?.scrollIntoView({ behavior: "smooth", block: "center" }), 30);
   }
 
   async function submitLogin(event, quickCredentials) {
@@ -1490,6 +1555,8 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <a href="#public-tools">{text(language, "recommendedNextSteps")}</a>
             <a href="#login-panel">{text(language, "login")}</a>
             <a href="#about-krishisense">{aboutCopy[0]}</a>
+            <a className="landing-nav-cta" href="#farmer-reviews">{reviewCopy[0]}</a>
+            <a className="landing-nav-cta" href="#field-journal">{blogLabel}</a>
           </div>
           <LanguageSwitcher language={language} onChange={onLanguageChange} />
         </div>
@@ -1830,27 +1897,52 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <h2 id="landing-reviews-title">{reviewCopy[0]}</h2>
           </div>
           <div className="landing-reviews-aside">
-            <p>{reviewCopy[1]}</p>
-            <a href="#field-journal">{localize("Field notes")} <ChevronRight size={16} /></a>
+            <p>{communityText(language, 11)}</p>
+            <button className="landing-community-write" type="button" onClick={() => openCommunityForm("review")}>{communityText(language, 0)} <ChevronRight size={16} /></button>
           </div>
         </div>
+        {communityLoading ? <p className="landing-community-status" role="status">{communityText(language, 12)}</p> : null}
         <div className="landing-review-grid">
-          {reviewCopy.slice(2).map((quote, index) => (
-            <article className="landing-review" key={`${language}-${index}`} style={{ "--story-order": index }}>
-              <span className="landing-review-index">0{index + 1}</span>
-              <blockquote>{quote}</blockquote>
-              <span className="landing-review-quote" aria-hidden="true">“</span>
+          {communityPosts.filter((post) => post.kind === "review").map((post, index) => (
+            <article className="landing-review" key={post.id} style={{ "--story-order": index }}>
+              <span className="landing-review-index">{String(index + 1).padStart(2, "0")}</span>
+              <span className="landing-review-rating" aria-label={`${post.rating} out of 5 stars`}>{post.rating} / 5</span>
+              <blockquote>{post.body}</blockquote>
+              <footer><strong>{post.authorName}</strong><time dateTime={post.createdAt}>{formatDate(post.createdAt)}</time></footer>
             </article>
           ))}
+          {!communityLoading && !communityPosts.some((post) => post.kind === "review") && (
+            <p className="landing-community-status">{communityText(language, 13)}</p>
+          )}
         </div>
+        {communityKind === "review" && (
+          <CommunitySubmissionForm kind="review" language={language} theme={theme} captchaConfig={captchaConfig} onClose={() => setCommunityKind("")} />
+        )}
       </section>
 
       <section className="landing-journal" id="field-journal" aria-labelledby="landing-journal-title" data-reveal>
         <div className="landing-journal-heading">
           <span className="landing-section-kicker"><span>05</span>{localize("Krishisense quick guide")}</span>
-          <h2 id="landing-journal-title">{localize("Field notes")}</h2>
+          <h2 id="landing-journal-title">{blogLabel}</h2>
           <p>{JOURNAL_INTRO[language] || JOURNAL_INTRO.en}</p>
+          <button className="landing-community-write" type="button" onClick={() => openCommunityForm("blog")}>{communityText(language, 1)} <ChevronRight size={16} /></button>
         </div>
+        <div className="landing-community-blogs">
+          <h3>{communityText(language, 2)}</h3>
+          {communityPosts.filter((post) => post.kind === "blog").map((post) => (
+            <details className="landing-community-blog" key={post.id}>
+              <summary><span><strong>{post.title}</strong><small>{post.authorName} · {formatDate(post.createdAt)}</small></span><ChevronDown size={18} /></summary>
+              <p>{post.body}</p>
+            </details>
+          ))}
+          {!communityLoading && !communityPosts.some((post) => post.kind === "blog") && (
+            <p className="landing-community-status">{communityText(language, 14)}</p>
+          )}
+        </div>
+        {communityKind === "blog" && (
+          <CommunitySubmissionForm kind="blog" language={language} theme={theme} captchaConfig={captchaConfig} onClose={() => setCommunityKind("")} />
+        )}
+        <div className="landing-journal-subheading"><span className="landing-section-kicker">{localize("Field notes")}</span><p>{JOURNAL_INTRO[language] || JOURNAL_INTRO.en}</p></div>
         <div className="landing-journal-grid">
           {journalArticles.map((article, index) => (
             <details className="landing-journal-entry" key={`${language}-${article.title}`} style={{ "--story-order": index }}>
@@ -1931,6 +2023,76 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         </div>
       </section>
     </main>
+  );
+}
+
+function CommunitySubmissionForm({ kind, language, theme, captchaConfig, onClose }) {
+  const [form, setForm] = useState({ authorName: "", title: "", body: "", rating: "5", website: "" });
+  const [token, setToken] = useState("");
+  const [captchaCycle, setCaptchaCycle] = useState(0);
+  const [captchaError, setCaptchaError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const isReview = kind === "review";
+
+  async function submit(event) {
+    event.preventDefault();
+    setError("");
+    setMessage("");
+    if (captchaConfig.loading || captchaConfig.error || (captchaConfig.required && !token)) {
+      setError(captchaConfig.error || localize("Complete the human verification check first."));
+      return;
+    }
+    const validation = communityClientSchema.safeParse(form);
+    if (!validation.success) {
+      setError(firstValidationMessage(validation));
+      return;
+    }
+    setBusy(true);
+    try {
+      await apiRequest("/api/community", {
+        method: "POST",
+        body: { ...validation.data, kind, turnstileToken: token }
+      });
+      setMessage(COMMUNITY_SUCCESS[language] || COMMUNITY_SUCCESS.en);
+      setForm({ authorName: "", title: "", body: "", rating: "5", website: "" });
+    } catch (submitError) {
+      setError(submitError.message);
+    } finally {
+      setBusy(false);
+      setToken("");
+      setCaptchaError("");
+      setCaptchaCycle((cycle) => cycle + 1);
+    }
+  }
+
+  return (
+    <form className="community-compose" id="community-compose" onSubmit={submit}>
+      <div className="community-compose-heading">
+        <div><span className="eyebrow">{isReview ? communityText(language, 0) : communityText(language, 1)}</span><h3>{isReview ? communityText(language, 8) : communityText(language, 9)}</h3></div>
+        <button className="icon-button" type="button" onClick={onClose} aria-label={localize("Close form")}><ChevronUp size={18} /></button>
+      </div>
+      <div className="community-compose-fields">
+        <label>{communityText(language, 3)}<input required minLength={2} maxLength={80} value={form.authorName} onChange={(event) => setForm({ ...form, authorName: event.target.value })} /></label>
+        {isReview ? (
+          <label>{communityText(language, 4)}<select value={form.rating} onChange={(event) => setForm({ ...form, rating: event.target.value })}><option value="5">5 / 5</option><option value="4">4 / 5</option><option value="3">3 / 5</option><option value="2">2 / 5</option><option value="1">1 / 5</option></select></label>
+        ) : (
+          <label>{communityText(language, 5)}<input required minLength={4} maxLength={140} value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} /></label>
+        )}
+        <label className="community-compose-body">{isReview ? communityText(language, 6) : communityText(language, 7)}<textarea required minLength={20} maxLength={1800} rows={5} value={form.body} onChange={(event) => setForm({ ...form, body: event.target.value })} /></label>
+        <input className="community-honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" value={form.website} onChange={(event) => setForm({ ...form, website: event.target.value })} />
+      </div>
+      {captchaConfig.loading ? <p className="turnstile-status">{localize("Loading security check…")}</p> : captchaConfig.required && captchaConfig.siteKey ? (
+        <div className="auth-captcha">
+          <TurnstileWidget key={captchaCycle} siteKey={captchaConfig.siteKey} action="community" theme={theme} onToken={setToken} onError={setCaptchaError} />
+          {captchaError && <div className="turnstile-error-row"><p className="turnstile-status error">{captchaError}</p><button className="small-button" type="button" onClick={() => { setCaptchaError(""); setToken(""); setCaptchaCycle((cycle) => cycle + 1); }}>Retry</button></div>}
+        </div>
+      ) : captchaConfig.error ? <p className="turnstile-status error">{captchaConfig.error}</p> : null}
+      {error && <p className="error-banner" role="alert">{error}</p>}
+      {message && <p className="success-banner" role="status">{message}</p>}
+      <div className="community-compose-actions"><button className="primary-button" disabled={busy || captchaConfig.loading || (captchaConfig.required && !token)}>{busy ? localize("Sending…") : communityText(language, 10)} <ChevronRight size={16} /></button><span>{communityText(language, 11)}</span></div>
+    </form>
   );
 }
 
@@ -5014,18 +5176,20 @@ function AdminDashboard({ token, language }) {
   const [loans, setLoans] = useState([]);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
+  const [communityPosts, setCommunityPosts] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const loadAdminData = useCallback(async () => {
     try {
-      const [analysisData, loanData, insuranceData, userData, orderData, statsData] = await Promise.all([
+      const [analysisData, loanData, insuranceData, userData, orderData, statsData, communityData] = await Promise.all([
         apiRequest("/api/analyses", { token }),
         apiRequest("/api/loans", { token }),
         apiRequest("/api/insurance", { token }),
         apiRequest("/api/admin/users", { token }),
         apiRequest("/api/admin/orders", { token }),
-        apiRequest("/api/admin/stats", { token })
+        apiRequest("/api/admin/stats", { token }),
+        apiRequest("/api/admin/community", { token })
       ]);
       setAnalyses(analysisData.analyses);
       setLoans(loanData.loans);
@@ -5033,6 +5197,7 @@ function AdminDashboard({ token, language }) {
       setUsers(userData.users);
       setOrders(orderData.orders);
       setStats(statsData.stats);
+      setCommunityPosts(communityData.posts || []);
     } finally {
       setLoading(false);
     }
@@ -5089,6 +5254,15 @@ function AdminDashboard({ token, language }) {
       body: { status }
     });
     setOrders((current) => current.map((order) => (order.id === id ? data.order : order)));
+  }
+
+  async function updateCommunityStatus(id, status) {
+    const { post } = await apiRequest(`/api/admin/community/${id}/status`, {
+      token,
+      method: "PATCH",
+      body: { status }
+    });
+    setCommunityPosts((current) => current.map((item) => item.id === id ? post : item));
   }
 
   async function resetUserPassword(id, password) {
@@ -5165,6 +5339,11 @@ function AdminDashboard({ token, language }) {
           <BarChart3 size={16} />
           Analytics
         </button>
+        <button className={tab === "community" ? "active" : ""} onClick={() => setTab("community")}>
+          <Users size={16} />
+          Community
+          {communityPosts.filter((post) => post.status === "pending").length > 0 && <span className="admin-tab-count">{communityPosts.filter((post) => post.status === "pending").length}</span>}
+        </button>
       </div>
 
       {loading ? (
@@ -5217,6 +5396,8 @@ function AdminDashboard({ token, language }) {
           )}
 
           {tab === "analytics" && <AdminAnalyticsPanel analyses={analyses} loans={loans} insurance={insurance} orders={orders} topSoils={topSoils} stats={stats} />}
+
+          {tab === "community" && <AdminCommunityPanel posts={communityPosts} onStatusChange={updateCommunityStatus} />}
         </>
       )}
     </div>
@@ -5685,6 +5866,55 @@ function AdminAnalyticsPanel({ analyses, loans, insurance, orders, topSoils, sta
         <Metric icon={<ShieldCheck size={19} />} label="Insurance" value={stats?.totalInsurance ?? 0} />
       </section>
     </div>
+  );
+}
+
+function AdminCommunityPanel({ posts, onStatusChange }) {
+  const pendingCount = posts.filter((post) => post.status === "pending").length;
+  return (
+    <div className="admin-community-panel">
+      <div className="section-heading compact-heading">
+        <span className="eyebrow">Homepage submissions</span>
+        <h2>Reviews and blogs</h2>
+        <p>{pendingCount} waiting for moderation. Only published entries are visible to visitors.</p>
+      </div>
+      {posts.length ? (
+        <div className="admin-community-list">
+          {posts.map((post) => <AdminCommunityPostCard key={post.id} post={post} onStatusChange={onStatusChange} />)}
+        </div>
+      ) : (
+        <div className="empty-state"><BookOpen size={34} /><h3>No community submissions</h3><p>Farmer reviews and blog posts will appear here for moderation.</p></div>
+      )}
+    </div>
+  );
+}
+
+function AdminCommunityPostCard({ post, onStatusChange }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function setStatus(status) {
+    setBusy(true);
+    setError("");
+    try { await onStatusChange(post.id, status); }
+    catch (actionError) { setError(actionError.message); }
+    finally { setBusy(false); }
+  }
+
+  return (
+    <article className="admin-community-card">
+      <div className="admin-community-card-heading">
+        <div><span className="eyebrow">{post.kind === "review" ? `Review${post.rating ? ` · ${post.rating}/5` : ""}` : "Blog"}</span><h3>{post.title || post.authorName}</h3></div>
+        <span className={`status-badge ${post.status}`}>{titleCase(post.status)}</span>
+      </div>
+      {post.title && <strong className="admin-community-author">{post.authorName}</strong>}
+      <p>{post.body}</p>
+      <footer><time dateTime={post.createdAt}>{formatDate(post.createdAt)}</time><div>
+        <button className="small-button" type="button" disabled={busy || post.status === "published"} onClick={() => setStatus("published")}><CheckCircle2 size={15} />Publish</button>
+        <button className="small-button danger-button" type="button" disabled={busy || post.status === "rejected"} onClick={() => setStatus("rejected")}><Ban size={15} />Reject</button>
+      </div></footer>
+      {error && <p className="row-error" role="alert">{error}</p>}
+    </article>
   );
 }
 

@@ -144,6 +144,27 @@ export const farmTaskStatusSchema = z.object({
   saleProceeds: z.coerce.number().min(0).max(1000000000).optional().default(0)
 });
 
+export const communityPostSchema = z.object({
+  kind: z.enum(["review", "blog"]),
+  authorName: z.string().trim().min(2).max(80),
+  title: z.string().trim().max(140).optional().default(""),
+  body: z.string().trim().min(20).max(1800),
+  rating: z.coerce.number().int().min(1).max(5).optional(),
+  turnstileToken: z.string().max(2048).optional().default(""),
+  website: z.string().max(200).optional().default("")
+}).superRefine((post, context) => {
+  if (post.kind === "blog" && post.title.length < 4) {
+    context.addIssue({ code: "custom", path: ["title"], message: "Blog title must be at least 4 characters." });
+  }
+  if (post.kind === "review" && !post.rating) {
+    context.addIssue({ code: "custom", path: ["rating"], message: "Choose a rating for your review." });
+  }
+});
+
+export const communityStatusSchema = z.object({
+  status: z.enum(["pending", "published", "rejected"])
+});
+
 export const orderStatusSchema = z.object({
   status: z.enum(["confirmed", "packed", "delivered"])
 });
