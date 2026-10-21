@@ -1282,6 +1282,12 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <source src={fieldVideos[heroVideoIndex]} type="video/mp4" />
           </video>
         )}
+        <div className="auth-visual-topline" aria-hidden="true">
+          <span className="auth-scene-label"><Sparkles size={15} />{localize("Farm tools")}</span>
+          {!reducedMotion && (
+            <span className="auth-video-count">{String(heroVideoIndex + 1).padStart(2, "0")} <i /> {String(fieldVideos.length).padStart(2, "0")}</span>
+          )}
+        </div>
         <div className="auth-hero-copy">
           <div className="brand-lockup">
             <span className="brand-mark">
@@ -1306,17 +1312,17 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
           </div>
         </div>
         <div className="auth-metrics">
-          <span>
-            <FlaskConical size={18} />
-            {localize("Photo analysis")}
+          <span className="auth-metric-card">
+            <span className="auth-metric-icon"><FlaskConical size={18} /></span>
+            <span className="auth-metric-label">{localize("Photo analysis")}</span>
           </span>
-          <span>
-            <Leaf size={18} />
-            {localize("Crop guidance")}
+          <span className="auth-metric-card">
+            <span className="auth-metric-icon"><Leaf size={18} /></span>
+            <span className="auth-metric-label">{localize("Crop guidance")}</span>
           </span>
-          <span>
-            <Camera size={18} />
-            {localize("AI disease detection")}
+          <span className="auth-metric-card">
+            <span className="auth-metric-icon"><Camera size={18} /></span>
+            <span className="auth-metric-label">{localize("AI disease detection")}</span>
           </span>
         </div>
       </section>
@@ -1327,9 +1333,12 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
           <ThemeSwitch theme={theme} onToggle={onThemeToggle} />
         </div>
 
-        <div className="panel-heading">
-          <span className="eyebrow">{text(language, "secureAccess")}</span>
-          <h2>{text(language, mode === "login" ? "welcomeBack" : "createFarmerAccount")}</h2>
+        <div className="panel-heading auth-panel-heading">
+          <span className="auth-heading-icon" aria-hidden="true"><ShieldCheck size={21} /></span>
+          <div className="auth-panel-heading-copy">
+            <span className="eyebrow">{text(language, "secureAccess")}</span>
+            <h2>{text(language, mode === "login" ? "welcomeBack" : "createFarmerAccount")}</h2>
+          </div>
         </div>
 
         <div className="segmented-control" role="tablist" aria-label="Authentication mode">
