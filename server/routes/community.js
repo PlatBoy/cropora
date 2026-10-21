@@ -44,9 +44,14 @@ communityRouter.post("/", submissionLimiter, validateBody(communityPostSchema), 
       authorName: req.body.authorName,
       title: req.body.kind === "blog" ? req.body.title : "",
       body: req.body.body,
-      rating: req.body.kind === "review" ? req.body.rating : undefined
+      rating: req.body.kind === "review" ? req.body.rating : undefined,
+      status: req.body.kind === "review" ? "published" : "pending"
     });
-    res.status(201).json({ message: "Thanks. Your submission is awaiting review.", postId: post.id });
+    res.status(201).json({
+      message: post.status === "published" ? "Your review is now live." : "Your blog is awaiting admin review.",
+      post: post.status === "published" ? post : undefined,
+      postId: post.id
+    });
   } catch (error) {
     next(error);
   }

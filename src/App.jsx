@@ -316,7 +316,26 @@ const COMMUNITY_COPY = {
   es: ["Escribir una reseña", "Escribir un blog", "Historias de la comunidad", "Tu nombre", "Valoración", "Título del blog", "Tu reseña", "Tu historia", "Comparte tu experiencia", "Escribe desde el campo", "Enviar para revisión", "Un administrador revisa los envíos antes de publicarlos en la página de inicio.", "Cargando reseñas…", "Aún no hay reseñas. Comparte tu experiencia primero.", "Aún no hay blogs. Comparte una experiencia de tu finca."]
 };
 
+const COMMUNITY_GUIDANCE = {
+  en: "Reviews publish immediately. Blog posts are checked by an admin before they appear.",
+  hi: "समीक्षाएँ तुरंत प्रकाशित होती हैं। ब्लॉग व्यवस्थापक की जाँच के बाद दिखते हैं।",
+  pa: "ਸਮੀਖਿਆਵਾਂ ਤੁਰੰਤ ਪ੍ਰਕਾਸ਼ਿਤ ਹੁੰਦੀਆਂ ਹਨ। ਬਲੌਗ ਐਡਮਿਨ ਦੀ ਜਾਂਚ ਤੋਂ ਬਾਅਦ ਦਿਖਦੇ ਹਨ।",
+  bn: "রিভিউ সঙ্গে সঙ্গে প্রকাশিত হয়। অ্যাডমিন যাচাইয়ের পর ব্লগ দেখা যায়।",
+  ta: "மதிப்பாய்வுகள் உடனே வெளியிடப்படும். நிர்வாகி சரிபார்த்த பிறகே வலைப்பதிவுகள் தோன்றும்.",
+  te: "సమీక్షలు వెంటనే ప్రచురించబడతాయి. నిర్వాహకుడు పరిశీలించిన తర్వాతే బ్లాగులు కనిపిస్తాయి.",
+  mr: "अभिप्राय लगेच प्रकाशित होतात. प्रशासक तपासल्यानंतर ब्लॉग दिसतात.",
+  gu: "સમીક્ષાઓ તરત પ્રકાશિત થાય છે. સંચાલક તપાસે પછી બ્લોગ દેખાય છે.",
+  kn: "ವಿಮರ್ಶೆಗಳು ತಕ್ಷಣ ಪ್ರಕಟವಾಗುತ್ತವೆ. ನಿರ್ವಾಹಕರು ಪರಿಶೀಲಿಸಿದ ನಂತರ ಬ್ಲಾಗ್‌ಗಳು ಕಾಣಿಸುತ್ತವೆ.",
+  ml: "അവലോകനങ്ങൾ ഉടൻ പ്രസിദ്ധീകരിക്കും. അഡ്മിൻ പരിശോധിച്ച ശേഷമാണ് ബ്ലോഗുകൾ കാണുക.",
+  ur: "جائزے فوراً شائع ہوتے ہیں۔ منتظم کی جانچ کے بعد بلاگ دکھائے جاتے ہیں۔",
+  ne: "समीक्षाहरू तुरुन्तै प्रकाशित हुन्छन्। प्रशासकले जाँचेपछि ब्लगहरू देखिन्छन्।",
+  or: "ସମୀକ୍ଷା ତୁରନ୍ତ ପ୍ରକାଶିତ ହୁଏ। ପ୍ରଶାସକ ଯାଞ୍ଚ କରିବା ପରେ ବ୍ଲଗ୍ ଦେଖାଯାଏ।",
+  as: "পৰ্যালোচনাবোৰ লগে লগে প্ৰকাশ পায়। প্ৰশাসকে পৰীক্ষা কৰাৰ পিছতহে ব্লগ দেখা যায়।",
+  es: "Las reseñas se publican al instante. Un administrador revisa los blogs antes de mostrarlos."
+};
+
 function communityText(language, index) {
+  if (index === 11) return COMMUNITY_GUIDANCE[language] || COMMUNITY_GUIDANCE.en;
   return (COMMUNITY_COPY[language] || COMMUNITY_COPY.en)[index];
 }
 
@@ -329,6 +348,17 @@ const COMMUNITY_SUCCESS = {
   ur: "شکریہ۔ آپ کی تحریر منتظم کے جائزے کی منتظر ہے۔", ne: "धन्यवाद। तपाईंको सामग्री प्रशासकको समीक्षाको प्रतीक्षामा छ।",
   or: "ଧନ୍ୟବାଦ। ଆପଣଙ୍କ ଲେଖା ପ୍ରଶାସକଙ୍କ ସମୀକ୍ଷାକୁ ଅପେକ୍ଷା କରୁଛି।", as: "ধন্যবাদ। আপোনাৰ লেখা প্ৰশাসকৰ পৰ্যালোচনাৰ বাবে অপেক্ষা কৰি আছে।",
   es: "Gracias. Tu envío está pendiente de revisión por parte del administrador."
+};
+
+const COMMUNITY_REVIEW_SUCCESS = {
+  en: "Thanks. Your review is now live.", hi: "धन्यवाद। आपकी समीक्षा अब प्रकाशित हो गई है।",
+  pa: "ਧੰਨਵਾਦ। ਤੁਹਾਡੀ ਸਮੀਖਿਆ ਹੁਣ ਪ੍ਰਕਾਸ਼ਿਤ ਹੋ ਗਈ ਹੈ।", bn: "ধন্যবাদ। আপনার রিভিউ এখন প্রকাশিত হয়েছে।",
+  ta: "நன்றி. உங்கள் மதிப்பாய்வு இப்போது வெளியிடப்பட்டுள்ளது.", te: "ధన్యవాదాలు. మీ సమీక్ష ఇప్పుడు ప్రచురించబడింది.",
+  mr: "धन्यवाद. तुमचा अभिप्राय आता प्रकाशित झाला आहे.", gu: "આભાર. તમારી સમીક્ષા હવે પ્રકાશિત થઈ ગઈ છે.",
+  kn: "ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ವಿಮರ್ಶೆ ಈಗ ಪ್ರಕಟವಾಗಿದೆ.", ml: "നന്ദി. നിങ്ങളുടെ അവലോകനം ഇപ്പോൾ പ്രസിദ്ധീകരിച്ചു.",
+  ur: "شکریہ۔ آپ کا جائزہ اب شائع ہو چکا ہے۔", ne: "धन्यवाद। तपाईंको समीक्षा अब प्रकाशित भयो।",
+  or: "ଧନ୍ୟବାଦ। ଆପଣଙ୍କ ସମୀକ୍ଷା ଏବେ ପ୍ରକାଶିତ ହୋଇଛି।", as: "ধন্যবাদ। আপোনাৰ পৰ্যালোচনা এতিয়া প্ৰকাশিত হৈছে।",
+  es: "Gracias. Tu reseña ya está publicada."
 };
 
 const insuranceClientSchema = z.object({
@@ -1916,7 +1946,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
           )}
         </div>
         {communityKind === "review" && (
-          <CommunitySubmissionForm kind="review" language={language} theme={theme} captchaConfig={captchaConfig} onClose={() => setCommunityKind("")} />
+          <CommunitySubmissionForm kind="review" language={language} theme={theme} captchaConfig={captchaConfig} onClose={() => setCommunityKind("")} onSubmitted={(post) => setCommunityPosts((posts) => [post, ...posts.filter((item) => item.id !== post.id)])} />
         )}
       </section>
 
@@ -2026,7 +2056,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   );
 }
 
-function CommunitySubmissionForm({ kind, language, theme, captchaConfig, onClose }) {
+function CommunitySubmissionForm({ kind, language, theme, captchaConfig, onClose, onSubmitted }) {
   const [form, setForm] = useState({ authorName: "", title: "", body: "", rating: "5", website: "" });
   const [token, setToken] = useState("");
   const [captchaCycle, setCaptchaCycle] = useState(0);
@@ -2051,11 +2081,14 @@ function CommunitySubmissionForm({ kind, language, theme, captchaConfig, onClose
     }
     setBusy(true);
     try {
-      await apiRequest("/api/community", {
+      const result = await apiRequest("/api/community", {
         method: "POST",
         body: { ...validation.data, kind, turnstileToken: token }
       });
-      setMessage(COMMUNITY_SUCCESS[language] || COMMUNITY_SUCCESS.en);
+      if (isReview && result.post) onSubmitted?.(result.post);
+      setMessage(isReview
+        ? (COMMUNITY_REVIEW_SUCCESS[language] || COMMUNITY_REVIEW_SUCCESS.en)
+        : (COMMUNITY_SUCCESS[language] || COMMUNITY_SUCCESS.en));
       setForm({ authorName: "", title: "", body: "", rating: "5", website: "" });
     } catch (submitError) {
       setError(submitError.message);
@@ -2091,7 +2124,7 @@ function CommunitySubmissionForm({ kind, language, theme, captchaConfig, onClose
       ) : captchaConfig.error ? <p className="turnstile-status error">{captchaConfig.error}</p> : null}
       {error && <p className="error-banner" role="alert">{error}</p>}
       {message && <p className="success-banner" role="status">{message}</p>}
-      <div className="community-compose-actions"><button className="primary-button" disabled={busy || captchaConfig.loading || (captchaConfig.required && !token)}>{busy ? localize("Sending…") : communityText(language, 10)} <ChevronRight size={16} /></button><span>{communityText(language, 11)}</span></div>
+      <div className="community-compose-actions"><button className="primary-button" disabled={busy || captchaConfig.loading || (captchaConfig.required && !token)}>{busy ? localize("Sending…") : communityText(language, isReview ? 8 : 10)} <ChevronRight size={16} /></button><span>{communityText(language, 11)}</span></div>
     </form>
   );
 }
