@@ -32,7 +32,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", "https://api.open-meteo.com", "https://geocoding-api.open-meteo.com", ...clientOrigins],
+        connectSrc: ["'self'", "https://api.open-meteo.com", "https://geocoding-api.open-meteo.com", "https://challenges.cloudflare.com", ...clientOrigins],
         frameSrc: ["'self'", "https://challenges.cloudflare.com"],
         imgSrc: ["'self'", "data:", "https:"],
         mediaSrc: ["'self'", "https://videos.pexels.com"],
