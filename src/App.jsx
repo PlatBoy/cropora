@@ -1309,6 +1309,63 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const aboutTrackRef = useRef(null);
   const aboutProgressRef = useRef(null);
   const landingRef = useRef(null);
+  const glideFrameRef = useRef(0);
+  const scrollBehaviorRef = useRef(null);
+
+  function stopGlide() {
+    if (glideFrameRef.current) window.cancelAnimationFrame(glideFrameRef.current);
+    glideFrameRef.current = 0;
+    if (scrollBehaviorRef.current !== null) {
+      document.documentElement.style.scrollBehavior = scrollBehaviorRef.current;
+      scrollBehaviorRef.current = null;
+    }
+  }
+
+  function glideTo(target, block = "start") {
+    if (!target) return;
+    stopGlide();
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      target.scrollIntoView({ behavior: "auto", block });
+      return;
+    }
+
+    const start = window.scrollY;
+    const rect = target.getBoundingClientRect();
+    const navHeight = document.querySelector(".auth-page-nav")?.offsetHeight || 0;
+    const marginTop = Number.parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
+    let destination = start + rect.top - marginTop;
+    if (block === "center") destination = start + rect.top - (window.innerHeight - rect.height) / 2;
+    if (block === "nearest") {
+      if (rect.top >= navHeight && rect.bottom <= window.innerHeight) return;
+      destination = rect.top < navHeight
+        ? start + rect.top - navHeight - 12
+        : start + rect.bottom - window.innerHeight + 16;
+    }
+    destination = Math.max(0, Math.min(destination, document.documentElement.scrollHeight - window.innerHeight));
+    const distance = destination - start;
+    if (Math.abs(distance) < 2) return;
+
+    const duration = Math.min(1400, Math.max(700, Math.abs(distance) * 0.48));
+    const beganAt = performance.now();
+    scrollBehaviorRef.current = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = "auto";
+
+    const step = (now) => {
+      const progress = Math.min((now - beganAt) / duration, 1);
+      const eased = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - ((-2 * progress + 2) ** 3) / 2;
+      window.scrollTo(0, start + distance * eased);
+      if (progress < 1) {
+        glideFrameRef.current = window.requestAnimationFrame(step);
+      } else {
+        glideFrameRef.current = 0;
+        document.documentElement.style.scrollBehavior = scrollBehaviorRef.current ?? "";
+        scrollBehaviorRef.current = null;
+      }
+    };
+    glideFrameRef.current = window.requestAnimationFrame(step);
+  }
 
   useEffect(() => {
     const query = window.matchMedia?.("(prefers-reduced-motion: reduce)");
@@ -1331,25 +1388,48 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     const track = aboutTrackRef.current;
     if (!section || !track) return undefined;
 
-    let frame = 0;
+    let updateFrame = 0;
+    let glideFrame = 0;
+    let targetProgress = 0;
+    let currentProgress = 0;
+    let initialized = false;
+    const paint = (progress) => {
+      const travel = Math.max(track.scrollWidth - section.clientWidth, 0);
+      track.style.transform = `translate3d(${-travel * progress}px, 0, 0)`;
+      if (aboutProgressRef.current) aboutProgressRef.current.style.transform = `scaleX(${progress})`;
+    };
+    const glide = () => {
+      glideFrame = 0;
+      currentProgress += (targetProgress - currentProgress) * 0.18;
+      if (Math.abs(targetProgress - currentProgress) < 0.0008) currentProgress = targetProgress;
+      paint(currentProgress);
+      if (currentProgress !== targetProgress) glideFrame = window.requestAnimationFrame(glide);
+    };
     const update = () => {
-      frame = 0;
+      updateFrame = 0;
       const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
       if (reduceMotion) {
         track.style.transform = "none";
         if (aboutProgressRef.current) aboutProgressRef.current.style.transform = "scaleX(0)";
+        if (glideFrame) window.cancelAnimationFrame(glideFrame);
+        glideFrame = 0;
+        initialized = false;
         return;
       }
 
       const navHeight = document.querySelector(".auth-page-nav")?.offsetHeight || 0;
       const scrollDistance = Math.max(section.offsetHeight - (window.innerHeight - navHeight), 1);
-      const progress = Math.min(Math.max(-section.getBoundingClientRect().top / scrollDistance, 0), 1);
-      const travel = Math.max(track.scrollWidth - section.clientWidth, 0);
-      track.style.transform = `translate3d(${-travel * progress}px, 0, 0)`;
-      if (aboutProgressRef.current) aboutProgressRef.current.style.transform = `scaleX(${progress})`;
+      targetProgress = Math.min(Math.max(-section.getBoundingClientRect().top / scrollDistance, 0), 1);
+      if (!initialized) {
+        currentProgress = targetProgress;
+        initialized = true;
+        paint(currentProgress);
+      } else if (!glideFrame) {
+        glideFrame = window.requestAnimationFrame(glide);
+      }
     };
     const scheduleUpdate = () => {
-      if (!frame) frame = window.requestAnimationFrame(update);
+      if (!updateFrame) updateFrame = window.requestAnimationFrame(update);
     };
 
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
@@ -1358,7 +1438,36 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     return () => {
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
-      if (frame) window.cancelAnimationFrame(frame);
+      if (updateFrame) window.cancelAnimationFrame(updateFrame);
+      if (glideFrame) window.cancelAnimationFrame(glideFrame);
+    };
+  }, []);
+
+  useEffect(() => {
+    const root = landingRef.current;
+    if (!root) return undefined;
+    const onClick = (event) => {
+      if (!(event.target instanceof Element) || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = event.target.closest('a[href^="#"]');
+      if (!link || link.target || link.hasAttribute("download")) return;
+      const hash = link.getAttribute("href");
+      const target = hash && document.getElementById(decodeURIComponent(hash.slice(1)));
+      if (!target || !root.contains(target)) return;
+      event.preventDefault();
+      if (window.location.hash !== hash) window.history.pushState(null, "", hash);
+      glideTo(target);
+    };
+    const interrupt = () => stopGlide();
+    root.addEventListener("click", onClick);
+    window.addEventListener("wheel", interrupt, { passive: true });
+    window.addEventListener("touchstart", interrupt, { passive: true });
+    window.addEventListener("keydown", interrupt);
+    return () => {
+      root.removeEventListener("click", onClick);
+      window.removeEventListener("wheel", interrupt);
+      window.removeEventListener("touchstart", interrupt);
+      window.removeEventListener("keydown", interrupt);
+      stopGlide();
     };
   }, []);
 
@@ -1477,12 +1586,12 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
 
   function startRegistration() {
     changeMode("register");
-    document.querySelector(".auth-panel")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest" });
+    glideTo(document.querySelector(".auth-panel"), "nearest");
   }
 
   function openCommunityForm(kind) {
     setCommunityKind(kind);
-    window.setTimeout(() => document.getElementById("community-compose")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" }), 30);
+    window.setTimeout(() => glideTo(document.getElementById("community-compose"), "center"), 30);
   }
 
   async function submitLogin(event, quickCredentials) {
