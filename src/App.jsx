@@ -1477,12 +1477,12 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
 
   function startRegistration() {
     changeMode("register");
-    document.querySelector(".auth-panel")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    document.querySelector(".auth-panel")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest" });
   }
 
   function openCommunityForm(kind) {
     setCommunityKind(kind);
-    window.setTimeout(() => document.getElementById("community-compose")?.scrollIntoView({ behavior: "smooth", block: "center" }), 30);
+    window.setTimeout(() => document.getElementById("community-compose")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" }), 30);
   }
 
   async function submitLogin(event, quickCredentials) {
