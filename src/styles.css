@@ -5466,6 +5466,31 @@ td {
   z-index: 30;
 }
 
+.landing-shell.about-finale-active .auth-page-nav {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-100%);
+}
+
+.landing-shell.about-finale-active {
+  overflow: visible;
+}
+
+.landing-shell.about-finale-active .about-stage {
+  position: fixed;
+  inset: 0;
+  top: 0;
+  z-index: 40;
+  height: 100svh;
+  min-height: 0;
+  width: 100vw;
+}
+
+.landing-shell.about-finale-active + .site-footer {
+  visibility: hidden;
+}
+
 .landing-nav-controls {
   min-width: 0;
   flex: 1 1 auto;

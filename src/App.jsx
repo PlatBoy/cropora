@@ -315,6 +315,23 @@ const COMMUNITY_COPY = {
   as: ["পৰ্যালোচনা লিখক", "ব্লগ লিখক", "সমাজৰ কাহিনী", "আপোনাৰ নাম", "ৰেটিং", "ব্লগৰ শিৰোনাম", "আপোনাৰ পৰ্যালোচনা", "আপোনাৰ কাহিনী", "আপোনাৰ অভিজ্ঞতা ভাগ-বতৰা কৰক", "খেতিৰ পৰা লিখক", "পৰ্যালোচনাৰ বাবে জমা দিয়ক", "হোমপেজত দেখুওৱাৰ আগতে প্ৰশাসকে জমা পৰীক্ষা কৰিব।", "পৰ্যালোচনা লোড হৈছে…", "এতিয়াও কোনো পৰ্যালোচনা নাই। আপোনাৰ অভিজ্ঞতা প্ৰথমে ভাগ-বতৰা কৰক।", "এতিয়াও কোনো ব্লগ নাই। খেতিৰ অভিজ্ঞতা লিখক।"],
   es: ["Escribir una reseña", "Escribir un blog", "Historias de la comunidad", "Tu nombre", "Valoración", "Título del blog", "Tu reseña", "Tu historia", "Comparte tu experiencia", "Escribe desde el campo", "Enviar para revisión", "Un administrador revisa los envíos antes de publicarlos en la página de inicio.", "Cargando reseñas…", "Aún no hay reseñas. Comparte tu experiencia primero.", "Aún no hay blogs. Comparte una experiencia de tu finca."]
 };
+const COMMUNITY_BLOG_EMPTY = {
+  en: "No community blogs yet. Share a lesson from your farm.",
+  hi: "समुदाय के ब्लॉग अभी नहीं हैं। अपने खेत का अनुभव साझा करें।",
+  pa: "ਹਾਲੇ ਭਾਈਚਾਰੇ ਦੇ ਬਲੌਗ ਨਹੀਂ ਹਨ। ਆਪਣੇ ਖੇਤ ਦਾ ਤਜਰਬਾ ਸਾਂਝਾ ਕਰੋ।",
+  bn: "কমিউনিটির কোনো ব্লগ নেই। আপনার খামারের অভিজ্ঞতা জানান।",
+  ta: "சமூக வலைப்பதிவுகள் இன்னும் இல்லை. உங்கள் பண்ணை அனுபவத்தைப் பகிருங்கள்.",
+  te: "ఇంకా కమ్యూనిటీ బ్లాగులు లేవు. మీ పొలం అనుభవాన్ని పంచుకోండి.",
+  mr: "समुदायाचे ब्लॉग अजून नाहीत. शेतातील अनुभव शेअर करा.",
+  gu: "હજુ સમુદાયના બ્લોગ નથી. તમારા ખેતરનો અનુભવ શેર કરો.",
+  kn: "ಇನ್ನೂ ಸಮುದಾಯದ ಬ್ಲಾಗ್‌ಗಳಿಲ್ಲ. ನಿಮ್ಮ ಹೊಲದ ಅನುಭವ ಹಂಚಿಕೊಳ್ಳಿ.",
+  ml: "കമ്മ്യൂണിറ്റി ബ്ലോഗുകൾ ഇതുവരെ ഇല്ല. നിങ്ങളുടെ കൃഷിയിട അനുഭവം പങ്കിടൂ.",
+  ur: "ابھی کمیونٹی بلاگ نہیں ہیں۔ اپنے کھیت کا تجربہ شیئر کریں۔",
+  ne: "अहिलेसम्म समुदायका ब्लग छैनन्। खेतको अनुभव साझा गर्नुहोस्।",
+  or: "ଏପର୍ଯ୍ୟନ୍ତ ସମ୍ପ୍ରଦାୟ ବ୍ଲଗ୍ ନାହିଁ। ଆପଣଙ୍କ ଚାଷ ଅନୁଭୂତି ବାଣ୍ଟନ୍ତୁ।",
+  as: "এতিয়াও সমাজৰ ব্লগ নাই। খেতিৰ অভিজ্ঞতা ভাগ-বতৰা কৰক।",
+  es: "Aún no hay blogs de la comunidad. Comparte una experiencia de tu finca."
+};
 
 const COMMUNITY_GUIDANCE = {
   en: "Reviews publish immediately. Blog posts are checked by an admin before they appear.",
@@ -527,21 +544,21 @@ const SAMPLE_REVIEWS = [
   { id: "sample-13", authorName: "Demo farmer 13", rating: 5, body: "Separate farm profiles help me keep records for each plot clearer and easier to review." }
 ];
 const JOURNAL_INTRO = {
-  en: "Seven practical field notes for soil, water and crop care. Real farmer photographs; pictured people are not the article authors.",
-  hi: "मिट्टी, पानी और फसल की देखभाल पर सात व्यावहारिक लेख। तस्वीरें असली किसानों की हैं; तस्वीरों में दिख रहे लोग लेखों के लेखक नहीं हैं।",
-  pa: "ਮਿੱਟੀ, ਪਾਣੀ ਅਤੇ ਫ਼ਸਲ ਦੀ ਦੇਖਭਾਲ ਬਾਰੇ ਸੱਤ ਵਰਤੋਂਯੋਗ ਲੇਖ। ਤਸਵੀਰਾਂ ਅਸਲ ਕਿਸਾਨਾਂ ਦੀਆਂ ਹਨ; ਤਸਵੀਰਾਂ ਵਾਲੇ ਲੋਕ ਲੇਖਕ ਨਹੀਂ ਹਨ।",
-  bn: "মাটি, জল ও ফসলের যত্ন নিয়ে সাতটি ব্যবহারিক লেখা। ছবিগুলি বাস্তব কৃষকদের; ছবির মানুষরা লেখক নন।",
-  ta: "மண், நீர் மற்றும் பயிர் பராமரிப்பு குறித்த ஏழு நடைமுறைக் குறிப்புகள். படங்கள் உண்மையான விவசாயிகளுடையவை; படத்தில் உள்ளவர்கள் கட்டுரைகளின் ஆசிரியர்கள் அல்ல.",
-  te: "నేల, నీరు, పంట సంరక్షణపై ఏడు ఆచరణాత్మక కథనాలు. చిత్రాలు నిజమైన రైతులవి; చిత్రాల్లో ఉన్నవారు ఈ కథనాల రచయితలు కారు.",
-  mr: "माती, पाणी आणि पीक काळजीवरील सात उपयुक्त लेख. छायाचित्रे खऱ्या शेतकऱ्यांची आहेत; छायाचित्रातील व्यक्ती लेखांच्या लेखक नाहीत.",
-  gu: "માટી, પાણી અને પાકની સંભાળ પરના સાત ઉપયોગી લેખ. તસવીરો વાસ્તવિક ખેડૂતોની છે; તસવીરમાં દેખાતા લોકો લેખના લેખક નથી.",
-  kn: "ಮಣ್ಣು, ನೀರು ಮತ್ತು ಬೆಳೆ ಆರೈಕೆಯ ಕುರಿತು ಏಳು ಪ್ರಾಯೋಗಿಕ ಲೇಖನಗಳು. ಚಿತ್ರಗಳು ನೈಜ ರೈತರವು; ಚಿತ್ರದಲ್ಲಿರುವವರು ಲೇಖಕರಲ್ಲ.",
-  ml: "മണ്ണ്, വെള്ളം, വിള പരിപാലനം എന്നിവയെക്കുറിച്ചുള്ള ഏഴ് പ്രായോഗിക കുറിപ്പുകൾ. ചിത്രങ്ങൾ യഥാർത്ഥ കർഷകരുടേതാണ്; ചിത്രത്തിലുള്ളവർ ലേഖകരല്ല.",
-  ur: "مٹی، پانی اور فصل کی دیکھ بھال پر سات عملی مضامین۔ تصاویر حقیقی کسانوں کی ہیں؛ تصاویر میں دکھائے گئے افراد مصنف نہیں ہیں۔",
-  ne: "माटो, पानी र बाली हेरचाहका सात व्यावहारिक लेख। तस्बिरहरू वास्तविक किसानका हुन्; तस्बिरमा देखिएका व्यक्ति लेखक होइनन्।",
-  or: "ମାଟି, ଜଳ ଓ ଫସଲ ଯତ୍ନ ଉପରେ ସାତଟି ବ୍ୟବହାରିକ ଲେଖା। ଫଟୋଗୁଡ଼ିକ ପ୍ରକୃତ ଚାଷୀଙ୍କର; ଫଟୋରେ ଥିବା ବ୍ୟକ୍ତିମାନେ ଲେଖକ ନୁହନ୍ତି।",
-  as: "মাটি, পানী আৰু শস্যৰ যত্নৰ বিষয়ে সাতটা ব্যৱহাৰিক লেখা। ফটোবোৰ বাস্তৱ কৃষকৰ; ফটোত দেখা লোকসকল লেখক নহয়।",
-  es: "Siete notas prácticas sobre suelo, agua y cultivos. Fotografías reales de agricultores; las personas retratadas no son los autores."
+  en: "Practical field notes on soil, water and crop care. Real farmer photographs; pictured people are not the article authors.",
+  hi: "मिट्टी, पानी और फसल की देखभाल पर व्यावहारिक लेख। तस्वीरें असली किसानों की हैं; तस्वीरों में दिख रहे लोग लेखों के लेखक नहीं हैं।",
+  pa: "ਮਿੱਟੀ, ਪਾਣੀ ਅਤੇ ਫ਼ਸਲ ਦੀ ਦੇਖਭਾਲ ਬਾਰੇ ਵਰਤੋਂਯੋਗ ਲੇਖ। ਤਸਵੀਰਾਂ ਅਸਲ ਕਿਸਾਨਾਂ ਦੀਆਂ ਹਨ; ਤਸਵੀਰਾਂ ਵਾਲੇ ਲੋਕ ਲੇਖਕ ਨਹੀਂ ਹਨ।",
+  bn: "মাটি, জল ও ফসলের যত্ন নিয়ে ব্যবহারিক লেখা। ছবিগুলি বাস্তব কৃষকদের; ছবির মানুষরা লেখক নন।",
+  ta: "மண், நீர் மற்றும் பயிர் பராமரிப்பு குறித்த நடைமுறைக் குறிப்புகள். படங்கள் உண்மையான விவசாயிகளுடையவை; படத்தில் உள்ளவர்கள் கட்டுரைகளின் ஆசிரியர்கள் அல்ல.",
+  te: "నేల, నీరు, పంట సంరక్షణపై ఆచరణాత్మక కథనాలు. చిత్రాలు నిజమైన రైతులవి; చిత్రాల్లో ఉన్నవారు ఈ కథనాల రచయితలు కారు.",
+  mr: "माती, पाणी आणि पीक काळजीवरील उपयुक्त लेख. छायाचित्रे खऱ्या शेतकऱ्यांची आहेत; छायाचित्रातील व्यक्ती लेखांच्या लेखक नाहीत.",
+  gu: "માટી, પાણી અને પાકની સંભાળ પરના ઉપયોગી લેખ. તસવીરો વાસ્તવિક ખેડૂતોની છે; તસવીરમાં દેખાતા લોકો લેખના લેખક નથી.",
+  kn: "ಮಣ್ಣು, ನೀರು ಮತ್ತು ಬೆಳೆ ಆರೈಕೆಯ ಕುರಿತು ಪ್ರಾಯೋಗಿಕ ಲೇಖನಗಳು. ಚಿತ್ರಗಳು ನೈಜ ರೈತರವು; ಚಿತ್ರದಲ್ಲಿರುವವರು ಲೇಖಕರಲ್ಲ.",
+  ml: "മണ്ണ്, വെള്ളം, വിള പരിപാലനം എന്നിവയെക്കുറിച്ചുള്ള പ്രായോഗിക കുറിപ്പുകൾ. ചിത്രങ്ങൾ യഥാർത്ഥ കർഷകരുടേതാണ്; ചിത്രത്തിലുള്ളവർ ലേഖകരല്ല.",
+  ur: "مٹی، پانی اور فصل کی دیکھ بھال پر عملی مضامین۔ تصاویر حقیقی کسانوں کی ہیں؛ تصاویر میں دکھائے گئے افراد مصنف نہیں ہیں۔",
+  ne: "माटो, पानी र बाली हेरचाहका व्यावहारिक लेख। तस्बिरहरू वास्तविक किसानका हुन्; तस्बिरमा देखिएका व्यक्ति लेखक होइनन्।",
+  or: "ମାଟି, ଜଳ ଓ ଫସଲ ଯତ୍ନ ଉପରେ ବ୍ୟବହାରିକ ଲେଖା। ଫଟୋଗୁଡ଼ିକ ପ୍ରକୃତ ଚାଷୀଙ୍କର; ଫଟୋରେ ଥିବା ବ୍ୟକ୍ତିମାନେ ଲେଖକ ନୁହନ୍ତି।",
+  as: "মাটি, পানী আৰু শস্যৰ যত্নৰ বিষয়ে ব্যৱহাৰিক লেখা। ফটোবোৰ বাস্তৱ কৃষকৰ; ফটোত দেখা লোকসকল লেখক নহয়।",
+  es: "Notas prácticas sobre suelo, agua y cultivos. Fotografías reales de agricultores; las personas retratadas no son los autores."
 };
 const JOURNAL_TITLES = {
   en: ["Read the soil before the next crop", "Give water to the roots, not the calendar", "Scout first. Treat with care.", "Rotate crops with a plan", "Keep soil covered between seasons", "Use fertilizer in measured doses", "Dry and store harvests carefully"],
@@ -650,6 +667,68 @@ const JOURNAL_EXTRA_COPY = {
     "Protege el suelo desnudo con residuos vegetales adecuados o cultivos de cobertura; evita quemar los residuos.",
     "Ajusta el fertilizante según un análisis del suelo y el asesoramiento local; evita dosis grandes sin medir.",
     "Seca bien el grano cosechado y guárdalo en recipientes limpios, protegido de la humedad y las plagas."
+  ]
+};
+const JOURNAL_ADDITIONS = {
+  en: [
+    { title: "Scout crops on a weekly route", body: "Walk the same representative rows each week. Check new and older leaves, both leaf surfaces and plants near field edges; mark affected patches and take clear photos before acting. Compare notes over time, confirm the likely cause with local crop advice before spraying, and follow the product label.", category: "Crop care", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "Make the first rain work longer", body: "Before the monsoon, clear field drains and repair bund breaks so water moves as planned instead of pooling around roots. On suitable slopes, contour measures and safe outlets can slow runoff; choose structures with local soil and water guidance and keep drainage paths open.", category: "Water", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  hi: [
+    { title: "हर सप्ताह तय रास्ते से फसल का निरीक्षण करें", body: "हर सप्ताह खेत की चुनी हुई कतारों में एक ही रास्ते से चलें। नई और पुरानी पत्तियाँ, दोनों सतहें और किनारे के पौधे देखें; प्रभावित जगह चिह्नित करें और कदम उठाने से पहले साफ़ तस्वीर लें। नोट्स की तुलना करें, छिड़काव से पहले स्थानीय कृषि सलाह से कारण की पुष्टि करें और उत्पाद का लेबल मानें।", category: "फसल देखभाल", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "पहली बारिश के पानी को अधिक समय तक रोकें", body: "मानसून से पहले खेत की नालियाँ साफ़ करें और मेड़ों की टूट-फूट ठीक करें, ताकि पानी जड़ों के पास जमा होने के बजाय सही दिशा में बहे। उपयुक्त ढलान पर कंटूर उपाय और सुरक्षित निकास बहाव धीमा कर सकते हैं; स्थानीय मिट्टी-पानी सलाह से संरचना चुनें और निकास मार्ग खुले रखें।", category: "पानी", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  pa: [
+    { title: "ਹਰ ਹਫ਼ਤੇ ਇੱਕੋ ਰਸਤੇ ਨਾਲ ਫ਼ਸਲ ਦੀ ਜਾਂਚ ਕਰੋ", body: "ਹਰ ਹਫ਼ਤੇ ਖੇਤ ਦੀਆਂ ਚੁਣੀਆਂ ਕਤਾਰਾਂ ਵਿੱਚ ਇੱਕੋ ਰਸਤੇ ਤੁਰੋ। ਨਵੇਂ ਤੇ ਪੁਰਾਣੇ ਪੱਤੇ, ਦੋਵੇਂ ਪਾਸੇ ਅਤੇ ਕਿਨਾਰੇ ਦੇ ਕੁਝ ਬੂਟੇ ਵੇਖੋ; ਪ੍ਰਭਾਵਿਤ ਥਾਂ ਨਿਸ਼ਾਨ ਲਗਾਓ ਅਤੇ ਕਦਮ ਚੁੱਕਣ ਤੋਂ ਪਹਿਲਾਂ ਸਾਫ਼ ਤਸਵੀਰ ਲਵੋ। ਨੋਟਾਂ ਦੀ ਤੁਲਨਾ ਕਰੋ, ਛਿੜਕਾਅ ਤੋਂ ਪਹਿਲਾਂ ਸਥਾਨਕ ਖੇਤੀ ਸਲਾਹ ਨਾਲ ਕਾਰਨ ਪੱਕਾ ਕਰੋ ਅਤੇ ਲੇਬਲ ਮੰਨੋ।", category: "ਫ਼ਸਲ ਦੀ ਦੇਖਭਾਲ", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "ਪਹਿਲੀ ਬਾਰਿਸ਼ ਦੇ ਪਾਣੀ ਨੂੰ ਹੋਰ ਸਮੇਂ ਲਈ ਸੰਭਾਲੋ", body: "ਮਾਨਸੂਨ ਤੋਂ ਪਹਿਲਾਂ ਖੇਤ ਦੀਆਂ ਨਾਲੀਆਂ ਸਾਫ਼ ਕਰੋ ਅਤੇ ਵੱਟਾਂ ਦੀ ਮੁਰੰਮਤ ਕਰੋ, ਤਾਂ ਜੋ ਪਾਣੀ ਜੜ੍ਹਾਂ ਕੋਲ ਖੜ੍ਹਨ ਦੀ ਬਜਾਏ ਸਹੀ ਪਾਸੇ ਵਗੇ। ਢੁਕਵੀਂ ਢਲਾਣ ਉੱਤੇ ਕੰਟੂਰ ਬੰਨ੍ਹ ਅਤੇ ਸੁਰੱਖਿਅਤ ਨਿਕਾਸ ਵਹਾਅ ਹੌਲਾ ਕਰ ਸਕਦੇ ਹਨ; ਸਥਾਨਕ ਮਿੱਟੀ-ਪਾਣੀ ਸਲਾਹ ਨਾਲ ਢਾਂਚਾ ਚੁਣੋ ਅਤੇ ਨਾਲੀਆਂ ਖੁੱਲ੍ਹੀਆਂ ਰੱਖੋ।", category: "ਪਾਣੀ", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  bn: [
+    { title: "প্রতি সপ্তাহে একই পথে ফসল পরীক্ষা করুন", body: "প্রতি সপ্তাহে জমির নির্বাচিত সারিতে একই পথে হাঁটুন। নতুন ও পুরোনো পাতা, পাতার দুই পিঠ এবং জমির ধারের গাছ দেখুন; আক্রান্ত অংশ চিহ্নিত করে ব্যবস্থা নেওয়ার আগে পরিষ্কার ছবি তুলুন। নোট মিলিয়ে দেখুন, স্প্রে করার আগে স্থানীয় কৃষি পরামর্শে কারণ নিশ্চিত করুন এবং পণ্যের লেবেল মানুন।", category: "ফসলের যত্ন", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "প্রথম বৃষ্টির জল আরও দিন ধরে কাজে লাগান", body: "বর্ষার আগে জমির নালা পরিষ্কার করুন ও আলের ভাঙা অংশ সারান, যাতে জল শিকড়ের কাছে জমে না থেকে পরিকল্পিত পথে যায়। উপযুক্ত ঢালে কন্টুর ব্যবস্থা ও নিরাপদ নিষ্কাশন জলপ্রবাহ কমাতে পারে; স্থানীয় মাটি-জল পরামর্শে ব্যবস্থা বেছে নিন এবং নিকাশির পথ খোলা রাখুন।", category: "জল", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  ta: [
+    { title: "வாரந்தோறும் ஒரே பாதையில் பயிரை ஆய்வு செய்யுங்கள்", body: "ஒவ்வொரு வாரமும் தேர்ந்தெடுத்த வயல் வரிசைகளில் ஒரே பாதையில் நடந்து பாருங்கள். புதிய, பழைய இலைகள், இலைகளின் இருபுறம், வயல் ஓரச் செடிகள் ஆகியவற்றைச் சரிபார்த்து, பாதிக்கப்பட்ட இடங்களைக் குறியிட்டு தெளிவான படம் எடுங்கள். குறிப்புகளை ஒப்பிட்டு, தெளிப்பதற்கு முன் உள்ளூர் ஆலோசனையால் காரணத்தை உறுதிசெய்து, தயாரிப்பு லேபிளைப் பின்பற்றுங்கள்.", category: "பயிர் பராமரிப்பு", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "முதல் மழைநீரை நீண்ட காலம் பயனுள்ளதாக வைத்திருங்கள்", body: "மழைக்காலத்திற்கு முன் வயல் வடிகால்களைச் சுத்தம் செய்து வரப்புகளைச் சரிசெய்யுங்கள்; நீர் வேரருகே தேங்காமல் திட்டமிட்ட வழியில் செல்லட்டும். ஏற்ற சரிவுகளில் வரையறைக் கட்டமைப்புகளும் பாதுகாப்பான வெளியேற்றமும் நீரோட்டத்தைக் குறைக்கலாம்; உள்ளூர் மண்-நீர் ஆலோசனையுடன் அமைப்பைத் தேர்ந்து, வடிகால் பாதைகளைத் திறந்துவையுங்கள்.", category: "நீர்", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  te: [
+    { title: "ప్రతి వారం ఒకే మార్గంలో పంటను పరిశీలించండి", body: "ప్రతి వారం పొలంలోని ఎంపిక చేసిన వరుసలను ఒకే మార్గంలో నడిచి చూడండి. కొత్త, పాత ఆకులు, ఆకుల రెండు వైపులు, అంచున ఉన్న మొక్కలను పరిశీలించి, ప్రభావిత ప్రాంతాలను గుర్తించి స్పష్టమైన ఫోటోలు తీయండి. గమనికలను పోల్చి, పిచికారీకి ముందు స్థానిక సలహాతో కారణాన్ని నిర్ధారించి, ఉత్పత్తి లేబుల్‌ను పాటించండి.", category: "పంట సంరక్షణ", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "మొదటి వర్షపు నీటిని ఎక్కువకాలం ఉపయోగించండి", body: "వర్షాకాలానికి ముందు పొలపు కాలువలను శుభ్రం చేసి గట్లను మరమ్మతు చేయండి; నీరు వేర్ల దగ్గర నిలవకుండా నిర్ణయించిన దారిలో వెళ్లేలా చూడండి. అనువైన వాలుల్లో కాంటూర్ పద్ధతులు, సురక్షిత అవుట్‌లెట్లు నీటి ప్రవాహాన్ని తగ్గించవచ్చు; స్థానిక నేల-నీటి సలహాతో నిర్మాణాన్ని ఎంచుకుని, కాలువలను తెరిచి ఉంచండి.", category: "నీరు", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  mr: [
+    { title: "दर आठवड्याला ठरावीक मार्गाने पिकाची पाहणी करा", body: "दर आठवड्याला शेतातील निवडक ओळींमधून त्याच मार्गाने फिरा. नवीन-जुनी पाने, पानांच्या दोन्ही बाजू आणि बांधाजवळची झाडे तपासा; बाधित भाग नोंदवा आणि उपायाआधी स्पष्ट छायाचित्र घ्या. नोंदींची तुलना करा, फवारणीपूर्वी स्थानिक सल्ल्याने कारण निश्चित करा आणि उत्पादनाच्या लेबलचे पालन करा.", category: "पीक काळजी", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "पहिल्या पावसाचे पाणी अधिक काळ उपयोगी ठेवा", body: "पावसाळ्यापूर्वी शेतातील चर स्वच्छ करा आणि बांध दुरुस्त करा, म्हणजे पाणी मुळांजवळ साचण्याऐवजी योग्य दिशेने वाहेल. योग्य उतारावर समतल उपाय आणि सुरक्षित निचरा पाण्याचा वेग कमी करू शकतात; स्थानिक माती-पाणी सल्ल्याने रचना ठरवा आणि निचऱ्याचे मार्ग खुले ठेवा.", category: "पाणी", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  gu: [
+    { title: "દર અઠવાડિયે નક્કી કરેલા રસ્તે પાક તપાસો", body: "દર અઠવાડિયે ખેતરની પસંદ કરેલી હારમાં એક જ રસ્તે ચાલો. નવા-જૂના પાંદડા, બંને બાજુ અને ખેતરની કિનારાનાં છોડ તપાસો; અસરગ્રસ્ત ભાગને ચિહ્નિત કરીને સ્પષ્ટ ફોટો લો. નોંધોની સરખામણી કરો, છંટકાવ પહેલાં સ્થાનિક સલાહથી કારણ ખાતરી કરો અને ઉત્પાદનનું લેબલ અનુસરો.", category: "પાકની સંભાળ", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "પહેલા વરસાદનું પાણી વધુ સમય ઉપયોગી રાખો", body: "ચોમાસા પહેલાં ખેતરની નાળીઓ સાફ કરો અને પાળની તૂટેલી જગ્યા સમારો, જેથી પાણી મૂળ પાસે ભરાવાને બદલે યોગ્ય દિશામાં વહે. યોગ્ય ઢાળ પર સમોચ્ચ ઉપાયો અને સુરક્ષિત નિકાસથી વહેણ ધીમો થઈ શકે; સ્થાનિક જમીન-પાણી સલાહથી રચના પસંદ કરો અને નિકાસના રસ્તા ખુલ્લા રાખો.", category: "પાણી", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  kn: [
+    { title: "ಪ್ರತಿ ವಾರ ಒಂದೇ ದಾರಿಯಲ್ಲಿ ಬೆಳೆಯನ್ನು ಪರಿಶೀಲಿಸಿ", body: "ಪ್ರತಿ ವಾರ ಹೊಲದ ಆಯ್ದ ಸಾಲುಗಳಲ್ಲಿ ಒಂದೇ ದಾರಿಯಲ್ಲಿ ನಡೆದು ನೋಡಿ. ಹೊಸ-ಹಳೆಯ ಎಲೆಗಳು, ಎಲೆಗಳ ಎರಡೂ ಬದಿಗಳು ಮತ್ತು ಅಂಚಿನ ಗಿಡಗಳನ್ನು ಪರಿಶೀಲಿಸಿ; ಹಾನಿಯಾದ ಜಾಗ ಗುರುತಿಸಿ ಸ್ಪಷ್ಟ ಚಿತ್ರ ತೆಗೆಯಿರಿ. ಟಿಪ್ಪಣಿಗಳನ್ನು ಹೋಲಿಸಿ, ಸಿಂಪಡಿಸುವ ಮೊದಲು ಸ್ಥಳೀಯ ಸಲಹೆಯಿಂದ ಕಾರಣ ಖಚಿತಪಡಿಸಿ ಮತ್ತು ಉತ್ಪನ್ನದ ಲೇಬಲ್ ಪಾಲಿಸಿ.", category: "ಬೆಳೆ ಆರೈಕೆ", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "ಮೊದಲ ಮಳೆಯ ನೀರನ್ನು ಹೆಚ್ಚು ದಿನ ಬಳಕೆಗೆ ಉಳಿಸಿ", body: "ಮಳೆಗಾಲದ ಮೊದಲು ಹೊಲದ ಕಾಲುವೆಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ, ಒಡೆದ ಬದುಗಳನ್ನು ಸರಿಪಡಿಸಿ; ನೀರು ಬೇರುಗಳ ಬಳಿ ನಿಲ್ಲದೆ ಯೋಜಿತ ದಾರಿಯಲ್ಲಿ ಹರಿಯಲಿ. ಸೂಕ್ತ ಇಳಿಜಾರಿನಲ್ಲಿ ಸಮತಟ್ಟು ಕ್ರಮಗಳು ಮತ್ತು ಸುರಕ್ಷಿತ ಹೊರಹರಿವು ನೀರಿನ ವೇಗ ಕಡಿಮೆ ಮಾಡಬಹುದು; ಸ್ಥಳೀಯ ಮಣ್ಣು-ನೀರಿನ ಸಲಹೆಯಂತೆ ಆಯ್ಕೆ ಮಾಡಿ, ಕಾಲುವೆಗಳನ್ನು ತೆರವಾಗಿಡಿ.", category: "ನೀರು", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  ml: [
+    { title: "ഓരോ ആഴ്ചയും ഒരേ വഴിയിലൂടെ വിള പരിശോധിക്കൂ", body: "ഓരോ ആഴ്ചയും വയലിലെ തിരഞ്ഞെടുത്ത വരികളിലൂടെ ഒരേ വഴിയിൽ നടക്കുക. പുതിയതും പഴയതുമായ ഇലകൾ, ഇലയുടെ ഇരുവശങ്ങൾ, അരികിലെ ചെടികൾ എന്നിവ പരിശോധിക്കുക; ബാധിച്ച ഭാഗങ്ങൾ അടയാളപ്പെടുത്തി വ്യക്തമായ ചിത്രം എടുക്കുക. കുറിപ്പുകൾ താരതമ്യം ചെയ്ത് തളിക്കുന്നതിന് മുമ്പ് പ്രാദേശിക ഉപദേശത്തോടെ കാരണം ഉറപ്പാക്കി ഉൽപ്പന്ന ലേബൽ പാലിക്കുക.", category: "വിള പരിപാലനം", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "ആദ്യ മഴവെള്ളം കൂടുതൽ കാലം പ്രയോജനപ്പെടുത്തൂ", body: "മൺസൂണിന് മുമ്പ് വയൽ ചാലുകൾ വൃത്തിയാക്കി പൊട്ടിയ വരമ്പുകൾ നന്നാക്കുക; വെള്ളം വേരുകൾക്കരികിൽ കെട്ടാതെ നിശ്ചയിച്ച വഴിയിലൂടെ ഒഴുകട്ടെ. അനുയോജ്യമായ ചരിവുകളിൽ കോണ്ടൂർ മാർഗങ്ങളും സുരക്ഷിത പുറന്തള്ളലും ഒഴുക്ക് കുറയ്ക്കാം; പ്രാദേശിക ഉപദേശത്തോടെ ഘടന തിരഞ്ഞെടുത്ത് ചാലുകൾ തുറന്നുവയ്ക്കുക.", category: "വെള്ളം", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  ur: [
+    { title: "ہر ہفتے ایک مقررہ راستے سے فصل کا معائنہ کریں", body: "ہر ہفتے کھیت کی منتخب قطاروں میں ایک ہی راستے پر چلیں۔ نئے اور پرانے پتے، دونوں رخ اور کنارے کے پودے دیکھیں؛ متاثرہ حصے نشان زد کرکے صاف تصویر لیں۔ نوٹس کا موازنہ کریں، اسپرے سے پہلے مقامی مشورے سے وجہ کی تصدیق کریں اور مصنوعات کے لیبل پر عمل کریں۔", category: "فصل کی دیکھ بھال", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "پہلی بارش کے پانی کو زیادہ عرصے تک کام میں لائیں", body: "مون سون سے پہلے کھیت کی نالیاں صاف اور ٹوٹے ہوئے بند درست کریں تاکہ پانی جڑوں کے پاس کھڑا ہونے کے بجائے طے شدہ راستے پر چلے۔ مناسب ڈھلوان پر محفوظ نکاسی بہاؤ کم کر سکتی ہے؛ مقامی مٹی اور پانی کے مشورے سے ڈھانچا چنیں اور نکاسی کے راستے کھلے رکھیں۔", category: "پانی", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  ne: [
+    { title: "हरेक हप्ता एउटै बाटोबाट बाली हेर्नुहोस्", body: "हरेक हप्ता खेतका छानिएका लाइनमा एउटै बाटो हिँड्नुहोस्। नयाँ र पुराना पात, दुवै सतह र छेउका बिरुवा जाँच्नुहोस्; प्रभावित ठाउँ चिनो लगाएर स्पष्ट तस्बिर लिनुहोस्। टिपोट तुलना गर्नुहोस्, छर्कनुअघि स्थानीय सल्लाहबाट कारण पुष्टि गर्नुहोस् र उत्पादनको लेबल पालना गर्नुहोस्।", category: "बाली हेरचाह", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "पहिलो वर्षाको पानीलाई लामो समय उपयोगी बनाउनुहोस्", body: "मनसुनअघि खेतका नाली सफा गर्नुहोस् र भत्केका आली मर्मत गर्नुहोस्, ताकि पानी जराछेउ जम्नुको सट्टा तोकिएको बाटोमा बगोस्। उपयुक्त भिरालोमा सुरक्षित निकासले बहाव कम गर्न सक्छ; स्थानीय माटो-पानी सल्लाहअनुसार संरचना छानेर निकास खुला राख्नुहोस्।", category: "पानी", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  or: [
+    { title: "ପ୍ରତି ସପ୍ତାହ ନିର୍ଦ୍ଧାରିତ ପଥରେ ଫସଲ ଯାଞ୍ଚ କରନ୍ତୁ", body: "ପ୍ରତି ସପ୍ତାହ କ୍ଷେତର ଚୟନିତ ଧାଡ଼ିରେ ସେହି ପଥରେ ଚାଲନ୍ତୁ। ନୂଆ ଓ ପୁରୁଣା ପତ୍ର, ଉଭୟ ପାର୍ଶ୍ୱ ଏବଂ କଡ଼ର ଗଛ ଦେଖନ୍ତୁ; ପ୍ରଭାବିତ ଅଞ୍ଚଳ ଚିହ୍ନଟ କରି ସ୍ପଷ୍ଟ ଫଟୋ ନିଅନ୍ତୁ। ଟିପ୍ପଣୀ ତୁଳନା କରନ୍ତୁ, ସ୍ଥାନୀୟ ପରାମର୍ଶରେ କାରଣ ନିଶ୍ଚିତ କରି ଲେବଲ୍ ମାନନ୍ତୁ।", category: "ଫସଲ ଯତ୍ନ", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "ପ୍ରଥମ ବର୍ଷା ଜଳକୁ ଅଧିକ ସମୟ ଉପଯୋଗୀ କରନ୍ତୁ", body: "ବର୍ଷା ପୂର୍ବରୁ କ୍ଷେତ ନାଳ ସଫା କରନ୍ତୁ ଓ ଭଙ୍ଗା ହିଡ଼ ମରାମତି କରନ୍ତୁ, ଯାହାଦ୍ୱାରା ଜଳ ମୂଳ ପାଖରେ ଜମିବ ନାହିଁ। ଉପଯୁକ୍ତ ଢାଲରେ ସୁରକ୍ଷିତ ନିଷ୍କାସନ ପ୍ରବାହ କମାଇପାରେ; ସ୍ଥାନୀୟ ପରାମର୍ଶରେ ଗଠନ ବାଛନ୍ତୁ ଓ ନାଳ ଖୋଲା ରଖନ୍ତୁ।", category: "ଜଳ", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  as: [
+    { title: "প্ৰতি সপ্তাহে একেটা নিৰ্দিষ্ট পথেৰে শস্য পৰীক্ষা কৰক", body: "প্ৰতি সপ্তাহে পথাৰৰ নিৰ্বাচিত শাৰীবোৰত একেটা পথেৰে খোজ কাঢ়ক। নতুন-পুৰণি পাত আৰু দুয়োফাল চাওক; ক্ষতিগ্ৰস্ত ঠাই চিন দি স্পষ্ট ফটো লওক। টোকা তুলনা কৰি, ছটিওৱাৰ আগতে স্থানীয় পৰামৰ্শৰে কাৰণ নিশ্চিত কৰক আৰু সামগ্ৰীৰ লেবেল মানক।", category: "শস্যৰ যত্ন", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "প্ৰথম বৰষুণৰ পানী অধিক দিন কামত লগাওক", body: "বৰ্ষাৰ আগতে পথাৰৰ নলা পৰিষ্কাৰ কৰক আৰু ভঙা আলি মেৰামতি কৰক, যাতে পানী শিপাৰ কাষত জমা নহৈ নিৰ্ধাৰিত পথেৰে যায়। উপযুক্ত ঢালত সুৰক্ষিত নিকাশে পানীৰ গতি কমাব পাৰে; স্থানীয় পৰামৰ্শৰে গঠন বাছি নলা খোলা ৰাখক।", category: "পানী", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
+  ],
+  es: [
+    { title: "Recorre el cultivo cada semana por la misma ruta", body: "Camina por las mismas hileras representativas cada semana. Revisa hojas nuevas y viejas, ambas caras y algunas plantas del borde; marca las zonas afectadas y toma fotos claras. Compara las notas, confirma la causa con asesoramiento local antes de pulverizar y sigue la etiqueta del producto.", category: "Cuidado del cultivo", image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82" },
+    { title: "Aprovecha durante más tiempo la primera lluvia", body: "Antes del monzón, limpia los desagües y repara los caballones rotos para que el agua no se estanque junto a las raíces. En pendientes adecuadas, las salidas seguras pueden frenar la escorrentía; elige las estructuras con asesoramiento local sobre suelo y agua y mantén libres los desagües.", category: "Agua", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
   ]
 };
 const FIELD_BOOK_HEADLINES = {
@@ -1403,6 +1482,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const [busy, setBusy] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
   const [heroVideoIndex, setHeroVideoIndex] = useState(0);
+  const [aboutFinaleActive, setAboutFinaleActive] = useState(false);
   const [error, setError] = useState("");
   const [captchaConfig, setCaptchaConfig] = useState({ loading: true, required: true, siteKey: "", error: "" });
   const [captchaToken, setCaptchaToken] = useState("");
@@ -1500,13 +1580,15 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   useEffect(() => {
     const section = aboutSectionRef.current;
     const track = aboutTrackRef.current;
-    if (!section || !track) return undefined;
+    const root = landingRef.current;
+    if (!section || !track || !root) return undefined;
 
     let updateFrame = 0;
     let glideFrame = 0;
     let targetProgress = 0;
     let currentProgress = 0;
     let initialized = false;
+    let finaleActive = false;
     const paint = (progress) => {
       const stageWidth = track.parentElement?.clientWidth || section.clientWidth;
       const travel = Math.max(track.getBoundingClientRect().width - stageWidth, 0);
@@ -1523,6 +1605,17 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     const update = () => {
       updateFrame = 0;
       const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+      const navHeight = document.querySelector(".auth-page-nav")?.offsetHeight || 0;
+      const scrollDistance = Math.max(section.offsetHeight - (window.innerHeight - navHeight), 1);
+      const rawProgress = -section.getBoundingClientRect().top / scrollDistance;
+      const finaleThreshold = 1 - (navHeight + 24) / scrollDistance;
+      const footerHeight = document.querySelector(".site-footer")?.offsetHeight || 0;
+      const finaleVisible = rawProgress <= 1 + (footerHeight + 16) / scrollDistance;
+      const nextFinaleActive = finaleVisible && rawProgress >= finaleThreshold;
+      if (nextFinaleActive !== finaleActive) {
+        finaleActive = nextFinaleActive;
+        setAboutFinaleActive(nextFinaleActive);
+      }
       if (reduceMotion) {
         track.style.transform = "none";
         if (aboutProgressRef.current) aboutProgressRef.current.style.transform = "scaleX(0)";
@@ -1532,9 +1625,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
         return;
       }
 
-      const navHeight = document.querySelector(".auth-page-nav")?.offsetHeight || 0;
-      const scrollDistance = Math.max(section.offsetHeight - (window.innerHeight - navHeight), 1);
-      targetProgress = Math.min(Math.max(-section.getBoundingClientRect().top / scrollDistance, 0), 1);
+      targetProgress = Math.min(Math.max(rawProgress, 0), 1);
       if (!initialized) {
         currentProgress = targetProgress;
         initialized = true;
@@ -1718,7 +1809,8 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
       category: text(language, "market"),
       image: "https://images.unsplash.com/photo-1525383033081-6088a7a5affa?auto=format&fit=crop&w=1200&q=82",
       paragraphs: [extraJournalCopy[3]]
-    }
+    },
+    ...(JOURNAL_ADDITIONS[language] || JOURNAL_ADDITIONS.en)
   ];
 
   function changeMode(nextMode) {
@@ -1827,7 +1919,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   ) : null;
 
   return (
-    <main className="auth-shell landing-shell" id="home" ref={landingRef}>
+    <main className={`auth-shell landing-shell${aboutFinaleActive ? " about-finale-active" : ""}`} id="home" ref={landingRef}>
       <nav className="auth-page-nav" aria-label={localize("Homepage navigation")}>
         <a className="auth-nav-brand" href="#home" aria-label="Krishisense home">
           <span className="brand-mark"><Sprout size={18} /></span>
@@ -2220,7 +2312,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             </details>
           ))}
           {!communityLoading && !communityPosts.some((post) => post.kind === "blog") && (
-            <p className="landing-community-status">{communityText(language, 14)}</p>
+            <p className="landing-community-status">{COMMUNITY_BLOG_EMPTY[language] || COMMUNITY_BLOG_EMPTY.en}</p>
           )}
         </div>
         {communityKind === "blog" && (
@@ -2242,7 +2334,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
                 <span className="landing-journal-title">{article.title}</span>
               </summary>
               <div className="landing-journal-copy">
-                {article.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                {(article.paragraphs || [article.body]).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>
             </details>
           ))}
