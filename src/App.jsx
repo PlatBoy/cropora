@@ -1403,7 +1403,6 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const [busy, setBusy] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
   const [heroVideoIndex, setHeroVideoIndex] = useState(0);
-  const [heroModuleIndex, setHeroModuleIndex] = useState(0);
   const [error, setError] = useState("");
   const [captchaConfig, setCaptchaConfig] = useState({ loading: true, required: true, siteKey: "", error: "" });
   const [captchaToken, setCaptchaToken] = useState("");
@@ -1666,12 +1665,6 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
       image: "https://images.unsplash.com/photo-1577109559107-8f94d2c68b7d?auto=format&fit=crop&w=1600&q=82"
     }
   ];
-  const heroModules = [
-    { title: text(language, "soilAnalysis"), icon: FlaskConical, description: aboutPanels[0].description },
-    { title: text(language, "diseaseDetection"), icon: Leaf, description: aboutPanels[1].description },
-    { title: text(language, "cropPlanner"), icon: CalendarDays, description: aboutPanels[2].description }
-  ];
-  const activeHeroModule = heroModules[heroModuleIndex];
   const extraJournalCopy = JOURNAL_EXTRA_COPY[language] || JOURNAL_EXTRA_COPY.en;
   const journalArticles = [
     {
@@ -1916,42 +1909,6 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             </a>
           </div>
         </div>
-        <aside className="landing-field-console" aria-label={text(language, "farmTools")}>
-          <div className="landing-console-heading">
-            <span><i aria-hidden="true" />{text(language, "farmTools")}</span>
-            <span className="landing-console-index">0{heroModuleIndex + 1} / 03</span>
-          </div>
-          <div className="landing-console-visual" aria-hidden="true">
-            <div className="landing-console-crosshair landing-console-crosshair-a" />
-            <div className="landing-console-crosshair landing-console-crosshair-b" />
-            <div className="landing-console-orbit landing-console-orbit-outer" />
-            <div className="landing-console-orbit landing-console-orbit-inner" />
-            <div className="landing-console-scanline" />
-            <div className="landing-console-symbol"><activeHeroModule.icon size={34} strokeWidth={1.4} /></div>
-            <span className="landing-console-coordinate">FIELD / {String(heroModuleIndex + 1).padStart(2, "0")}</span>
-            <span className="landing-console-caption">{activeHeroModule.title}</span>
-          </div>
-          <div className="landing-console-detail" aria-live="polite">
-            <span>0{heroModuleIndex + 1} — 03</span>
-            <h2>{activeHeroModule.title}</h2>
-            <p>{activeHeroModule.description}</p>
-          </div>
-          <div className="landing-console-tabs" role="group" aria-label={text(language, "farmTools")}>
-            {heroModules.map((module, index) => (
-              <button
-                key={module.title}
-                type="button"
-                aria-pressed={heroModuleIndex === index}
-                aria-label={module.title}
-                title={module.title}
-                onClick={() => setHeroModuleIndex(index)}
-              >
-                <module.icon size={17} strokeWidth={1.8} />
-              </button>
-            ))}
-            <a href="#login-panel" aria-label={text(language, "login")} title={text(language, "login")}><ChevronRight size={18} /></a>
-          </div>
-        </aside>
         <div className="auth-metrics">
           <span className="auth-metric-card">
             <span className="auth-metric-icon"><FlaskConical size={18} /></span>
