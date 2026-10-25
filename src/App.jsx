@@ -511,32 +511,146 @@ const LANDING_REVIEW_COPY = {
   as: ["কৃষকৰ মতামত", "এইবোৰ কেৱল উদাহৰণ, যাচাইকৃত গ্ৰাহকৰ পৰ্যালোচনা নহয়।", "পৰৱৰ্তী পদক্ষেপ ঠিক কৰাৰ আগতে মাটিৰ ফটো আৰু পথাৰৰ তথ্য একেলগে ৰাখিব পাৰোঁ।", "শস্যৰ স্বাস্থ্য আৰু পথাৰৰ কাম একে ঠাইত থাকিলে ঋতুৰ পৰিকল্পনা সহজ হয়।", "এই পৰামৰ্শই আৰম্ভণিত সহায় কৰে; সিদ্ধান্ত স্থানীয় পৰামৰ্শৰে নিশ্চিত কৰোঁ।"],
   es: ["Opiniones de agricultores", "Son ejemplos ilustrativos, no opiniones verificadas de clientes.", "Puedo reunir fotos del suelo y datos del terreno antes de planificar el siguiente paso.", "Tener la salud del cultivo y las tareas del campo en un solo lugar facilita organizar la temporada.", "La orientación me da un punto de partida; confirmo las decisiones con asesoramiento local."]
 };
+const SAMPLE_REVIEWS = [
+  { id: "sample-01", authorName: "Demo farmer 01", rating: 5, body: "I can keep soil photos and field details together before deciding what to check next." },
+  { id: "sample-02", authorName: "Demo farmer 02", rating: 4, body: "The irrigation reminder prompts me to check moisture near the roots instead of following a fixed calendar." },
+  { id: "sample-03", authorName: "Demo farmer 03", rating: 5, body: "The crop-health photo check helps me prepare clearer questions for a local agriculture expert." },
+  { id: "sample-04", authorName: "Demo farmer 04", rating: 4, body: "Keeping field tasks beside the crop plan makes a busy week easier to organize." },
+  { id: "sample-05", authorName: "Demo farmer 05", rating: 5, body: "The soil photo tool is a useful first look, while lab tests guide my nutrient decisions." },
+  { id: "sample-06", authorName: "Demo farmer 06", rating: 4, body: "Weather, field notes and crop tasks in one place give me a clearer view of the week." },
+  { id: "sample-07", authorName: "Demo farmer 07", rating: 5, body: "It is easier to compare the listed farming inputs when the market items are organized." },
+  { id: "sample-08", authorName: "Demo farmer 08", rating: 4, body: "Saving reports with my farm makes them easier to find than loose photos on my phone." },
+  { id: "sample-09", authorName: "Demo farmer 09", rating: 5, body: "The planner helps me record scouting dates and follow up when a crop issue changes." },
+  { id: "sample-10", authorName: "Demo farmer 10", rating: 4, body: "Seeing the status of loan and insurance requests makes the paperwork easier to track." },
+  { id: "sample-11", authorName: "Demo farmer 11", rating: 5, body: "I use the crop guidance as a starting point and confirm important decisions locally." },
+  { id: "sample-12", authorName: "Demo farmer 12", rating: 4, body: "Photo notes help me document a field problem before I ask someone for advice." },
+  { id: "sample-13", authorName: "Demo farmer 13", rating: 5, body: "Separate farm profiles help me keep records for each plot clearer and easier to review." }
+];
 const JOURNAL_INTRO = {
-  en: "Practical notes for soil, water and crop care.", hi: "मिट्टी, पानी और फसल की देखभाल के लिए व्यावहारिक सुझाव।",
-  pa: "ਮਿੱਟੀ, ਪਾਣੀ ਅਤੇ ਫ਼ਸਲ ਦੀ ਦੇਖਭਾਲ ਲਈ ਵਰਤੋਂਯੋਗ ਨੋਟਸ।", bn: "মাটি, জল ও ফসলের যত্নের ব্যবহারিক পরামর্শ।",
-  ta: "மண், நீர் மற்றும் பயிர் பராமரிப்புக்கான நடைமுறை குறிப்புகள்.", te: "నేల, నీరు, పంట సంరక్షణకు ఉపయోగకరమైన సూచనలు.",
-  mr: "माती, पाणी आणि पीक काळजीसाठी उपयुक्त टिपा.", gu: "માટી, પાણી અને પાકની સંભાળ માટે ઉપયોગી નોંધો.",
-  kn: "ಮಣ್ಣು, ನೀರು ಮತ್ತು ಬೆಳೆ ಆರೈಕೆಗೆ ಪ್ರಾಯೋಗಿಕ ಟಿಪ್ಪಣಿಗಳು.", ml: "മണ്ണ്, വെള്ളം, വിള പരിപാലനം എന്നിവയ്ക്കുള്ള പ്രായോഗിക കുറിപ്പുകൾ.",
-  ur: "مٹی، پانی اور فصل کی دیکھ بھال کے لیے عملی نکات۔", ne: "माटो, पानी र बाली हेरचाहका व्यावहारिक टिपोटहरू।",
-  or: "ମାଟି, ଜଳ ଓ ଫସଲ ଯତ୍ନ ପାଇଁ ବ୍ୟବହାରିକ ଟିପ୍ପଣୀ।", as: "মাটি, পানী আৰু শস্যৰ যত্নৰ ব্যৱহাৰিক টোকা।",
-  es: "Consejos prácticos sobre suelo, agua y cuidado de cultivos."
+  en: "Seven practical field notes for soil, water and crop care. Real farmer photographs; pictured people are not the article authors.",
+  hi: "मिट्टी, पानी और फसल की देखभाल पर सात व्यावहारिक लेख। तस्वीरें असली किसानों की हैं; तस्वीरों में दिख रहे लोग लेखों के लेखक नहीं हैं।",
+  pa: "ਮਿੱਟੀ, ਪਾਣੀ ਅਤੇ ਫ਼ਸਲ ਦੀ ਦੇਖਭਾਲ ਬਾਰੇ ਸੱਤ ਵਰਤੋਂਯੋਗ ਲੇਖ। ਤਸਵੀਰਾਂ ਅਸਲ ਕਿਸਾਨਾਂ ਦੀਆਂ ਹਨ; ਤਸਵੀਰਾਂ ਵਾਲੇ ਲੋਕ ਲੇਖਕ ਨਹੀਂ ਹਨ।",
+  bn: "মাটি, জল ও ফসলের যত্ন নিয়ে সাতটি ব্যবহারিক লেখা। ছবিগুলি বাস্তব কৃষকদের; ছবির মানুষরা লেখক নন।",
+  ta: "மண், நீர் மற்றும் பயிர் பராமரிப்பு குறித்த ஏழு நடைமுறைக் குறிப்புகள். படங்கள் உண்மையான விவசாயிகளுடையவை; படத்தில் உள்ளவர்கள் கட்டுரைகளின் ஆசிரியர்கள் அல்ல.",
+  te: "నేల, నీరు, పంట సంరక్షణపై ఏడు ఆచరణాత్మక కథనాలు. చిత్రాలు నిజమైన రైతులవి; చిత్రాల్లో ఉన్నవారు ఈ కథనాల రచయితలు కారు.",
+  mr: "माती, पाणी आणि पीक काळजीवरील सात उपयुक्त लेख. छायाचित्रे खऱ्या शेतकऱ्यांची आहेत; छायाचित्रातील व्यक्ती लेखांच्या लेखक नाहीत.",
+  gu: "માટી, પાણી અને પાકની સંભાળ પરના સાત ઉપયોગી લેખ. તસવીરો વાસ્તવિક ખેડૂતોની છે; તસવીરમાં દેખાતા લોકો લેખના લેખક નથી.",
+  kn: "ಮಣ್ಣು, ನೀರು ಮತ್ತು ಬೆಳೆ ಆರೈಕೆಯ ಕುರಿತು ಏಳು ಪ್ರಾಯೋಗಿಕ ಲೇಖನಗಳು. ಚಿತ್ರಗಳು ನೈಜ ರೈತರವು; ಚಿತ್ರದಲ್ಲಿರುವವರು ಲೇಖಕರಲ್ಲ.",
+  ml: "മണ്ണ്, വെള്ളം, വിള പരിപാലനം എന്നിവയെക്കുറിച്ചുള്ള ഏഴ് പ്രായോഗിക കുറിപ്പുകൾ. ചിത്രങ്ങൾ യഥാർത്ഥ കർഷകരുടേതാണ്; ചിത്രത്തിലുള്ളവർ ലേഖകരല്ല.",
+  ur: "مٹی، پانی اور فصل کی دیکھ بھال پر سات عملی مضامین۔ تصاویر حقیقی کسانوں کی ہیں؛ تصاویر میں دکھائے گئے افراد مصنف نہیں ہیں۔",
+  ne: "माटो, पानी र बाली हेरचाहका सात व्यावहारिक लेख। तस्बिरहरू वास्तविक किसानका हुन्; तस्बिरमा देखिएका व्यक्ति लेखक होइनन्।",
+  or: "ମାଟି, ଜଳ ଓ ଫସଲ ଯତ୍ନ ଉପରେ ସାତଟି ବ୍ୟବହାରିକ ଲେଖା। ଫଟୋଗୁଡ଼ିକ ପ୍ରକୃତ ଚାଷୀଙ୍କର; ଫଟୋରେ ଥିବା ବ୍ୟକ୍ତିମାନେ ଲେଖକ ନୁହନ୍ତି।",
+  as: "মাটি, পানী আৰু শস্যৰ যত্নৰ বিষয়ে সাতটা ব্যৱহাৰিক লেখা। ফটোবোৰ বাস্তৱ কৃষকৰ; ফটোত দেখা লোকসকল লেখক নহয়।",
+  es: "Siete notas prácticas sobre suelo, agua y cultivos. Fotografías reales de agricultores; las personas retratadas no son los autores."
 };
 const JOURNAL_TITLES = {
-  en: ["Read the soil before the next crop", "Give water to the roots, not the calendar", "Scout first. Treat with care."],
-  hi: ["अगली फसल से पहले मिट्टी को समझें", "तारीख नहीं, जड़ों की ज़रूरत देखकर पानी दें", "पहले निरीक्षण करें, फिर सावधानी से उपचार करें"],
-  pa: ["ਅਗਲੀ ਫ਼ਸਲ ਤੋਂ ਪਹਿਲਾਂ ਮਿੱਟੀ ਨੂੰ ਸਮਝੋ", "ਤਾਰੀਖ ਨਹੀਂ, ਜੜ੍ਹਾਂ ਦੀ ਲੋੜ ਦੇਖ ਕੇ ਪਾਣੀ ਦਿਓ", "ਪਹਿਲਾਂ ਜਾਂਚੋ, ਫਿਰ ਸੋਚ-ਸਮਝ ਕੇ ਇਲਾਜ ਕਰੋ"],
-  bn: ["পরের ফসলের আগে মাটি বুঝুন", "ক্যালেন্ডার নয়, শিকড়ের প্রয়োজন বুঝে জল দিন", "আগে খতিয়ে দেখুন, তারপর সাবধানে ব্যবস্থা নিন"],
-  ta: ["அடுத்த பயிருக்கு முன் மண்ணைப் புரிந்துகொள்ளுங்கள்", "நாள்காட்டியை அல்ல, வேர்களின் தேவையைப் பார்த்து நீர் பாய்ச்சுங்கள்", "முதலில் ஆய்வு செய்யுங்கள்; பிறகு கவனமாகச் செயல்படுங்கள்"],
-  te: ["తదుపరి పంటకు ముందు నేలను అర్థం చేసుకోండి", "తేదీని కాదు, వేర్ల అవసరాన్ని బట్టి నీరు పెట్టండి", "ముందుగా పరిశీలించండి; తర్వాత జాగ్రత్తగా చర్య తీసుకోండి"],
-  mr: ["पुढील पिकाआधी माती समजून घ्या", "तारखेपेक्षा मुळांची गरज पाहून पाणी द्या", "आधी निरीक्षण करा; मग काळजीपूर्वक उपाय करा"],
-  gu: ["આગળના પાક પહેલાં માટીને સમજો", "તારીખ નહીં, મૂળની જરૂરિયાત જોઈને પાણી આપો", "પહેલાં નિરીક્ષણ કરો, પછી કાળજીથી પગલું લો"],
-  kn: ["ಮುಂದಿನ ಬೆಳೆಗೆ ಮೊದಲು ಮಣ್ಣನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ", "ದಿನಾಂಕವಲ್ಲ, ಬೇರುಗಳ ಅಗತ್ಯಕ್ಕೆ ತಕ್ಕಂತೆ ನೀರುಣಿಸಿ", "ಮೊದಲು ಪರಿಶೀಲಿಸಿ; ನಂತರ ಎಚ್ಚರಿಕೆಯಿಂದ ಕ್ರಮ ಕೈಗೊಳ್ಳಿ"],
-  ml: ["അടുത്ത വിളയ്ക്ക് മുമ്പ് മണ്ണിനെ മനസ്സിലാക്കൂ", "തീയതിയല്ല, വേരുകളുടെ ആവശ്യം നോക്കി നനയ്ക്കൂ", "ആദ്യം നിരീക്ഷിക്കൂ; പിന്നെ ശ്രദ്ധയോടെ നടപടി എടുക്കൂ"],
-  ur: ["اگلی فصل سے پہلے مٹی کو سمجھیں", "تاریخ نہیں، جڑوں کی ضرورت دیکھ کر پانی دیں", "پہلے معائنہ کریں، پھر احتیاط سے قدم اٹھائیں"],
-  ne: ["अर्को बालीअघि माटो बुझ्नुहोस्", "मिति होइन, जराको आवश्यकताअनुसार पानी दिनुहोस्", "पहिले निरीक्षण गर्नुहोस्, त्यसपछि सावधानीपूर्वक कदम चाल्नुहोस्"],
-  or: ["ପରବର୍ତ୍ତୀ ଫସଲ ପୂର୍ବରୁ ମାଟିକୁ ବୁଝନ୍ତୁ", "ତାରିଖ ନୁହେଁ, ମୂଳର ଆବଶ୍ୟକତା ଦେଖି ପାଣି ଦିଅନ୍ତୁ", "ପ୍ରଥମେ ଯାଞ୍ଚ କରନ୍ତୁ, ପରେ ସାବଧାନତାର ସହ ପଦକ୍ଷେପ ନିଅନ୍ତୁ"],
-  as: ["পৰৱৰ্তী শস্যৰ আগতে মাটি বুজি লওক", "তাৰিখ নহয়, শিপাৰ প্ৰয়োজন চাই পানী দিয়ক", "আগতে পৰীক্ষা কৰক, তাৰ পিছত সাৱধানে ব্যৱস্থা লওক"],
-  es: ["Conoce el suelo antes del próximo cultivo", "Riega según las raíces, no según el calendario", "Observa primero. Actúa con cuidado."]
+  en: ["Read the soil before the next crop", "Give water to the roots, not the calendar", "Scout first. Treat with care.", "Rotate crops with a plan", "Keep soil covered between seasons", "Use fertilizer in measured doses", "Dry and store harvests carefully"],
+  hi: ["अगली फसल से पहले मिट्टी को समझें", "तारीख नहीं, जड़ों की ज़रूरत देखकर पानी दें", "पहले निरीक्षण करें, फिर सावधानी से उपचार करें", "योजना के साथ फसल चक्र अपनाएँ", "मौसमों के बीच मिट्टी को ढककर रखें", "उर्वरक सीमित और सही मात्रा में दें", "फसल को अच्छी तरह सुखाकर सुरक्षित रखें"],
+  pa: ["ਅਗਲੀ ਫ਼ਸਲ ਤੋਂ ਪਹਿਲਾਂ ਮਿੱਟੀ ਨੂੰ ਸਮਝੋ", "ਤਾਰੀਖ ਨਹੀਂ, ਜੜ੍ਹਾਂ ਦੀ ਲੋੜ ਦੇਖ ਕੇ ਪਾਣੀ ਦਿਓ", "ਪਹਿਲਾਂ ਜਾਂਚੋ, ਫਿਰ ਸੋਚ-ਸਮਝ ਕੇ ਇਲਾਜ ਕਰੋ", "ਯੋਜਨਾ ਨਾਲ ਫ਼ਸਲਾਂ ਦੀ ਅਦਲਾ-ਬਦਲੀ ਕਰੋ", "ਮੌਸਮਾਂ ਵਿਚਕਾਰ ਮਿੱਟੀ ਨੂੰ ਢੱਕ ਕੇ ਰੱਖੋ", "ਖਾਦ ਦੀ ਮਾਤਰਾ ਮਾਪ ਕੇ ਵਰਤੋ", "ਕਟਾਈ ਤੋਂ ਬਾਅਦ ਫ਼ਸਲ ਨੂੰ ਸੁਕਾ ਕੇ ਸੰਭਾਲੋ"],
+  bn: ["পরের ফসলের আগে মাটি বুঝুন", "ক্যালেন্ডার নয়, শিকড়ের প্রয়োজন বুঝে জল দিন", "আগে খতিয়ে দেখুন, তারপর সাবধানে ব্যবস্থা নিন", "পরিকল্পনা করে ফসল পর্যায়ক্রমে চাষ করুন", "মরসুমের মাঝে মাটি ঢেকে রাখুন", "পরিমিত মাত্রায় সার ব্যবহার করুন", "ফসল ভালোভাবে শুকিয়ে সংরক্ষণ করুন"],
+  ta: ["அடுத்த பயிருக்கு முன் மண்ணைப் புரிந்துகொள்ளுங்கள்", "நாள்காட்டியை அல்ல, வேர்களின் தேவையைப் பார்த்து நீர் பாய்ச்சுங்கள்", "முதலில் ஆய்வு செய்யுங்கள்; பிறகு கவனமாகச் செயல்படுங்கள்", "திட்டமிட்டு பயிர் சுழற்சியைப் பின்பற்றுங்கள்", "பருவங்களுக்கு இடையில் மண்ணை மூடி வையுங்கள்", "அளவான உரத்தைப் பயன்படுத்துங்கள்", "அறுவடையை நன்றாக உலர்த்திப் பாதுகாக்குங்கள்"],
+  te: ["తదుపరి పంటకు ముందు నేలను అర్థం చేసుకోండి", "తేదీని కాదు, వేర్ల అవసరాన్ని బట్టి నీరు పెట్టండి", "ముందుగా పరిశీలించండి; తర్వాత జాగ్రత్తగా చర్య తీసుకోండి", "ప్రణాళికతో పంట మార్పిడి చేయండి", "సీజన్ల మధ్య నేలను కప్పి ఉంచండి", "ఎరువును కొలిచిన మోతాదులో వాడండి", "పంటను బాగా ఎండబెట్టి జాగ్రత్తగా నిల్వ చేయండి"],
+  mr: ["पुढील पिकाआधी माती समजून घ्या", "तारखेपेक्षा मुळांची गरज पाहून पाणी द्या", "आधी निरीक्षण करा; मग काळजीपूर्वक उपाय करा", "नियोजनपूर्वक पीक फेरपालट करा", "हंगामांदरम्यान माती आच्छादित ठेवा", "खताचे प्रमाण मोजून वापरा", "काढणी चांगली वाळवून सुरक्षित साठवा"],
+  gu: ["આગળના પાક પહેલાં માટીને સમજો", "તારીખ નહીં, મૂળની જરૂરિયાત જોઈને પાણી આપો", "પહેલાં નિરીક્ષણ કરો, પછી કાળજીથી પગલું લો", "આયોજનપૂર્વક પાક ફેરબદલી કરો", "ઋતુઓ વચ્ચે જમીન ઢાંકેલી રાખો", "ખાતર માપેલી માત્રામાં વાપરો", "લણણીને સારી રીતે સૂકવીને સાચવો"],
+  kn: ["ಮುಂದಿನ ಬೆಳೆಗೆ ಮೊದಲು ಮಣ್ಣನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ", "ದಿನಾಂಕವಲ್ಲ, ಬೇರುಗಳ ಅಗತ್ಯಕ್ಕೆ ತಕ್ಕಂತೆ ನೀರುಣಿಸಿ", "ಮೊದಲು ಪರಿಶೀಲಿಸಿ; ನಂತರ ಎಚ್ಚರಿಕೆಯಿಂದ ಕ್ರಮ ಕೈಗೊಳ್ಳಿ", "ಯೋಜನೆಯೊಂದಿಗೆ ಬೆಳೆ ಪರಿವರ್ತನೆ ಮಾಡಿ", "ಋತುಗಳ ನಡುವೆ ಮಣ್ಣನ್ನು ಮುಚ್ಚಿರಿಸಿ", "ಗೊಬ್ಬರವನ್ನು ಅಳತೆಯ ಪ್ರಮಾಣದಲ್ಲಿ ಬಳಸಿ", "ಕೊಯ್ಲನ್ನು ಚೆನ್ನಾಗಿ ಒಣಗಿಸಿ ಸುರಕ್ಷಿತವಾಗಿ ಸಂಗ್ರಹಿಸಿ"],
+  ml: ["അടുത്ത വിളയ്ക്ക് മുമ്പ് മണ്ണിനെ മനസ്സിലാക്കൂ", "തീയതിയല്ല, വേരുകളുടെ ആവശ്യം നോക്കി നനയ്ക്കൂ", "ആദ്യം നിരീക്ഷിക്കൂ; പിന്നെ ശ്രദ്ധയോടെ നടപടി എടുക്കൂ", "പദ്ധതിയോടെ വിളപരിവർത്തനം നടത്തൂ", "സീസണുകൾക്കിടയിൽ മണ്ണ് മൂടി സൂക്ഷിക്കൂ", "അളന്ന തോതിൽ വളം ഉപയോഗിക്കൂ", "വിളവ് നന്നായി ഉണക്കി സൂക്ഷിക്കൂ"],
+  ur: ["اگلی فصل سے پہلے مٹی کو سمجھیں", "تاریخ نہیں، جڑوں کی ضرورت دیکھ کر پانی دیں", "پہلے معائنہ کریں، پھر احتیاط سے قدم اٹھائیں", "منصوبہ بندی کے ساتھ فصلیں تبدیل کریں", "موسموں کے درمیان مٹی ڈھانپ کر رکھیں", "کھاد نپی تلی مقدار میں استعمال کریں", "فصل کو اچھی طرح خشک کرکے محفوظ رکھیں"],
+  ne: ["अर्को बालीअघि माटो बुझ्नुहोस्", "मिति होइन, जराको आवश्यकताअनुसार पानी दिनुहोस्", "पहिले निरीक्षण गर्नुहोस्, त्यसपछि सावधानीपूर्वक कदम चाल्नुहोस्", "योजनासहित बाली चक्र अपनाउनुहोस्", "मौसमबीच माटोलाई ढाकेर राख्नुहोस्", "मलखाद नापेर प्रयोग गर्नुहोस्", "बाली राम्ररी सुकाएर सुरक्षित राख्नुहोस्"],
+  or: ["ପରବର୍ତ୍ତୀ ଫସଲ ପୂର୍ବରୁ ମାଟିକୁ ବୁଝନ୍ତୁ", "ତାରିଖ ନୁହେଁ, ମୂଳର ଆବଶ୍ୟକତା ଦେଖି ପାଣି ଦିଅନ୍ତୁ", "ପ୍ରଥମେ ଯାଞ୍ଚ କରନ୍ତୁ, ପରେ ସାବଧାନତାର ସହ ପଦକ୍ଷେପ ନିଅନ୍ତୁ", "ଯୋଜନା ସହ ଫସଲ ପରିବର୍ତ୍ତନ କରନ୍ତୁ", "ଋତୁ ମଧ୍ୟରେ ମାଟିକୁ ଢାଙ୍କି ରଖନ୍ତୁ", "ମାପିଚୁପି ସାର ବ୍ୟବହାର କରନ୍ତୁ", "ଅମଳକୁ ଭଲଭାବେ ଶୁଖାଇ ସୁରକ୍ଷିତ ରଖନ୍ତୁ"],
+  as: ["পৰৱৰ্তী শস্যৰ আগতে মাটি বুজি লওক", "তাৰিখ নহয়, শিপাৰ প্ৰয়োজন চাই পানী দিয়ক", "আগতে পৰীক্ষা কৰক, তাৰ পিছত সাৱধানে ব্যৱস্থা লওক", "পৰিকল্পনাৰে শস্য পৰিৱৰ্তন কৰক", "ঋতুৰ মাজত মাটি ঢাকি ৰাখক", "জোখমতে সাৰ ব্যৱহাৰ কৰক", "শস্য ভালদৰে শুকুৱাই সুৰক্ষিতভাৱে ৰাখক"],
+  es: ["Conoce el suelo antes del próximo cultivo", "Riega según las raíces, no según el calendario", "Observa primero. Actúa con cuidado.", "Rota los cultivos con un plan", "Mantén el suelo cubierto entre temporadas", "Usa fertilizante en dosis medidas", "Seca y almacena la cosecha con cuidado"]
+};
+const JOURNAL_EXTRA_COPY = {
+  en: [
+    "Where local conditions allow, rotating crop families may help reduce repeated pest pressure and balance nutrient demand.",
+    "Use suitable crop residue or cover crops to protect bare soil; avoid burning residues.",
+    "Set fertilizer amounts from a soil test and local crop advice; avoid large, unmeasured doses.",
+    "Dry harvested grain well and store it in clean containers protected from damp and pests."
+  ],
+  hi: [
+    "स्थानीय परिस्थितियों के अनुसार फसल परिवार बदलने से बार-बार होने वाले कीट दबाव को कम करने और पोषक तत्वों की मांग संतुलित करने में मदद मिल सकती है।",
+    "खाली मिट्टी की रक्षा के लिए उपयुक्त फसल अवशेष या आवरण फसल रखें; अवशेष न जलाएँ।",
+    "मिट्टी परीक्षण और स्थानीय फसल सलाह से उर्वरक की मात्रा तय करें; बिना माप के अधिक मात्रा न डालें।",
+    "काटे हुए अनाज को अच्छी तरह सुखाएँ और साफ, नमी व कीटों से सुरक्षित जगह पर रखें।"
+  ],
+  pa: [
+    "ਸਥਾਨਕ ਹਾਲਾਤਾਂ ਅਨੁਸਾਰ ਫ਼ਸਲ ਪਰਿਵਾਰ ਬਦਲਣ ਨਾਲ ਕੀੜਿਆਂ ਦਾ ਵਾਰ-ਵਾਰ ਦਬਾਅ ਘਟਾਉਣ ਅਤੇ ਪੌਸ਼ਟਿਕ ਤੱਤਾਂ ਦੀ ਮੰਗ ਸੰਤੁਲਿਤ ਕਰਨ ਵਿੱਚ ਮਦਦ ਮਿਲ ਸਕਦੀ ਹੈ।",
+    "ਨੰਗੀ ਮਿੱਟੀ ਦੀ ਰੱਖਿਆ ਲਈ ਢੁਕਵੇਂ ਫ਼ਸਲੀ ਅਵਸ਼ੇਸ਼ ਜਾਂ ਢੱਕਣ ਵਾਲੀ ਫ਼ਸਲ ਵਰਤੋ; ਅਵਸ਼ੇਸ਼ ਨਾ ਸਾੜੋ।",
+    "ਮਿੱਟੀ ਦੀ ਜਾਂਚ ਅਤੇ ਸਥਾਨਕ ਫ਼ਸਲ ਸਲਾਹ ਮੁਤਾਬਕ ਖਾਦ ਦੀ ਮਾਤਰਾ ਤੈਅ ਕਰੋ; ਬਿਨਾਂ ਮਾਪੇ ਵੱਡੀ ਮਾਤਰਾ ਨਾ ਪਾਓ।",
+    "ਕਟੇ ਹੋਏ ਅਨਾਜ ਨੂੰ ਚੰਗੀ ਤਰ੍ਹਾਂ ਸੁਕਾਓ ਅਤੇ ਸਾਫ਼, ਨਮੀ ਤੇ ਕੀੜਿਆਂ ਤੋਂ ਸੁਰੱਖਿਅਤ ਥਾਂ ਰੱਖੋ।"
+  ],
+  bn: [
+    "স্থানীয় পরিস্থিতি অনুযায়ী ফসলের পরিবার বদলালে একই পোকামাকড়ের চাপ কমতে এবং পুষ্টির চাহিদা ভারসাম্য রাখতে পারে।",
+    "খালি মাটি রক্ষায় উপযুক্ত ফসলের অবশিষ্টাংশ বা আচ্ছাদন ফসল ব্যবহার করুন; অবশিষ্টাংশ পোড়াবেন না।",
+    "মাটি পরীক্ষা ও স্থানীয় ফসল পরামর্শ অনুযায়ী সারের পরিমাণ ঠিক করুন; আন্দাজে বেশি সার দেবেন না।",
+    "কাটা শস্য ভালোভাবে শুকিয়ে পরিষ্কার, আর্দ্রতা ও পোকামাকড় থেকে সুরক্ষিত স্থানে রাখুন।"
+  ],
+  ta: [
+    "உள்ளூர் சூழலுக்கு ஏற்றபடி பயிர்க் குடும்பங்களை மாற்றுவது, ஒரே பூச்சிகளின் தொடர்ச்சியான தாக்கத்தைக் குறைத்து ஊட்டச்சத்து தேவையைச் சமப்படுத்த உதவலாம்।",
+    "வெற்று மண்ணைப் பாதுகாக்க பொருத்தமான பயிர் எச்சம் அல்லது மூடுபயிரைப் பயன்படுத்துங்கள்; எச்சங்களை எரிக்க வேண்டாம்।",
+    "மண் பரிசோதனை மற்றும் உள்ளூர் பயிர் ஆலோசனையின் அடிப்படையில் உர அளவைத் தீர்மானியுங்கள்; அளவிடாத அதிக உரத்தைத் தவிர்க்கவும்।",
+    "அறுவடை செய்த தானியத்தை நன்றாக உலர்த்தி, ஈரப்பதம் மற்றும் பூச்சிகளிலிருந்து பாதுகாக்கப்பட்ட சுத்தமான இடத்தில் வையுங்கள்।"
+  ],
+  te: [
+    "స్థానిక పరిస్థితులు అనుకూలించినప్పుడు పంట కుటుంబాలను మార్చడం వల్ల ఒకే రకం పురుగుల ఒత్తిడి తగ్గి, పోషకాల అవసరం సమతుల్యం కావచ్చు.",
+    "బయటపడిన నేలను కాపాడటానికి తగిన పంట అవశేషాలు లేదా కవర్ పంటలు వాడండి; అవశేషాలను కాల్చవద్దు.",
+    "నేల పరీక్ష, స్థానిక పంట సలహా ఆధారంగా ఎరువు మోతాదును నిర్ణయించండి; కొలతలేని అధిక మోతాదులను నివారించండి.",
+    "కోత చేసిన ధాన్యాన్ని బాగా ఎండబెట్టి, తేమ మరియు పురుగుల నుంచి రక్షించిన శుభ్రమైన చోట నిల్వ చేయండి."
+  ],
+  mr: [
+    "स्थानिक परिस्थितीनुसार पिकांची कुटुंबे बदलल्यास वारंवार होणारा कीडप्रादुर्भाव कमी होण्यास आणि अन्नद्रव्यांची मागणी संतुलित राहण्यास मदत होऊ शकते.",
+    "उघडी माती झाकण्यासाठी योग्य पीक-अवशेष किंवा आच्छादन पीक वापरा; अवशेष जाळू नका.",
+    "माती परीक्षण आणि स्थानिक पीक सल्ल्यानुसार खताचे प्रमाण ठरवा; अंदाजाने जास्त खत देऊ नका.",
+    "काढलेले धान्य चांगले वाळवा आणि ओलावा व किडींपासून सुरक्षित, स्वच्छ ठिकाणी साठवा."
+  ],
+  gu: [
+    "સ્થાનિક પરિસ્થિતિ અનુકૂળ હોય ત્યારે પાકના કુળો બદલવાથી વારંવાર થતું જીવાતનું દબાણ ઘટે અને પોષક તત્ત્વોની માંગ સંતુલિત રહેવામાં મદદ મળી શકે છે.",
+    "ખુલ્લી જમીનને બચાવવા યોગ્ય પાકના અવશેષો અથવા આવરણ પાક વાપરો; અવશેષો બાળશો નહીં.",
+    "માટી પરીક્ષણ અને સ્થાનિક પાક સલાહ પરથી ખાતરનું પ્રમાણ નક્કી કરો; માપ્યા વગર વધારે ખાતર ન નાખો.",
+    "કાપેલા અનાજને સારી રીતે સૂકવીને ભેજ અને જીવાતથી સુરક્ષિત, સ્વચ્છ જગ્યાએ રાખો."
+  ],
+  kn: [
+    "ಸ್ಥಳೀಯ ಪರಿಸ್ಥಿತಿಗೆ ಅನುಗುಣವಾಗಿ ಬೆಳೆ ಕುಟುಂಬಗಳನ್ನು ಬದಲಿಸುವುದರಿಂದ ಮರುಕಳಿಸುವ ಕೀಟದ ಒತ್ತಡ ಕಡಿಮೆಯಾಗಲು ಮತ್ತು ಪೋಷಕಾಂಶದ ಬೇಡಿಕೆ ಸಮತೋಲನಗೊಳ್ಳಲು ಸಹಾಯವಾಗಬಹುದು.",
+    "ಬಯಲಾದ ಮಣ್ಣನ್ನು ರಕ್ಷಿಸಲು ಸೂಕ್ತ ಬೆಳೆ ಅವಶೇಷ ಅಥವಾ ಹೊದಿಕೆ ಬೆಳೆ ಬಳಸಿ; ಅವಶೇಷಗಳನ್ನು ಸುಡಬೇಡಿ.",
+    "ಮಣ್ಣಿನ ಪರೀಕ್ಷೆ ಮತ್ತು ಸ್ಥಳೀಯ ಬೆಳೆ ಸಲಹೆಯ ಆಧಾರದಲ್ಲಿ ಗೊಬ್ಬರದ ಪ್ರಮಾಣ ನಿಗದಿಪಡಿಸಿ; ಅಳತೆಯಿಲ್ಲದೆ ಹೆಚ್ಚು ಹಾಕಬೇಡಿ.",
+    "ಕೊಯ್ಲಿನ ಧಾನ್ಯವನ್ನು ಚೆನ್ನಾಗಿ ಒಣಗಿಸಿ, ತೇವ ಮತ್ತು ಕೀಟಗಳಿಂದ ರಕ್ಷಿಸಿದ ಸ್ವಚ್ಛ ಸ್ಥಳದಲ್ಲಿ ಸಂಗ್ರಹಿಸಿ."
+  ],
+  ml: [
+    "പ്രാദേശിക സാഹചര്യങ്ങൾ അനുവദിക്കുമ്പോൾ വിളകുടുംബങ്ങൾ മാറി കൃഷി ചെയ്യുന്നത് ആവർത്തിച്ചുള്ള കീടസമ്മർദ്ദം കുറയ്ക്കാനും പോഷകാവശ്യം തുല്യമാക്കാനും സഹായിക്കാം.",
+    "തുറന്ന മണ്ണ് സംരക്ഷിക്കാൻ അനുയോജ്യമായ വിളാവശിഷ്ടങ്ങളോ മൂടുവിളകളോ ഉപയോഗിക്കുക; അവശിഷ്ടങ്ങൾ കത്തിക്കരുത്.",
+    "മണ്ണുപരിശോധനയുടെയും പ്രാദേശിക വിളനിർദേശത്തിന്റെയും അടിസ്ഥാനത്തിൽ വളത്തിന്റെ അളവ് നിശ്ചയിക്കുക; അളവില്ലാതെ അധികം ചേർക്കരുത്.",
+    "വിളവെടുത്ത ധാന്യം നന്നായി ഉണക്കി ഈർപ്പവും കീടങ്ങളും തടയുന്ന വൃത്തിയുള്ള സ്ഥലത്ത് സൂക്ഷിക്കുക."
+  ],
+  ur: [
+    "مقامی حالات کے مطابق فصلوں کے خاندان بدلنے سے ایک جیسے کیڑوں کا بار بار دباؤ کم اور غذائی اجزا کی طلب متوازن ہو سکتی ہے۔",
+    "ننگی مٹی کو بچانے کے لیے مناسب فصل کی باقیات یا کور کراپ استعمال کریں؛ باقیات نہ جلائیں۔",
+    "مٹی کے ٹیسٹ اور مقامی فصل کے مشورے سے کھاد کی مقدار طے کریں؛ بغیر ناپے زیادہ مقدار نہ ڈالیں۔",
+    "کٹے ہوئے اناج کو اچھی طرح خشک کریں اور نمی و کیڑوں سے محفوظ صاف جگہ پر رکھیں۔"
+  ],
+  ne: [
+    "स्थानीय अवस्था मिल्दा बाली परिवार फेर्दा एउटै कीराको बारम्बारको दबाब घटाउन र पोषक तत्त्वको माग सन्तुलित गर्न मद्दत हुन सक्छ।",
+    "खाली माटो जोगाउन उपयुक्त बाली अवशेष वा ढाक्ने बाली प्रयोग गर्नुहोस्; अवशेष नजलाउनुहोस्।",
+    "माटो परीक्षण र स्थानीय बाली सल्लाहअनुसार मलको मात्रा तय गर्नुहोस्; ननापी धेरै मल नहाल्नुहोस्।",
+    "कटेको अन्न राम्ररी सुकाएर ओस र कीराबाट सुरक्षित सफा ठाउँमा राख्नुहोस्।"
+  ],
+  or: [
+    "ସ୍ଥାନୀୟ ପରିସ୍ଥିତି ଅନୁକୂଳ ହେଲେ ଫସଲ ପରିବାର ବଦଳାଇବା ଦ୍ୱାରା ସମାନ କୀଟର ପୁନରାବୃତ୍ତି ଚାପ କମିବା ଓ ପୋଷକ ଚାହିଦା ସନ୍ତୁଳିତ ହେବାରେ ସାହାଯ୍ୟ ମିଳିପାରେ।",
+    "ଖୋଲା ମାଟିକୁ ସୁରକ୍ଷା ପାଇଁ ଉପଯୁକ୍ତ ଫସଲ ଅବଶେଷ କିମ୍ବା ଆବରଣ ଫସଲ ବ୍ୟବହାର କରନ୍ତୁ; ଅବଶେଷ ଜାଳନ୍ତୁ ନାହିଁ।",
+    "ମାଟି ପରୀକ୍ଷା ଓ ସ୍ଥାନୀୟ ଫସଲ ପରାମର୍ଶ ଅନୁସାରେ ସାରର ପରିମାଣ ଧାର୍ଯ୍ୟ କରନ୍ତୁ; ଅନୁମାନରେ ଅଧିକ ଦିଅନ୍ତୁ ନାହିଁ।",
+    "ଅମଳ ହୋଇଥିବା ଶସ୍ୟକୁ ଭଲଭାବେ ଶୁଖାଇ ଆର୍ଦ୍ରତା ଓ କୀଟରୁ ସୁରକ୍ଷିତ ସଫା ସ୍ଥାନରେ ରଖନ୍ତୁ।"
+  ],
+  as: [
+    "স্থানীয় পৰিস্থিতিৰ সৈতে মিলাই শস্যৰ পৰিয়াল সলনি কৰিলে একে কীটৰ পুনৰাবৃত্তি চাপ কমাবলৈ আৰু পুষ্টিৰ চাহিদা সাম্যত ৰাখিবলৈ সহায় হ’ব পাৰে।",
+    "উন্মুক্ত মাটি সুৰক্ষিত কৰিবলৈ উপযুক্ত শস্যৰ অৱশিষ্ট বা আৱৰণ শস্য ব্যৱহাৰ কৰক; অৱশিষ্ট নজ্বলাব।",
+    "মাটিৰ পৰীক্ষা আৰু স্থানীয় শস্য পৰামৰ্শ অনুসৰি সাৰৰ পৰিমাণ নিৰ্ধাৰণ কৰক; অনুমান কৰি বেছি নিদিব।",
+    "চপোৱা শস্য ভালদৰে শুকুৱাই আৰ্দ্ৰতা আৰু কীটৰ পৰা সুৰক্ষিত পৰিষ্কাৰ ঠাইত ৰাখক।"
+  ],
+  es: [
+    "Cuando las condiciones locales lo permitan, alternar familias de cultivos puede reducir la presión repetida de plagas y equilibrar la demanda de nutrientes.",
+    "Protege el suelo desnudo con residuos vegetales adecuados o cultivos de cobertura; evita quemar los residuos.",
+    "Ajusta el fertilizante según un análisis del suelo y el asesoramiento local; evita dosis grandes sin medir.",
+    "Seca bien el grano cosechado y guárdalo en recipientes limpios, protegido de la humedad y las plagas."
+  ]
 };
 const FIELD_BOOK_HEADLINES = {
   en: "A season is made of small decisions.",
@@ -1289,6 +1403,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const [busy, setBusy] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
   const [heroVideoIndex, setHeroVideoIndex] = useState(0);
+  const [heroModuleIndex, setHeroModuleIndex] = useState(0);
   const [error, setError] = useState("");
   const [captchaConfig, setCaptchaConfig] = useState({ loading: true, required: true, siteKey: "", error: "" });
   const [captchaToken, setCaptchaToken] = useState("");
@@ -1529,6 +1644,11 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
   const reviewCopy = LANDING_REVIEW_COPY[language] || LANDING_REVIEW_COPY.en;
   const blogLabel = BLOG_LABELS[language] || BLOG_LABELS.en;
   const journalTitles = JOURNAL_TITLES[language] || JOURNAL_TITLES.en;
+  const publishedReviews = communityPosts.filter((post) => post.kind === "review");
+  const showingSampleReviews = !communityLoading && publishedReviews.length === 0;
+  const displayedReviews = publishedReviews.length
+    ? publishedReviews
+    : communityLoading ? [] : SAMPLE_REVIEWS.map((review) => ({ ...review, sample: true }));
   const aboutPanels = [
     {
       title: text(language, "soilAnalysis"),
@@ -1546,11 +1666,18 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
       image: "https://images.unsplash.com/photo-1577109559107-8f94d2c68b7d?auto=format&fit=crop&w=1600&q=82"
     }
   ];
+  const heroModules = [
+    { title: text(language, "soilAnalysis"), icon: FlaskConical, description: aboutPanels[0].description },
+    { title: text(language, "diseaseDetection"), icon: Leaf, description: aboutPanels[1].description },
+    { title: text(language, "cropPlanner"), icon: CalendarDays, description: aboutPanels[2].description }
+  ];
+  const activeHeroModule = heroModules[heroModuleIndex];
+  const extraJournalCopy = JOURNAL_EXTRA_COPY[language] || JOURNAL_EXTRA_COPY.en;
   const journalArticles = [
     {
       title: journalTitles[0],
       category: localize("Soil"),
-      image: aboutPanels[0].image,
+      image: "https://images.unsplash.com/photo-1695566372177-e1e53ed814d2?auto=format&fit=crop&w=1200&q=82",
       paragraphs: [
         localize("Upload a soil photo and add your crop and field details to get farm-specific guidance."),
         localize("Use a soil test and local agricultural advice for exact nutrient or pH corrections.")
@@ -1559,7 +1686,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     {
       title: journalTitles[1],
       category: localize("Irrigation"),
-      image: aboutPanels[2].image,
+      image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82",
       paragraphs: [
         localize("Keep water moderate for loamy soil, give shorter gaps for sandy soil, and avoid standing water in clay soil."),
         localize("Use the forecast with a field check before changing irrigation or spraying plans.")
@@ -1568,11 +1695,35 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     {
       title: journalTitles[2],
       category: text(language, "cropPlanner"),
-      image: aboutPanels[1].image,
+      image: "https://images.unsplash.com/photo-1709207514198-45eb2443a566?auto=format&fit=crop&w=1200&q=82",
       paragraphs: [
         localize("Control weeds early, apply fertilizer in split doses, and watch for pest or leaf colour changes."),
         localize("Use mandi prices and water availability before deciding how much area to plant.")
       ]
+    },
+    {
+      title: journalTitles[3],
+      category: text(language, "cropPlanner"),
+      image: "https://images.unsplash.com/photo-1627475320102-d73fcb4eb427?auto=format&fit=crop&w=1200&q=82",
+      paragraphs: [extraJournalCopy[0]]
+    },
+    {
+      title: journalTitles[4],
+      category: text(language, "soilAnalysis"),
+      image: "https://images.unsplash.com/photo-1709207514212-2df60d198d4b?auto=format&fit=crop&w=1200&q=82",
+      paragraphs: [extraJournalCopy[1]]
+    },
+    {
+      title: journalTitles[5],
+      category: text(language, "soilAnalysis"),
+      image: "https://images.unsplash.com/photo-1761634373241-5abcfcaa0c39?auto=format&fit=crop&w=1200&q=82",
+      paragraphs: [extraJournalCopy[2]]
+    },
+    {
+      title: journalTitles[6],
+      category: text(language, "market"),
+      image: "https://images.unsplash.com/photo-1525383033081-6088a7a5affa?auto=format&fit=crop&w=1200&q=82",
+      paragraphs: [extraJournalCopy[3]]
     }
   ];
 
@@ -1765,6 +1916,42 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             </a>
           </div>
         </div>
+        <aside className="landing-field-console" aria-label={text(language, "farmTools")}>
+          <div className="landing-console-heading">
+            <span><i aria-hidden="true" />{text(language, "farmTools")}</span>
+            <span className="landing-console-index">0{heroModuleIndex + 1} / 03</span>
+          </div>
+          <div className="landing-console-visual" aria-hidden="true">
+            <div className="landing-console-crosshair landing-console-crosshair-a" />
+            <div className="landing-console-crosshair landing-console-crosshair-b" />
+            <div className="landing-console-orbit landing-console-orbit-outer" />
+            <div className="landing-console-orbit landing-console-orbit-inner" />
+            <div className="landing-console-scanline" />
+            <div className="landing-console-symbol"><activeHeroModule.icon size={34} strokeWidth={1.4} /></div>
+            <span className="landing-console-coordinate">FIELD / {String(heroModuleIndex + 1).padStart(2, "0")}</span>
+            <span className="landing-console-caption">{activeHeroModule.title}</span>
+          </div>
+          <div className="landing-console-detail" aria-live="polite">
+            <span>0{heroModuleIndex + 1} — 03</span>
+            <h2>{activeHeroModule.title}</h2>
+            <p>{activeHeroModule.description}</p>
+          </div>
+          <div className="landing-console-tabs" role="group" aria-label={text(language, "farmTools")}>
+            {heroModules.map((module, index) => (
+              <button
+                key={module.title}
+                type="button"
+                aria-pressed={heroModuleIndex === index}
+                aria-label={module.title}
+                title={module.title}
+                onClick={() => setHeroModuleIndex(index)}
+              >
+                <module.icon size={17} strokeWidth={1.8} />
+              </button>
+            ))}
+            <a href="#login-panel" aria-label={text(language, "login")} title={text(language, "login")}><ChevronRight size={18} /></a>
+          </div>
+        </aside>
         <div className="auth-metrics">
           <span className="auth-metric-card">
             <span className="auth-metric-icon"><FlaskConical size={18} /></span>
@@ -2036,21 +2223,21 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <h2 id="landing-reviews-title">{reviewCopy[0]}</h2>
           </div>
           <div className="landing-reviews-aside">
-            <p>{communityText(language, 11)}</p>
+            <p>{showingSampleReviews ? reviewCopy[1] : communityText(language, 11)}</p>
             <button className="landing-community-write" type="button" onClick={() => openCommunityForm("review")}>{communityText(language, 0)} <ChevronRight size={16} /></button>
           </div>
         </div>
         {communityLoading ? <p className="landing-community-status" role="status">{communityText(language, 12)}</p> : null}
         <div className="landing-review-grid">
-          {communityPosts.filter((post) => post.kind === "review").map((post, index) => (
-            <article className="landing-review" key={post.id} style={{ "--story-order": index }}>
+          {displayedReviews.map((post, index) => (
+            <article className={`landing-review${post.sample ? " landing-review-sample" : ""}`} key={post.id} style={{ "--story-order": index }}>
               <span className="landing-review-index">{String(index + 1).padStart(2, "0")}</span>
               <span className="landing-review-rating" aria-label={`${post.rating} out of 5 stars`}>{post.rating} / 5</span>
-              <blockquote>{post.body}</blockquote>
-              <footer><strong>{post.authorName}</strong><time dateTime={post.createdAt}>{formatDate(post.createdAt)}</time></footer>
+              <blockquote lang={post.sample ? "en" : undefined}>{post.body}</blockquote>
+              <footer lang={post.sample ? "en" : undefined}><strong>{post.authorName}</strong>{post.createdAt && <time dateTime={post.createdAt}>{formatDate(post.createdAt)}</time>}</footer>
             </article>
           ))}
-          {!communityLoading && !communityPosts.some((post) => post.kind === "review") && (
+          {!communityLoading && !displayedReviews.length && (
             <p className="landing-community-status">{communityText(language, 13)}</p>
           )}
         </div>
@@ -2087,7 +2274,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
             <details className="landing-journal-entry" key={`${language}-${article.title}`} style={{ "--story-order": index }}>
               <summary>
                 <span className="landing-journal-image">
-                  <img src={article.image} alt="" loading="lazy" />
+                  <img src={article.image} alt={article.title} loading="lazy" />
                   <span className="landing-journal-number">0{index + 1}</span>
                 </span>
                 <span className="landing-journal-meta">
