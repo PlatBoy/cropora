@@ -1508,7 +1508,8 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
     let currentProgress = 0;
     let initialized = false;
     const paint = (progress) => {
-      const travel = Math.max(track.scrollWidth - section.clientWidth, 0);
+      const stageWidth = track.parentElement?.clientWidth || section.clientWidth;
+      const travel = Math.max(track.getBoundingClientRect().width - stageWidth, 0);
       track.style.transform = `translate3d(${-travel * progress}px, 0, 0)`;
       if (aboutProgressRef.current) aboutProgressRef.current.style.transform = `scaleX(${progress})`;
     };
@@ -2266,7 +2267,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
                 <span className="about-eyebrow">{aboutCopy[0]}</span>
                 <h2 id="about-heading">{aboutCopy[1]}</h2>
                 <p>{aboutCopy[2]}</p>
-                <span className="about-index">01 <i /> 04</span>
+                <span className="about-index">01 <i /> 05</span>
               </div>
               <div className="about-image-wrap">
                 <img src={fieldImage} alt={localize("Farm field at sunrise")} loading="lazy" />
@@ -2284,7 +2285,7 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
                   <span className="about-eyebrow">{aboutCopy[0]}</span>
                   <h2 id={`about-panel-${index + 2}-heading`}>{panel.title}</h2>
                   <p>{panel.description}</p>
-                  <span className="about-index">{String(index + 2).padStart(2, "0")} <i /> 04</span>
+                  <span className="about-index">{String(index + 2).padStart(2, "0")} <i /> 05</span>
                   {index === aboutPanels.length - 1 && (
                     <button className="primary-button about-cta" type="button" onClick={startRegistration}>
                       <UserPlus size={17} />
@@ -2299,6 +2300,15 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
                 </div>
               </article>
             ))}
+            <article className="about-panel about-panel-final" aria-labelledby="about-final-heading">
+              <div className="about-sunburst" aria-hidden="true" />
+              <div className="about-copy">
+                <h2 id="about-final-heading">
+                  <span className="about-hindi-tagline" lang="hi">चूज़ सुपीरियॉरिटी</span>
+                  <span lang="en">choose krishisense</span>
+                </h2>
+              </div>
+            </article>
           </div>
           <div className="about-progress" aria-hidden="true">
             <span ref={aboutProgressRef} />

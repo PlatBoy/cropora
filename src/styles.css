@@ -582,7 +582,7 @@ textarea:focus {
 
 .theme-switch-label {
   min-width: 34px;
-  text-align: left;
+  text-align: right;
 }
 
 .lang-switch {
@@ -1665,13 +1665,15 @@ html[dir="rtl"] .lang-switch-menu button {
 .about-scroll {
   grid-column: 1 / -1;
   position: relative;
-  height: calc(400svh - 64px);
+  width: 100vw;
+  height: calc(500svh - 64px);
   background: var(--bg);
 }
 
 .about-stage {
   position: sticky;
   top: 64px;
+  width: 100vw;
   height: calc(100svh - 64px);
   min-height: 560px;
   overflow: hidden;
@@ -1680,15 +1682,15 @@ html[dir="rtl"] .lang-switch-menu button {
 
 .about-track {
   display: flex;
-  width: 400%;
+  width: 500%;
   height: 100%;
   will-change: transform;
 }
 
 .about-panel {
   position: relative;
-  flex: 0 0 25%;
-  width: 25%;
+  flex: 0 0 20%;
+  width: 20%;
   height: 100%;
   min-width: 0;
   display: grid;
@@ -1822,6 +1824,71 @@ html[dir="rtl"] .lang-switch-menu button {
   padding-inline: 18px;
 }
 
+.about-panel-final {
+  --about-tagline-size: clamp(1.25rem, 3vw, 2.2rem);
+  --about-tagline-text-size: clamp(1.15rem, 2.5vw, 1.65rem);
+  --about-tagline-edge: clamp(12px, 1.5vw, 24px);
+  font-size: var(--about-tagline-size);
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  border-top: 0;
+  color: #fff;
+  background: #98121d;
+}
+
+.about-panel-final .about-copy h2 {
+  display: grid;
+  justify-items: center;
+  gap: clamp(6px, 1vw, 14px);
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  color: #fff;
+  font-family: "Satoshi", Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--about-tagline-text-size);
+  font-weight: 700;
+  line-height: 1.02;
+  text-align: center;
+}
+
+.about-panel-final .about-copy h2 span {
+  white-space: nowrap;
+}
+
+.about-panel-final .about-hindi-tagline {
+  font-family: "Noto Sans Devanagari", "Nirmala UI", sans-serif;
+  font-weight: 700;
+}
+
+.about-panel-final .about-copy {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: calc(100% - var(--about-tagline-edge) - 4.5em);
+  right: auto;
+  width: min(52%, 760px);
+  max-width: none;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+}
+
+.about-sunburst {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.about-sunburst::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: repeating-conic-gradient(from 0deg at calc(100% - var(--about-tagline-edge) - 4.5em) 50%, rgba(255, 255, 255, 0.28) 0deg 5deg, transparent 5deg 15deg);
+  mask-image: radial-gradient(circle at calc(100% - var(--about-tagline-edge) - 4.5em) 50%, transparent 0 11%, #000 17% 100%);
+}
+
 .about-progress {
   position: absolute;
   z-index: 2;
@@ -1871,6 +1938,29 @@ html[dir="rtl"] .lang-switch-menu button {
     font-size: 2.25rem;
   }
 
+  .about-panel-final {
+    --about-tagline-size: clamp(1rem, 4vw, 1.65rem);
+    --about-tagline-text-size: clamp(0.82rem, 2.8vw, 1.05rem);
+    --about-tagline-edge: 14px;
+    font-size: var(--about-tagline-size);
+  }
+
+  .about-panel-final .about-copy h2 {
+    font-size: var(--about-tagline-text-size);
+  }
+
+  .about-panel-final .about-copy {
+    left: calc(100% - var(--about-tagline-edge) - 4.5em);
+    right: auto;
+    width: calc(100% - (2 * var(--about-tagline-edge)));
+    transform: translate(-50%, -50%);
+  }
+
+  .about-sunburst::before {
+    background: repeating-conic-gradient(from 0deg at calc(100% - var(--about-tagline-edge) - 4.5em) 50%, rgba(255, 255, 255, 0.28) 0deg 5deg, transparent 5deg 15deg);
+    mask-image: radial-gradient(circle at calc(100% - var(--about-tagline-edge) - 4.5em) 50%, transparent 0 12%, #000 18% 100%);
+  }
+
   .about-copy p {
     font-size: 0.94rem;
     line-height: 1.5;
@@ -1913,6 +2003,20 @@ html[dir="rtl"] .lang-switch-menu button {
 
   .about-copy h2 {
     font-size: 2rem;
+  }
+
+  .about-panel-final {
+    --about-tagline-size: clamp(0.95rem, 4.2vw, 1.25rem);
+    --about-tagline-text-size: clamp(0.75rem, 3vw, 1rem);
+    font-size: var(--about-tagline-size);
+  }
+
+  .about-panel-final .about-copy {
+    right: var(--about-tagline-edge);
+    left: calc(100% - var(--about-tagline-edge) - 4.5em);
+    right: auto;
+    width: calc(100% - (2 * var(--about-tagline-edge)));
+    transform: translate(-50%, -50%);
   }
 
   .about-image-wrap {
@@ -6152,7 +6256,7 @@ td {
   }
 
   .landing-shell .about-scroll {
-    height: calc(400svh - 64px);
+    height: calc(500svh - 64px);
   }
 }
 
