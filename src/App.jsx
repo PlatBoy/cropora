@@ -731,6 +731,10 @@ const JOURNAL_ADDITIONS = {
     { title: "Aprovecha durante más tiempo la primera lluvia", body: "Antes del monzón, limpia los desagües y repara los caballones rotos para que el agua no se estanque junto a las raíces. En pendientes adecuadas, las salidas seguras pueden frenar la escorrentía; elige las estructuras con asesoramiento local sobre suelo y agua y mantén libres los desagües.", category: "Agua", image: "https://images.unsplash.com/photo-1709207516801-c8cd368ca089?auto=format&fit=crop&w=1200&q=82" }
   ]
 };
+const JOURNAL_ADDITION_IMAGES = [
+  "https://images.unsplash.com/photo-1703922055661-2168ea8b80a9?auto=format&fit=crop&w=1200&q=82",
+  "https://images.unsplash.com/photo-1760549255949-767d18981890?auto=format&fit=crop&w=1200&q=82"
+];
 const FIELD_BOOK_HEADLINES = {
   en: "A season is made of small decisions.",
   hi: "हर मौसम छोटे-छोटे फैसलों से बनता है।",
@@ -1810,7 +1814,10 @@ function LoginView({ onLogin, theme, onThemeToggle, language, onLanguageChange }
       image: "https://images.unsplash.com/photo-1525383033081-6088a7a5affa?auto=format&fit=crop&w=1200&q=82",
       paragraphs: [extraJournalCopy[3]]
     },
-    ...(JOURNAL_ADDITIONS[language] || JOURNAL_ADDITIONS.en)
+    ...(JOURNAL_ADDITIONS[language] || JOURNAL_ADDITIONS.en).map((article, index) => ({
+      ...article,
+      image: JOURNAL_ADDITION_IMAGES[index]
+    }))
   ];
 
   function changeMode(nextMode) {
