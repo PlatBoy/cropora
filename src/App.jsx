@@ -5016,7 +5016,7 @@ function LoanCard({ loan, adminMode = false, onDecision }) {
       {loan.farmerNote && <p className="loan-note">{loan.farmerNote}</p>}
       {loan.adminNote && <p className="loan-note admin-note">{loan.adminNote}</p>}
 
-      {adminMode && (
+      {adminMode && loan.status === "pending" && (
         <div className="loan-actions">
           <textarea
             value={adminNote}
@@ -5035,6 +5035,9 @@ function LoanCard({ loan, adminMode = false, onDecision }) {
             </button>
           </div>
         </div>
+      )}
+      {adminMode && loan.status !== "pending" && (
+        <p className="loan-note admin-note">Decision recorded. This application is closed.</p>
       )}
     </article>
   );
@@ -5219,7 +5222,7 @@ function InsuranceCard({ insurance, adminMode = false, onDecision }) {
       {insurance.farmerNote && <p className="loan-note">{insurance.farmerNote}</p>}
       {insurance.adminNote && <p className="loan-note admin-note">{insurance.adminNote}</p>}
 
-      {adminMode && (
+      {adminMode && insurance.status === "pending" && (
         <div className="loan-actions">
           <textarea value={adminNote} onChange={(event) => setAdminNote(event.target.value)} rows={2} placeholder="Admin note" />
           <div className="action-row">
@@ -5233,6 +5236,9 @@ function InsuranceCard({ insurance, adminMode = false, onDecision }) {
             </button>
           </div>
         </div>
+      )}
+      {adminMode && insurance.status !== "pending" && (
+        <p className="loan-note admin-note">Decision recorded. This application is closed.</p>
       )}
     </article>
   );

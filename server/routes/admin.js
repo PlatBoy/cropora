@@ -238,6 +238,7 @@ adminRouter.patch("/loans/:id/status", validateBody(loanStatusSchema), async (re
   try {
     const loan = await LoanApplication.findById(req.params.id);
     if (!loan) throw notFound("Loan application not found");
+    if (loan.status !== "pending") throw new HttpError(409, "This loan application has already been decided");
 
     const shouldCreditWallet = req.body.status === "approved" && !loan.creditedAt;
     loan.status = req.body.status;

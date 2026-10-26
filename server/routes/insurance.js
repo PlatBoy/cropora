@@ -61,6 +61,7 @@ insuranceRouter.patch("/:id/status", requireAuth, requireAdmin, validateBody(ins
   try {
     const application = await InsuranceApplication.findById(req.params.id);
     if (!application) throw notFound("Insurance application not found");
+    if (application.status !== "pending") throw new HttpError(409, "This insurance application has already been decided");
 
     application.status = req.body.status;
     application.adminNote = req.body.adminNote || application.adminNote;
